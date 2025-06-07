@@ -1,0 +1,122 @@
+{
+  "name": "BuddyBill - Partage de Dépenses",
+  "short_name": "BuddyBill",
+  "description": "Application de partage de dépenses multi-devises pour vos voyages et sorties de groupe",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "travel", "productivity"],
+  "lang": "fr",
+  "dir": "ltr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile-dashboard.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Dashboard principal avec balances et groupes"
+    },
+    {
+      "src": "/screenshots/mobile-expenses.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Gestion des dépenses multi-devises"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nouveau Groupe",
+      "short_name": "Groupe",
+      "description": "Créer un nouveau groupe de dépenses",
+      "url": "/dashboard/groups/create",
+      "icons": [
+        {
+          "src": "/icons/shortcut-group.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Ajouter Dépense",
+      "short_name": "Dépense",
+      "description": "Ajouter une nouvelle dépense",
+      "url": "/dashboard/expenses/add",
+      "icons": [
+        {
+          "src": "/icons/shortcut-expense.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Voir Balances",
+      "short_name": "Balances",
+      "description": "Consulter les balances et règlements",
+      "url": "/dashboard/balances",
+      "icons": [
+        {
+          "src": "/icons/shortcut-balance.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}

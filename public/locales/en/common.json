@@ -1,0 +1,138 @@
+{
+  "login": "Login",
+  "signup": "Sign up",
+  "new": "New",
+  "hero": {
+    "title": "Share expenses easily with friends",
+    "subtitle": "BuddyBill simplifies expense sharing during your outings and trips with advanced multi-currency management.",
+    "cta": "Start for free",
+    "demo": "Try the demo"
+  },
+  "problem": {
+    "title": "No more complicated calculations between friends",
+    "description": "Sharing expenses during a trip or outing can quickly become a headache, especially with different currencies.",
+    "challenges": {
+      "title": "Common challenges",
+      "item1": "Complex manual calculations and risk of errors",
+      "item2": "Difficulties with exchange rates and conversions",
+      "item3": "Confusion about who owes what to whom in the end"
+    },
+    "solution": {
+      "title": "The BuddyBill solution",
+      "item1": "Accurate and fair automatic calculations",
+      "item2": "Real-time currency conversion",
+      "item3": "Clear visualization of balances and repayments"
+    }
+  },
+  "features": {
+    "title": "Key Features",
+    "subtitle": "BuddyBill offers everything you need to manage your group expenses stress-free.",
+    "groups": {
+      "title": "Unlimited groups",
+      "description": "Create as many groups as needed for your different activities and trips."
+    },
+    "currency": {
+      "title": "Multi-currency",
+      "description": "Easily manage expenses in different currencies with automatic conversion."
+    },
+    "expenses": {
+      "title": "Flexible sharing",
+      "description": "Split expenses equally or with custom amounts."
+    },
+    "balance": {
+      "title": "Clear balances",
+      "description": "Visualize who owes what to whom with intuitive graphs."
+    },
+    "mobile": {
+      "title": "Mobile app",
+      "description": "Use BuddyBill on all your devices thanks to our installable PWA."
+    },
+    "simple": {
+      "title": "Intuitive interface",
+      "description": "A simple and pleasant user experience, without unnecessary features."
+    }
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "subtitle": "BuddyBill simplifies expense sharing in a few simple steps.",
+    "steps": {
+      "step1": {
+        "title": "Create a group",
+        "description": "Start by creating a group and invite your friends to join by email.",
+        "tip": "Tip: Give your group a descriptive name like 'Paris Trip 2025' to easily find it later."
+      },
+      "step2": {
+        "title": "Add your expenses",
+        "description": "Record each expense with its amount, currency, and the participants involved.",
+        "tip": "Tip: Take a photo of your receipts to keep track of all your expenses."
+      },
+      "step3": {
+        "title": "Track balances",
+        "description": "See in real-time who owes how much to whom in the group.",
+        "tip": "Tip: Use the 'Simplified Balances' view to minimize the number of transactions needed."
+      },
+      "step4": {
+        "title": "Settle up",
+        "description": "Record repayments made to automatically update balances.",
+        "tip": "Tip: Use the 'Mark as settled' function to quickly clear small debts between friends."
+      }
+    }
+  },
+  "testimonials": {
+    "title": "What our users say",
+    "subtitle": "Thousands of people are already using BuddyBill to simplify their expense sharing.",
+    "quotes": {
+      "0": {
+        "text": "BuddyBill has completely transformed our trips with friends. No more calculators or complicated notes!",
+        "name": "Sophie L.",
+        "role": "Frequent traveler"
+      },
+      "1": {
+        "text": "The multi-currency function is great. During our European road trip, we were able to manage euros, pounds, and Swiss francs effortlessly.",
+        "name": "Thomas M.",
+        "role": "Erasmus student"
+      },
+      "2": {
+        "text": "Intuitive interface and powerful features. I particularly appreciate being able to install the app on my phone.",
+        "name": "Julie D.",
+        "role": "User since 2024"
+      }
+    }
+  },
+  "cta": {
+    "title": "Ready to simplify your expense sharing?",
+    "subtitle": "Join thousands of users who have already adopted BuddyBill for their trips and outings with friends.",
+    "primary": "Create a free account",
+    "secondary": "Explore the demo"
+  },
+  "footer": {
+    "tagline": "Simplify your expense sharing between friends",
+    "product": {
+      "title": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "demo": "Demo",
+      "security": "Security"
+    },
+    "company": {
+      "title": "Company",
+      "about": "About",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookies"
+    },
+    "copyright": "All rights reserved."
+  },
+  "install": {
+    "title": "Install BuddyBill",
+    "description": "Install the app on your device for quick access and optimal experience.",
+    "button": "Install now",
+    "dismiss": "Later"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "login": "Connexion",
+  "signup": "Inscription",
+  "new": "Nouveau",
+  "hero": {
+    "title": "Partagez vos dépenses simplement entre amis",
+    "subtitle": "BuddyBill simplifie le partage des dépenses lors de vos sorties et voyages avec une gestion multi-devises avancée.",
+    "cta": "Commencer gratuitement",
+    "demo": "Essayer la démo"
+  },
+  "problem": {
+    "title": "Fini les calculs compliqués entre amis",
+    "description": "Le partage des dépenses lors d'un voyage ou d'une sortie peut rapidement devenir un casse-tête, surtout avec différentes devises.",
+    "challenges": {
+      "title": "Les défis habituels",
+      "item1": "Calculs manuels complexes et risques d'erreurs",
+      "item2": "Difficultés avec les taux de change et les conversions",
+      "item3": "Confusion sur qui doit combien à qui à la fin"
+    },
+    "solution": {
+      "title": "La solution BuddyBill",
+      "item1": "Calculs automatiques précis et équitables",
+      "item2": "Conversion de devises en temps réel",
+      "item3": "Visualisation claire des soldes et des remboursements"
+    }
+  },
+  "features": {
+    "title": "Fonctionnalités principales",
+    "subtitle": "BuddyBill offre tout ce dont vous avez besoin pour gérer vos dépenses de groupe sans stress.",
+    "groups": {
+      "title": "Groupes illimités",
+      "description": "Créez autant de groupes que nécessaire pour vos différentes activités et voyages."
+    },
+    "currency": {
+      "title": "Multi-devises",
+      "description": "Gérez facilement les dépenses dans différentes devises avec conversion automatique."
+    },
+    "expenses": {
+      "title": "Partage flexible",
+      "description": "Répartissez les dépenses équitablement ou avec des montants personnalisés."
+    },
+    "balance": {
+      "title": "Soldes clairs",
+      "description": "Visualisez qui doit quoi à qui avec des graphiques intuitifs."
+    },
+    "mobile": {
+      "title": "Application mobile",
+      "description": "Utilisez BuddyBill sur tous vos appareils grâce à notre PWA installable."
+    },
+    "simple": {
+      "title": "Interface intuitive",
+      "description": "Une expérience utilisateur simple et agréable, sans fonctionnalités superflues."
+    }
+  },
+  "howItWorks": {
+    "title": "Comment ça marche",
+    "subtitle": "BuddyBill simplifie le partage des dépenses en quelques étapes simples.",
+    "steps": {
+      "step1": {
+        "title": "Créez un groupe",
+        "description": "Commencez par créer un groupe et invitez vos amis à le rejoindre par email.",
+        "tip": "Astuce : Donnez un nom descriptif à votre groupe comme 'Voyage à Paris 2025' pour vous y retrouver facilement."
+      },
+      "step2": {
+        "title": "Ajoutez vos dépenses",
+        "description": "Enregistrez chaque dépense avec son montant, sa devise et les participants concernés.",
+        "tip": "Astuce : Prenez une photo de vos reçus pour garder une trace de toutes vos dépenses."
+      },
+      "step3": {
+        "title": "Suivez les soldes",
+        "description": "Consultez en temps réel qui doit combien à qui dans le groupe.",
+        "tip": "Astuce : Utilisez la vue 'Soldes simplifiés' pour minimiser le nombre de transactions nécessaires."
+      },
+      "step4": {
+        "title": "Réglez les comptes",
+        "description": "Enregistrez les remboursements effectués pour mettre à jour automatiquement les soldes.",
+        "tip": "Astuce : Utilisez la fonction 'Marquer comme réglé' pour effacer rapidement les petites dettes entre amis."
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Ce que disent nos utilisateurs",
+    "subtitle": "Des milliers de personnes utilisent déjà BuddyBill pour simplifier leurs partages de dépenses.",
+    "quotes": {
+      "0": {
+        "text": "BuddyBill a complètement transformé nos voyages entre amis. Plus besoin de calculatrice ni de notes compliquées !",
+        "name": "Sophie L.",
+        "role": "Voyageuse fréquente"
+      },
+      "1": {
+        "text": "La fonction multi-devises est géniale. Lors de notre road trip en Europe, nous avons pu gérer euros, livres et francs suisses sans effort.",
+        "name": "Thomas M.",
+        "role": "Étudiant Erasmus"
+      },
+      "2": {
+        "text": "Interface intuitive et fonctionnalités puissantes. J'apprécie particulièrement la possibilité d'installer l'app sur mon téléphone.",
+        "name": "Julie D.",
+        "role": "Utilisatrice depuis 2024"
+      }
+    }
+  },
+  "cta": {
+    "title": "Prêt à simplifier vos partages de dépenses ?",
+    "subtitle": "Rejoignez des milliers d'utilisateurs qui ont déjà adopté BuddyBill pour leurs voyages et sorties entre amis.",
+    "primary": "Créer un compte gratuit",
+    "secondary": "Explorer la démo"
+  },
+  "footer": {
+    "tagline": "Simplifiez vos partages de dépenses entre amis",
+    "product": {
+      "title": "Produit",
+      "features": "Fonctionnalités",
+      "pricing": "Tarifs",
+      "demo": "Démo",
+      "security": "Sécurité"
+    },
+    "company": {
+      "title": "Entreprise",
+      "about": "À propos",
+      "blog": "Blog",
+      "careers": "Carrières",
+      "contact": "Contact"
+    },
+    "legal": {
+      "title": "Légal",
+      "terms": "Conditions d'utilisation",
+      "privacy": "Politique de confidentialité",
+      "cookies": "Cookies"
+    },
+    "copyright": "Tous droits réservés."
+  },
+  "install": {
+    "title": "Installer BuddyBill",
+    "description": "Installez l'application sur votre appareil pour un accès rapide et une expérience optimale.",
+    "button": "Installer maintenant",
+    "dismiss": "Plus tard"
+  }
+}
