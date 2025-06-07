@@ -14,6 +14,7 @@ import {
   X,
   CheckCircle
 } from 'lucide-react'
+import { safeLocalStorage } from '@/lib/safe-storage'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>
@@ -181,11 +182,11 @@ export default function InstallPWAInstructions({ language = 'fr' }: InstallPWAIn
   const handleClose = () => {
     setIsVisible(false)
     // Re-afficher dans 24h
-    localStorage.setItem('buddybill-install-dismissed', Date.now().toString())
+    safeLocalStorage.setItem('buddybill-install-dismissed', Date.now().toString())
   }
 
   // Ne pas afficher si déjà installé ou si récemment fermé
-  const lastDismissed = localStorage.getItem('buddybill-install-dismissed')
+  const lastDismissed = safeLocalStorage.getItem('buddybill-install-dismissed')
   if (isInstalled || !isVisible || (lastDismissed && Date.now() - parseInt(lastDismissed) < 24 * 60 * 60 * 1000)) {
     return null
   }
