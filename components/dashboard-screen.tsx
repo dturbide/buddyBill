@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import PWAInstallButton from "@/components/pwa-install-button"
 import { usePWAStandalone } from "@/hooks/use-pwa-standalone"
+import PullToRefresh from "@/components/pull-to-refresh"
 import {
   Bell,
   PlusCircle,
@@ -30,6 +31,7 @@ import {
   Settings,
   ChevronRight,
   Receipt,
+  RefreshCw,
 } from "lucide-react"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
@@ -120,27 +122,25 @@ export default function DashboardScreen() {
   const [pendingTransactions, setPendingTransactions] = useState(0)
   const [isQuickAddExpenseModalOpen, setIsQuickAddExpenseModalOpen] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState<{ id: string; name: string; defaultCurrency?: string } | null>(null)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const isStandalone = usePWAStandalone()
 
   // Fonction pour rafraîchir toutes les données
   const refreshData = useCallback(async () => {
     console.log('🔄 REFRESH DATA - Début du rafraîchissement')
-    setIsLoading(true)
-    setError(null)
-    
+    setIsRefreshing(true)
     try {
       await Promise.all([
         fetchGroups(),
-        fetchRecentExpenses(),
-        fetchBalances()
+        fetchBalances(),
+        fetchRecentExpenses()
       ])
       console.log('✅ REFRESH DATA - Rafraîchissement terminé avec succès')
-    } catch (err) {
-      console.error('❌ REFRESH DATA - Erreur lors du rafraîchissement:', err)
-      setError('Erreur lors du chargement des données')
+    } catch (error) {
+      console.error('❌ REFRESH DATA - Erreur lors du rafraîchissement:', error)
     } finally {
-      setIsLoading(false)
+      setIsRefreshing(false)
     }
   }, [])
 
@@ -328,143 +328,158 @@ export default function DashboardScreen() {
             </AvatarFallback>
           </Avatar>
           <LanguageSwitcher />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-700"
+            onClick={refreshData}
+            disabled={isRefreshing}
+          >
+            {isRefreshing ? (
+              <RefreshCw className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       </header>
-      <ScrollArea className="flex-grow">
-        <div className="p-3 sm:p-4 space-y-5 sm:space-y-6">
-          <section>
-            <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-2">{t('dashboard:overview.title')}</h2>
-            <p className="text-sm text-gray-500 mb-3">
-              {t('dashboard:overview.welcome', { name: userProfile?.full_name || user?.email })}
-            </p>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-3">
-              <SummaryCard title={t('dashboard:overview.owedToYou')} value={totalOwed} icon={DollarSign} bgColor="bg-emerald-50" textColor="text-emerald-700" />
-              <SummaryCard title={t('dashboard:overview.youOwe')} value={totalYouOwe} icon={DollarSign} bgColor="bg-rose-50" textColor="text-rose-700" />
-              <SummaryCard title={t('dashboard:overview.thisMonth')} value={monthExpenses} icon={CreditCard} />
-              <SummaryCard title={t('dashboard:overview.activeGroups')} value={groups.length.toString()} icon={UsersRound} />
-              <SummaryCard title={t('dashboard:overview.pending')} value={pendingTransactions?.toString() || "0"} icon={Activity} />
-            </div>
-          </section>
-          <section className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-gray-800">{t('dashboard:groups.title')}</h3>
-            <Card>
-              <CardContent className="p-4">
-                {groups.length === 0 ? (
-                  <div className="text-center py-6">
-                    <UsersRound className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                    <p className="text-sm text-gray-500 mb-3">{t('dashboard:groups.noGroups')}</p>
+      <PullToRefresh onRefresh={refreshData}>
+        <ScrollArea className="flex-grow">
+          <div className="p-3 sm:p-4 space-y-5 sm:space-y-6">
+            <section>
+              <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-2">{t('dashboard:overview.title')}</h2>
+              <p className="text-sm text-gray-500 mb-3">
+                {t('dashboard:overview.welcome', { name: userProfile?.full_name || user?.email })}
+              </p>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-3">
+                <SummaryCard title={t('dashboard:overview.owedToYou')} value={totalOwed} icon={DollarSign} bgColor="bg-emerald-50" textColor="text-emerald-700" />
+                <SummaryCard title={t('dashboard:overview.youOwe')} value={totalYouOwe} icon={DollarSign} bgColor="bg-rose-50" textColor="text-rose-700" />
+                <SummaryCard title={t('dashboard:overview.thisMonth')} value={monthExpenses} icon={CreditCard} />
+                <SummaryCard title={t('dashboard:overview.activeGroups')} value={groups.length.toString()} icon={UsersRound} />
+                <SummaryCard title={t('dashboard:overview.pending')} value={pendingTransactions?.toString() || "0"} icon={Activity} />
+              </div>
+            </section>
+            <section className="mb-6">
+              <h3 className="text-lg font-semibold mb-3 text-gray-800">{t('dashboard:groups.title')}</h3>
+              <Card>
+                <CardContent className="p-4">
+                  {groups.length === 0 ? (
+                    <div className="text-center py-6">
+                      <UsersRound className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-sm text-gray-500 mb-3">{t('dashboard:groups.noGroups')}</p>
+                      <Link href="/create-group">
+                        <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
+                          <Plus className="h-4 w-4 mr-2" />
+                          {t('dashboard:quickActions.createGroup')}
+                        </Button>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {groups.slice(0, 3).map((group, index) => (
+                        <div key={group.id} className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                          <div className="flex items-center space-x-3 w-full">
+                            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                              <span className="text-white font-medium text-sm">
+                                {group.name?.charAt(0)?.toUpperCase() || 'G'}
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-sm text-gray-900">{group.name}</p>
+                              <p className="text-xs text-gray-500">{t('dashboard:groups.members', { count: group.memberCount || 0 })}</p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-700"
+                              onClick={() => {
+                                console.log('🐛 DEBUG groupe sélectionné:', group)
+                                console.log('🐛 DEBUG defaultCurrency:', group.defaultCurrency)
+                                setSelectedGroup({ id: group.id, name: group.name, defaultCurrency: group.defaultCurrency || 'EUR' })
+                                setIsQuickAddExpenseModalOpen(true)
+                              }}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      {groups.length > 3 && (
+                        <Link href="/dashboard/groups">
+                          <Button variant="outline" size="sm" className="w-full">
+                            {t('dashboard:groups.viewAll', { count: groups.length })}
+                          </Button>
+                        </Link>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </section>
+            <section>
+              <h3 className="text-lg font-semibold mb-3 text-gray-800">{t('dashboard:quickActions.title')}</h3>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex flex-col space-y-3 max-w-sm">
                     <Link href="/create-group">
-                      <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
-                        <Plus className="h-4 w-4 mr-2" />
-                        {t('dashboard:quickActions.createGroup')}
+                      <Button className="bg-blue-500 hover:bg-blue-600 text-white h-12 text-sm w-full justify-start">
+                        <UsersRound className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.createGroup')}
+                      </Button>
+                    </Link>
+                    <Link href="/join-group">
+                      <Button variant="outline" className="text-sm h-12 w-full justify-start">
+                        <PlusCircle className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.joinGroup')}
+                      </Button>
+                    </Link>
+                    <Link href="/dashboard/settle-up">
+                      <Button variant="outline" className="text-sm h-12 w-full justify-start">
+                        <CheckCircle className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.settleUp')}
+                      </Button>
+                    </Link>
+                    <Link href="/dashboard/expenses">
+                      <Button variant="outline" className="text-sm h-12 w-full justify-start">
+                        <Receipt className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.manageExpenses')}
+                      </Button>
+                    </Link>
+                    <Link href="/dashboard/recent-activity">
+                      <Button variant="outline" className="text-sm h-12 w-full justify-start">
+                        <Activity className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.viewFullActivity')}
                       </Button>
                     </Link>
                   </div>
-                ) : (
-                  <div className="space-y-3">
-                    {groups.slice(0, 3).map((group, index) => (
-                      <div key={group.id} className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                        <div className="flex items-center space-x-3 w-full">
-                          <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                            <span className="text-white font-medium text-sm">
-                              {group.name?.charAt(0)?.toUpperCase() || 'G'}
-                            </span>
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium text-sm text-gray-900">{group.name}</p>
-                            <p className="text-xs text-gray-500">{t('dashboard:groups.members', { count: group.memberCount || 0 })}</p>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-700"
-                            onClick={() => {
-                              console.log('🐛 DEBUG groupe sélectionné:', group)
-                              console.log('🐛 DEBUG defaultCurrency:', group.defaultCurrency)
-                              setSelectedGroup({ id: group.id, name: group.name, defaultCurrency: group.defaultCurrency || 'EUR' })
-                              setIsQuickAddExpenseModalOpen(true)
-                            }}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
+                </CardContent>
+              </Card>
+            </section>
+            <section>
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-700">{t('dashboard:recentActivity.title')}</h2>
+                <Link
+                  href="/dashboard/recent-activity"
+                  className="text-xs sm:text-sm text-primary hover:underline flex items-center"
+                >
+                  {t('dashboard:recentActivity.viewAll')} <ArrowRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4" />
+                </Link>
+              </div>
+              <Card>
+                <CardContent className="p-4">
+                  {recentActivity.length === 0 ? (
+                    <p className="text-sm text-gray-500 text-center">{t('dashboard:recentActivity.noActivity')}</p>
+                  ) : (
+                    recentActivity.map((activity, index) => (
+                      <React.Fragment key={index}>
+                        <div className="px-3 sm:px-4">
+                          <ActivityItem {...activity} />
                         </div>
-                      </div>
-                    ))}
-                    {groups.length > 3 && (
-                      <Link href="/dashboard/groups">
-                        <Button variant="outline" size="sm" className="w-full">
-                          {t('dashboard:groups.viewAll', { count: groups.length })}
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </section>
-          <section>
-            <h3 className="text-lg font-semibold mb-3 text-gray-800">{t('dashboard:quickActions.title')}</h3>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex flex-col space-y-3 max-w-sm">
-                  <Link href="/create-group">
-                    <Button className="bg-blue-500 hover:bg-blue-600 text-white h-12 text-sm w-full justify-start">
-                      <UsersRound className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.createGroup')}
-                    </Button>
-                  </Link>
-                  <Link href="/join-group">
-                    <Button variant="outline" className="text-sm h-12 w-full justify-start">
-                      <PlusCircle className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.joinGroup')}
-                    </Button>
-                  </Link>
-                  <Link href="/dashboard/settle-up">
-                    <Button variant="outline" className="text-sm h-12 w-full justify-start">
-                      <CheckCircle className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.settleUp')}
-                    </Button>
-                  </Link>
-                  <Link href="/dashboard/expenses">
-                    <Button variant="outline" className="text-sm h-12 w-full justify-start">
-                      <Receipt className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.manageExpenses')}
-                    </Button>
-                  </Link>
-                  <Link href="/dashboard/recent-activity">
-                    <Button variant="outline" className="text-sm h-12 w-full justify-start">
-                      <Activity className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.viewFullActivity')}
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-          <section>
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="text-base sm:text-lg font-semibold text-gray-700">{t('dashboard:recentActivity.title')}</h2>
-              <Link
-                href="/dashboard/recent-activity"
-                className="text-xs sm:text-sm text-primary hover:underline flex items-center"
-              >
-                {t('dashboard:recentActivity.viewAll')} <ArrowRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4" />
-              </Link>
-            </div>
-            <Card>
-              <CardContent className="p-4">
-                {recentActivity.length === 0 ? (
-                  <p className="text-sm text-gray-500 text-center">{t('dashboard:recentActivity.noActivity')}</p>
-                ) : (
-                  recentActivity.map((activity, index) => (
-                    <React.Fragment key={index}>
-                      <div className="px-3 sm:px-4">
-                        <ActivityItem {...activity} />
-                      </div>
-                      {index < recentActivity.length - 1 && <Separator />}
-                    </React.Fragment>
-                  ))
-                )}
-              </CardContent>
-            </Card>
-          </section>
-        </div>
-      </ScrollArea>
+                        {index < recentActivity.length - 1 && <Separator />}
+                      </React.Fragment>
+                    ))
+                  )}
+                </CardContent>
+              </Card>
+            </section>
+          </div>
+        </ScrollArea>
+      </PullToRefresh>
       <nav className="p-1 sm:p-2 border-t bg-slate-50 grid grid-cols-5 gap-0.5 sm:gap-1">
         {navItems.map((item) => (
           <NavItem key={item.label} {...item} />
