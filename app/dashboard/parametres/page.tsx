@@ -88,7 +88,7 @@ export default function ParametresPage() {
         {
           icon: HelpCircle,
           label: 'Aide & Support',
-          description: 'Centre d'aide',
+          description: 'Centre d\'aide',
           onClick: () => alert('Fonctionnalité à venir')
         }
       ]
