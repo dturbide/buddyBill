@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     siteName: 'BuddyBill',
     images: [
       {
-        url: '/icons/icon-512x512.svg',
+        url: '/icons/icon-512x512.png',
         width: 512,
         height: 512,
         alt: 'BuddyBill App Icon',
@@ -46,14 +46,14 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'BuddyBill - Partage de Dépenses Multi-Devises',
     description: 'Simplifiez vos dépenses de groupe avec BuddyBill. Gestion multi-devises, conversion temps réel.',
-    images: ['/icons/icon-512x512.svg'],
+    images: ['/icons/icon-512x512.png'],
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'BuddyBill',
     startupImage: [
-      '/icons/icon-192x192.svg',
+      '/icons/icon-192x192.png',
     ],
   },
   verification: {
@@ -84,13 +84,13 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" href="/icons/icon-192x192.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/icons/icon-152x152.svg" />
-        <link rel="shortcut icon" href="/icons/icon-96x96.svg" />
+        <link rel="icon" href="/icons/icon-192x192.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
+        <link rel="shortcut icon" href="/icons/icon-96x96.png" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="msapplication-TileImage" content="/icons/icon-144x144.svg" />
+        <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
         <meta name="msapplication-TileColor" content="#ff9f43" />
         <meta name="theme-color" content="#ff7675" />
       </head>
