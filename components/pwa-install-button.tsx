@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from './ui/button'
 import { Smartphone, Download, ExternalLink, Info, X } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
+import { usePWAStandalone, useDeviceInfo } from '@/hooks/use-pwa-standalone'
 
 interface PWAInstallButtonProps {
   className?: string
@@ -19,29 +20,6 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 
-// Détection du type d'appareil et navigateur
-const detectDevice = () => {
-  if (typeof window === 'undefined') return { device: 'unknown', browser: 'unknown' }
-  
-  const userAgent = window.navigator.userAgent.toLowerCase()
-  const isIOS = /iphone|ipad|ipod/.test(userAgent)
-  const isAndroid = /android/.test(userAgent)
-  const isSafari = /safari/.test(userAgent) && !/chrome/.test(userAgent)
-  const isChrome = /chrome/.test(userAgent)
-  const isFirefox = /firefox/.test(userAgent)
-  
-  let device = 'desktop'
-  if (isIOS) device = 'ios'
-  else if (isAndroid) device = 'android'
-  
-  let browser = 'other'
-  if (isSafari) browser = 'safari'
-  else if (isChrome) browser = 'chrome'
-  else if (isFirefox) browser = 'firefox'
-  
-  return { device, browser }
-}
-
 export default function PWAInstallButton({ 
   className = '', 
   variant = 'default', 
@@ -53,11 +31,12 @@ export default function PWAInstallButton({
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [isInstallable, setIsInstallable] = useState(false)
   const [showDialog, setShowDialog] = useState(false)
-  const [deviceInfo, setDeviceInfo] = useState({ device: 'unknown', browser: 'unknown' })
+  
+  // Utilisation des hooks personnalisés
+  const isStandalone = usePWAStandalone()
+  const deviceInfo = useDeviceInfo()
 
   useEffect(() => {
-    setDeviceInfo(detectDevice())
-    
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
@@ -70,6 +49,11 @@ export default function PWAInstallButton({
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     }
   }, [])
+
+  // Ne pas afficher le bouton si l'app est déjà en mode standalone
+  if (isStandalone) {
+    return null
+  }
 
   const handleClick = async () => {
     if (deferredPrompt && isInstallable) {
