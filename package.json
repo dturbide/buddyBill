@@ -1,6 +1,23 @@
 {
-  "name": "my-v0-project",
-  "version": "0.1.0",
+  "name": "buddybill-expense-sharing",
+  "version": "1.0.0",
+  "description": "Application moderne de partage de dépenses avec support multi-devises et interface multilingue",
+  "author": "BuddyBill Team",
+  "license": "MIT",
+  "keywords": [
+    "expense-sharing",
+    "split-bills",
+    "multi-currency",
+    "react",
+    "nextjs",
+    "supabase",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/denisturbide/buddybill-expense-sharing.git"
+  },
+  "homepage": "https://buddybill-expense-sharing.vercel.app",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -47,6 +64,9 @@
     "embla-carousel": "latest",
     "embla-carousel-autoplay": "latest",
     "embla-carousel-react": "latest",
+    "i18next": "^25.2.1",
+    "i18next-browser-languagedetector": "^8.1.0",
+    "i18next-resources-to-backend": "^1.2.1",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
@@ -55,6 +75,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^19",
     "react-hook-form": "^7.54.1",
+    "react-i18next": "^15.5.2",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
     "sonner": "^1.7.1",

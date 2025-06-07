@@ -1,0 +1,81 @@
+{
+  "title": "Groups",
+  "my_groups": "My groups",
+  "create_group": "Create group",
+  "join_group": "Join group",
+  "group_details": "Group details",
+  "form": {
+    "name": "Group name",
+    "name_placeholder": "Enter group name...",
+    "description": "Description",
+    "description_placeholder": "Describe the group purpose...",
+    "currency": "Default currency",
+    "invite_code": "Invite code",
+    "invite_code_placeholder": "Enter invite code..."
+  },
+  "members": {
+    "title": "Members",
+    "count": "{{count}} member",
+    "count_plural": "{{count}} members",
+    "role_admin": "Administrator",
+    "role_member": "Member",
+    "invite_members": "Invite members",
+    "remove_member": "Remove from group",
+    "make_admin": "Make administrator",
+    "leave_group": "Leave group"
+  },
+  "invite": {
+    "title": "Invite members",
+    "share_code": "Share this invite code:",
+    "copy_code": "Copy code",
+    "code_copied": "Code copied!",
+    "send_link": "Send link",
+    "or_share": "Or share this link:",
+    "join_instructions": "Members can join using this code or link"
+  },
+  "actions": {
+    "create_group": "Create group",
+    "join_group": "Join group",
+    "edit_group": "Edit group",
+    "delete_group": "Delete group",
+    "add_expense": "Add expense",
+    "view_expenses": "View expenses",
+    "settle_up": "Settle up",
+    "manage_members": "Manage members"
+  },
+  "messages": {
+    "group_created": "Group created successfully",
+    "group_updated": "Group updated successfully",
+    "group_deleted": "Group deleted successfully",
+    "group_joined": "You have successfully joined the group",
+    "group_left": "You have left the group",
+    "member_removed": "Member removed from group",
+    "confirm_delete": "Are you sure you want to delete this group? This action cannot be undone.",
+    "confirm_leave": "Are you sure you want to leave this group?",
+    "confirm_remove_member": "Are you sure you want to remove {{name}} from the group?",
+    "invalid_code": "Invalid invite code",
+    "already_member": "You are already a member of this group",
+    "group_not_found": "Group not found",
+    "no_permission": "You don't have permission to perform this action"
+  },
+  "filters": {
+    "all_groups": "All groups",
+    "admin_groups": "Admin groups",
+    "member_groups": "Member groups",
+    "recent": "Recent",
+    "active": "Active"
+  },
+  "stats": {
+    "total_expenses": "Total expenses",
+    "your_balance": "Your balance",
+    "last_activity": "Last activity",
+    "created": "Created on {{date}}",
+    "no_expenses": "No expenses recorded"
+  },
+  "empty_states": {
+    "no_groups": "You don't have any groups yet",
+    "no_groups_description": "Create your first group or join one with an invite code",
+    "no_members": "No members found",
+    "no_expenses": "No expenses in this group"
+  }
+}

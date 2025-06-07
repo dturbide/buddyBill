@@ -244,8 +244,8 @@ export default function GroupDetailsScreen({ group }: GroupDetailsScreenProps) {
   return (
     <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col">
       <header className="p-4 flex items-center justify-between border-b sticky top-0 bg-white z-20">
-        <Link href="/groups-list-example" passHref legacyBehavior>
-          <Button variant="ghost" size="icon" className="mr-2" aria-label="Back to groups list">
+        <Link href="/dashboard" passHref legacyBehavior>
+          <Button variant="ghost" size="icon" className="mr-2" aria-label="Back to dashboard">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>

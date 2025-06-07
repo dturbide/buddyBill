@@ -1,0 +1,81 @@
+{
+  "title": "Groupes",
+  "my_groups": "Mes groupes",
+  "create_group": "Créer un groupe",
+  "join_group": "Rejoindre un groupe",
+  "group_details": "Détails du groupe",
+  "form": {
+    "name": "Nom du groupe",
+    "name_placeholder": "Saisissez le nom du groupe...",
+    "description": "Description",
+    "description_placeholder": "Décrivez l'objectif du groupe...",
+    "currency": "Devise par défaut",
+    "invite_code": "Code d'invitation",
+    "invite_code_placeholder": "Saisissez le code d'invitation..."
+  },
+  "members": {
+    "title": "Membres",
+    "count": "{{count}} membre",
+    "count_plural": "{{count}} membres",
+    "role_admin": "Administrateur",
+    "role_member": "Membre",
+    "invite_members": "Inviter des membres",
+    "remove_member": "Retirer du groupe",
+    "make_admin": "Promouvoir administrateur",
+    "leave_group": "Quitter le groupe"
+  },
+  "invite": {
+    "title": "Inviter des membres",
+    "share_code": "Partagez ce code d'invitation :",
+    "copy_code": "Copier le code",
+    "code_copied": "Code copié !",
+    "send_link": "Envoyer le lien",
+    "or_share": "Ou partagez ce lien :",
+    "join_instructions": "Les membres peuvent rejoindre en utilisant ce code ou lien"
+  },
+  "actions": {
+    "create_group": "Créer le groupe",
+    "join_group": "Rejoindre le groupe",
+    "edit_group": "Modifier le groupe",
+    "delete_group": "Supprimer le groupe",
+    "add_expense": "Ajouter une dépense",
+    "view_expenses": "Voir les dépenses",
+    "settle_up": "Régler les comptes",
+    "manage_members": "Gérer les membres"
+  },
+  "messages": {
+    "group_created": "Groupe créé avec succès",
+    "group_updated": "Groupe mis à jour avec succès",
+    "group_deleted": "Groupe supprimé avec succès",
+    "group_joined": "Vous avez rejoint le groupe avec succès",
+    "group_left": "Vous avez quitté le groupe",
+    "member_removed": "Membre retiré du groupe",
+    "confirm_delete": "Êtes-vous sûr de vouloir supprimer ce groupe ? Cette action ne peut pas être annulée.",
+    "confirm_leave": "Êtes-vous sûr de vouloir quitter ce groupe ?",
+    "confirm_remove_member": "Êtes-vous sûr de vouloir retirer {{name}} du groupe ?",
+    "invalid_code": "Code d'invitation invalide",
+    "already_member": "Vous êtes déjà membre de ce groupe",
+    "group_not_found": "Groupe non trouvé",
+    "no_permission": "Vous n'avez pas la permission d'effectuer cette action"
+  },
+  "filters": {
+    "all_groups": "Tous les groupes",
+    "admin_groups": "Groupes administrés",
+    "member_groups": "Groupes membres",
+    "recent": "Récents",
+    "active": "Actifs"
+  },
+  "stats": {
+    "total_expenses": "Total des dépenses",
+    "your_balance": "Votre solde",
+    "last_activity": "Dernière activité",
+    "created": "Créé le {{date}}",
+    "no_expenses": "Aucune dépense enregistrée"
+  },
+  "empty_states": {
+    "no_groups": "Vous n'avez pas encore de groupes",
+    "no_groups_description": "Créez votre premier groupe ou rejoignez-en un avec un code d'invitation",
+    "no_members": "Aucun membre trouvé",
+    "no_expenses": "Aucune dépense dans ce groupe"
+  }
+}

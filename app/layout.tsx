@@ -1,9 +1,11 @@
-import type { Metadata } from 'next'
 import './globals.css'
+import { NotificationProvider } from '@/components/notification-system'
+import I18nProvider from '@/components/i18n-provider'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'BuddyBill',
+  description: 'Application de partage de dépenses',
   generator: 'v0.dev',
 }
 
@@ -13,8 +15,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="fr">
+      <body>
+        <I18nProvider locale="fr">
+          <NotificationProvider>
+            {children}
+          </NotificationProvider>
+        </I18nProvider>
+      </body>
     </html>
   )
 }

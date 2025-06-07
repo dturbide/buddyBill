@@ -1,0 +1,48 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome, {{name}}!",
+  "overview": {
+    "title": "Overview",
+    "welcome": "Welcome, {{name}}!",
+    "owedToYou": "Owed to you",
+    "youOwe": "You owe",
+    "thisMonth": "This month",
+    "activeGroups": "Active groups",
+    "pending": "Pending",
+    "totalBalance": "Total balance",
+    "monthlyExpenses": "Monthly expenses"
+  },
+  "groups": {
+    "title": "Your groups",
+    "members": "members",
+    "viewAll": "View all",
+    "noGroups": "No groups found",
+    "membersCount": "{{count}} member",
+    "membersCountPlural": "{{count}} members",
+    "inviteCode": "Invite code: {{code}}",
+    "copyCode": "Copy code",
+    "addExpenseToGroup": "Add expense"
+  },
+  "quickActions": {
+    "title": "Quick actions",
+    "createGroup": "Create group",
+    "joinGroup": "Join group",
+    "settleUp": "Settle up",
+    "manageExpenses": "Manage expenses",
+    "viewFullActivity": "View full activity",
+    "addExpense": "Add expense",
+    "viewGroups": "View all groups"
+  },
+  "recentActivity": {
+    "title": "Recent activity",
+    "viewAll": "View all",
+    "noActivity": "No recent activity",
+    "expenseAdded": "{{user}} added a {{amount}} expense in {{group}}",
+    "paymentMade": "{{user}} paid {{amount}} to {{recipient}}"
+  },
+  "stats": {
+    "thisMonth": "This month",
+    "lastMonth": "Last month",
+    "total": "Total"
+  }
+}

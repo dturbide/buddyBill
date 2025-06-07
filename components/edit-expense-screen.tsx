@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils"
 import { format, parseISO } from "date-fns"
 import { ArrowLeft, CalendarIcon, Paperclip, ChevronDown, Tag, DollarSign, Camera, Save } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { AppLayout, MobileCard } from '@/components/app-layout'
 
 const expenseCategories = ["Food", "Transport", "Accommodation", "Activities", "Shopping", "Utilities", "Other"]
 const currencies = ["USD", "EUR", "GBP", "CAD", "AUD", "JPY"]
@@ -119,229 +120,220 @@ export default function EditExpenseScreen({ groupContext, expenseToEdit }: EditE
   }
 
   return (
-    <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col">
-      <header className="p-4 flex items-center border-b sticky top-0 bg-white z-10">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="mr-2"
-          aria-label="Back to expense details"
-          onClick={() =>
-            router.push(`/expense-details-example?expenseId=${expenseToEdit.id}&groupId=${groupContext.id}`)
-          }
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="text-lg font-semibold text-gray-800">Modifier la Dépense</h1>
-      </header>
-
-      <form onSubmit={handleSubmit} className="flex-grow overflow-y-auto p-6 space-y-5">
-        <div>
-          <Label htmlFor="description">Description</Label>
-          <Input
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g., Dinner, Taxi, Groceries"
-            required
-          />
-        </div>
-
-        <div className="flex gap-3">
-          <div className="flex-grow">
-            <Label htmlFor="amount">Montant</Label>
-            <div className="relative">
-              <DollarSign className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="amount"
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="0.00"
-                required
-                className="pl-8"
-              />
-            </div>
-          </div>
-          <div className="w-1/3">
-            <Label htmlFor="currency">Devise</Label>
-            <Select value={currency} onValueChange={setCurrency}>
-              <SelectTrigger id="currency">
-                <SelectValue placeholder="Devise" />
-              </SelectTrigger>
-              <SelectContent>
-                {currencies.map((curr) => (
-                  <SelectItem key={curr} value={curr}>
-                    {curr}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="flex gap-3">
-          <div className="flex-grow">
-            <Label htmlFor="date">Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : <span>Choisir une date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
-              </PopoverContent>
-            </Popover>
-          </div>
-          <div className="flex-grow">
-            <Label htmlFor="category">Catégorie</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger id="category">
-                <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
-                <SelectValue placeholder="Catégorie" />
-              </SelectTrigger>
-              <SelectContent>
-                {expenseCategories.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    {cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="paidBy">Payé par</Label>
-          <Select value={paidBy} onValueChange={setPaidBy}>
-            <SelectTrigger id="paidBy">
-              <SelectValue placeholder="Qui a payé ?" />
-            </SelectTrigger>
-            <SelectContent>
-              {groupContext.members.map((member) => (
-                <SelectItem key={member.id} value={member.id}>
-                  <div className="flex items-center">
-                    <Avatar className="h-5 w-5 mr-2">
-                      <AvatarImage src={member.avatarUrl || "/placeholder.svg"} alt={member.name} />
-                      <AvatarFallback>{member.name.substring(0, 1)}</AvatarFallback>
-                    </Avatar>
-                    {member.name}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label>Partagé entre</Label>
-          <div className="p-3 border rounded-md">
-            <div className="flex items-center justify-between mb-2">
-              <Button
-                type="button"
-                variant="ghost"
-                className="text-sm p-0 h-auto"
-                onClick={() => setSplitEqually(!splitEqually)}
-              >
-                {splitEqually ? "Partage égal" : "Partage personnalisé (non impl.)"}
-                <ChevronDown className="ml-1 h-4 w-4" />
-              </Button>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="selectAllMembers"
-                  checked={selectedMembersForSplit.length === groupContext.members.length}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      setSelectedMembersForSplit(groupContext.members.map((m) => m.id))
-                    } else {
-                      setSelectedMembersForSplit([])
-                    }
-                  }}
-                />
-                <Label htmlFor="selectAllMembers" className="text-sm font-normal">
-                  Tous ({selectedMembersForSplit.length}/{groupContext.members.length})
-                </Label>
-              </div>
-            </div>
-            {splitEqually && (
-              <div className="space-y-2 max-h-32 overflow-y-auto">
-                {groupContext.members.map((member) => (
-                  <div key={member.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`member-${member.id}`}
-                      checked={selectedMembersForSplit.includes(member.id)}
-                      onCheckedChange={() => toggleMemberForSplit(member.id)}
-                    />
-                    <Avatar className="h-6 w-6">
-                      <AvatarImage src={member.avatarUrl || "/placeholder.svg"} alt={member.name} />
-                      <AvatarFallback>{member.name.substring(0, 1)}</AvatarFallback>
-                    </Avatar>
-                    <Label htmlFor={`member-${member.id}`} className="text-sm font-normal flex-grow">
-                      {member.name}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            )}
-            {!splitEqually && (
-              <p className="text-sm text-muted-foreground">
-                Les options de partage personnalisé (inégal, par parts, etc.) apparaîtraient ici.
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="receiptUpload">Reçu (Optionnel)</Label>
-          <div className="flex items-center gap-3">
-            {receiptPreview ? (
-              <img
-                src={receiptPreview || "/placeholder.svg"}
-                alt="Aperçu du reçu"
-                className="h-16 w-16 object-cover rounded-md border"
-              />
-            ) : (
-              <div className="h-16 w-16 bg-slate-100 rounded-md flex items-center justify-center">
-                <Camera className="h-8 w-8 text-muted-foreground" />
-              </div>
-            )}
-            <Button type="button" variant="outline" onClick={() => document.getElementById("receiptUpload")?.click()}>
-              <Paperclip className="mr-2 h-4 w-4" /> Joindre/Changer Reçu
-            </Button>
+    <AppLayout
+      title="Modifier la Dépense"
+      showBackButton={true}
+      backHref={`/expense-details-example?expenseId=${expenseToEdit.id}&groupId=${groupContext.id}`}
+    >
+      <MobileCard>
+        <form onSubmit={handleSubmit} className="flex-grow overflow-y-auto p-6 space-y-5">
+          <div>
+            <Label htmlFor="description">Description</Label>
             <Input
-              type="file"
-              id="receiptUpload"
-              accept="image/*,application/pdf"
-              onChange={handleReceiptChange}
-              className="hidden"
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g., Dinner, Taxi, Groceries"
+              required
             />
           </div>
-        </div>
 
-        <div>
-          <Label htmlFor="notes">Notes (Optionnel)</Label>
-          <Textarea
-            id="notes"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Ajouter des notes pertinentes pour cette dépense"
-            className="min-h-[60px]"
-          />
-        </div>
-      </form>
+          <div className="flex gap-3">
+            <div className="flex-grow">
+              <Label htmlFor="amount">Montant</Label>
+              <div className="relative">
+                <DollarSign className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="amount"
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0.00"
+                  required
+                  className="pl-8"
+                />
+              </div>
+            </div>
+            <div className="w-1/3">
+              <Label htmlFor="currency">Devise</Label>
+              <Select value={currency} onValueChange={setCurrency}>
+                <SelectTrigger id="currency">
+                  <SelectValue placeholder="Devise" />
+                </SelectTrigger>
+                <SelectContent>
+                  {currencies.map((curr) => (
+                    <SelectItem key={curr} value={curr}>
+                      {curr}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
-      <div className="p-4 border-t bg-slate-50 sticky bottom-0">
-        <Button type="submit" onClick={handleSubmit} className="w-full h-12 text-base">
-          <Save className="mr-2 h-5 w-5" />
-          Sauvegarder les Modifications
-        </Button>
-      </div>
-    </div>
+          <div className="flex gap-3">
+            <div className="flex-grow">
+              <Label htmlFor="date">Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Choisir une date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div className="flex-grow">
+              <Label htmlFor="category">Catégorie</Label>
+              <Select value={category} onValueChange={setCategory}>
+                <SelectTrigger id="category">
+                  <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <SelectValue placeholder="Catégorie" />
+                </SelectTrigger>
+                <SelectContent>
+                  {expenseCategories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="paidBy">Payé par</Label>
+            <Select value={paidBy} onValueChange={setPaidBy}>
+              <SelectTrigger id="paidBy">
+                <SelectValue placeholder="Qui a payé ?" />
+              </SelectTrigger>
+              <SelectContent>
+                {groupContext.members.map((member) => (
+                  <SelectItem key={member.id} value={member.id}>
+                    <div className="flex items-center">
+                      <Avatar className="h-5 w-5 mr-2">
+                        <AvatarImage src={member.avatarUrl || "/placeholder.svg"} alt={member.name} />
+                        <AvatarFallback>{member.name.substring(0, 1)}</AvatarFallback>
+                      </Avatar>
+                      {member.name}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label>Partagé entre</Label>
+            <div className="p-3 border rounded-md">
+              <div className="flex items-center justify-between mb-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="text-sm p-0 h-auto"
+                  onClick={() => setSplitEqually(!splitEqually)}
+                >
+                  {splitEqually ? "Partage égal" : "Partage personnalisé (non impl.)"}
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="selectAllMembers"
+                    checked={selectedMembersForSplit.length === groupContext.members.length}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSelectedMembersForSplit(groupContext.members.map((m) => m.id))
+                      } else {
+                        setSelectedMembersForSplit([])
+                      }
+                    }}
+                  />
+                  <Label htmlFor="selectAllMembers" className="text-sm font-normal">
+                    Tous ({selectedMembersForSplit.length}/{groupContext.members.length})
+                  </Label>
+                </div>
+              </div>
+              {splitEqually && (
+                <div className="space-y-2 max-h-32 overflow-y-auto">
+                  {groupContext.members.map((member) => (
+                    <div key={member.id} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`member-${member.id}`}
+                        checked={selectedMembersForSplit.includes(member.id)}
+                        onCheckedChange={() => toggleMemberForSplit(member.id)}
+                      />
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src={member.avatarUrl || "/placeholder.svg"} alt={member.name} />
+                        <AvatarFallback>{member.name.substring(0, 1)}</AvatarFallback>
+                      </Avatar>
+                      <Label htmlFor={`member-${member.id}`} className="text-sm font-normal flex-grow">
+                        {member.name}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {!splitEqually && (
+                <p className="text-sm text-muted-foreground">
+                  Les options de partage personnalisé (inégal, par parts, etc.) apparaîtraient ici.
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="receiptUpload">Reçu (Optionnel)</Label>
+            <div className="flex items-center gap-3">
+              {receiptPreview ? (
+                <img
+                  src={receiptPreview || "/placeholder.svg"}
+                  alt="Aperçu du reçu"
+                  className="h-16 w-16 object-cover rounded-md border"
+                />
+              ) : (
+                <div className="h-16 w-16 bg-slate-100 rounded-md flex items-center justify-center">
+                  <Camera className="h-8 w-8 text-muted-foreground" />
+                </div>
+              )}
+              <Button type="button" variant="outline" onClick={() => document.getElementById("receiptUpload")?.click()}>
+                <Paperclip className="mr-2 h-4 w-4" /> Joindre/Changer Reçu
+              </Button>
+              <Input
+                type="file"
+                id="receiptUpload"
+                accept="image/*,application/pdf"
+                onChange={handleReceiptChange}
+                className="hidden"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="notes">Notes (Optionnel)</Label>
+            <Textarea
+              id="notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Ajouter des notes pertinentes pour cette dépense"
+              className="min-h-[60px]"
+            />
+          </div>
+        </form>
+
+        <div className="p-4 border-t bg-slate-50 sticky bottom-0">
+          <Button type="submit" onClick={handleSubmit} className="w-full h-12 text-base">
+            <Save className="mr-2 h-5 w-5" />
+            Sauvegarder les Modifications
+          </Button>
+        </div>
+      </MobileCard>
+    </AppLayout>
   )
 }
 

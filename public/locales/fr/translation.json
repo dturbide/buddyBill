@@ -1,0 +1,70 @@
+{
+  "app": {
+    "name": "BuddyBill",
+    "tagline": "Partagez vos dépenses facilement"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "groups": "Mes groupes",
+    "expenses": "Dépenses",
+    "balances": "Équilibres",
+    "settle_up": "Régler les comptes",
+    "profile": "Profil",
+    "recent_activity": "Activité récente",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter",
+    "login": "Se connecter",
+    "signup": "S'inscrire"
+  },
+  "buttons": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "add": "Ajouter",
+    "back": "Retour",
+    "continue": "Continuer",
+    "confirm": "Confirmer",
+    "copy": "Copier",
+    "join": "Rejoindre",
+    "invite": "Inviter",
+    "update": "Mettre à jour",
+    "close": "Fermer"
+  },
+  "form": {
+    "required": "Ce champ est requis",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "name": "Nom",
+    "description": "Description",
+    "amount": "Montant",
+    "date": "Date",
+    "category": "Catégorie",
+    "notes": "Notes",
+    "currency": "Devise"
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite",
+    "network": "Erreur de connexion",
+    "unauthorized": "Non autorisé",
+    "not_found": "Élément non trouvé",
+    "validation": "Erreur de validation",
+    "email_required": "L'adresse e-mail est requise",
+    "password_required": "Le mot de passe est requis",
+    "amount_required": "Le montant est requis",
+    "amount_positive": "Le montant doit être positif"
+  },
+  "success": {
+    "saved": "Enregistré avec succès",
+    "created": "Créé avec succès",
+    "updated": "Mis à jour avec succès",
+    "deleted": "Supprimé avec succès",
+    "copied": "Copié dans le presse-papiers"
+  },
+  "loading": "Chargement...",
+  "no_data": "Aucune donnée disponible",
+  "confirm_delete": "Êtes-vous sûr de vouloir supprimer cet élément ?",
+  "language": "Langue"
+}

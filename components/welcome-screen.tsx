@@ -2,7 +2,8 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import useEmblaCarousel, { type EmblaOptionsType } from "embla-carousel-react"
+import useEmblaCarousel from "embla-carousel-react"
+import type { EmblaOptionsType } from "embla-carousel"
 import Autoplay from "embla-carousel-autoplay"
 import { Button } from "@/components/ui/button"
 import { Zap, BarChartBig, CreditCard } from "lucide-react"
@@ -88,16 +89,16 @@ export default function WelcomeScreen() {
           ))}
         </div>
         <div className="space-y-3">
-          <Link href="/registration-example" passHref legacyBehavior>
+          <Link href="/signup" className="w-full">
             <Button size="lg" className="w-full bg-sky-500 hover:bg-sky-600 text-white h-12 text-base">
               Sign Up
             </Button>
           </Link>
-          <Link href="/login-example" passHref legacyBehavior>
+          <Link href="/signin" className="w-full">
             <Button
               variant="outline"
               size="lg"
-              className="w-full border-gray-600 text-white hover:bg-gray-700 hover:text-white h-12 text-base"
+              className="w-full border-gray-600 bg-gray-800 text-white hover:bg-gray-700 hover:text-white h-12 text-base"
             >
               Log In
             </Button>

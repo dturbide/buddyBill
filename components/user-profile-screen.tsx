@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
-  ArrowLeft,
   User,
   Bell,
   ShieldCheck,
@@ -22,7 +21,6 @@ import {
   AlertCircle,
   Hourglass,
 } from "lucide-react"
-import Link from "next/link"
 import { format, parseISO } from "date-fns"
 import { fr } from "date-fns/locale"
 import { useRouter } from "next/navigation"
@@ -63,9 +61,9 @@ const ProfileLinkItem: React.FC<ProfileLinkItemProps> = ({ icon: Icon, label, hr
 
   if (href) {
     return (
-      <Link href={href} passHref legacyBehavior>
-        <a className="block">{content}</a>
-      </Link>
+      <a href={href} className="block">
+        {content}
+      </a>
     )
   }
   return (
@@ -101,14 +99,14 @@ export default function UserProfileScreen() {
           console.log("User not authenticated. Redirecting to login.")
           setError("Utilisateur non authentifié. Redirection vers la connexion...")
         }
-        setTimeout(() => router.push("/login-example"), 2000)
+        setTimeout(() => router.push("/signin"), 2000)
         return
       }
 
-      // Fetch profile data from 'profiles' table
+      // Fetch profile data from 'user_profiles' table
       const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("full_name, avatar_url, phone, default_currency")
+        .from("user_profiles")
+        .select("full_name, avatar_url, phone, preferred_currency, created_at")
         .eq("id", authUser.id)
         .single()
 
@@ -124,8 +122,8 @@ export default function UserProfileScreen() {
         email: authUser.email || "Non défini",
         avatarUrl: profileData?.avatar_url || undefined,
         phone: profileData?.phone || undefined,
-        defaultCurrency: profileData?.default_currency || undefined,
-        memberSince: authUser.created_at,
+        defaultCurrency: profileData?.preferred_currency || undefined,
+        memberSince: profileData?.created_at || authUser.created_at,
       })
       setIsLoading(false)
     }
@@ -140,13 +138,13 @@ export default function UserProfileScreen() {
       setError(`Erreur lors de la déconnexion: ${signOutError.message}`)
       alert(`Erreur lors de la déconnexion: ${signOutError.message}`)
     } else {
-      router.push("/login-example") // Rediriger vers la page de connexion après déconnexion
+      router.push("/signin") // Rediriger vers la page de connexion après déconnexion
     }
   }
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center py-8">
         <p>Chargement du profil...</p>
       </div>
     )
@@ -154,11 +152,11 @@ export default function UserProfileScreen() {
 
   if (error || !user) {
     return (
-      <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col items-center justify-center p-6 text-center">
+      <div className="flex flex-col items-center justify-center p-6 text-center">
         <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
         <h2 className="text-xl font-semibold mb-2">Erreur</h2>
         <p className="text-muted-foreground">{error || "Impossible de charger les informations utilisateur."}</p>
-        <Button onClick={() => router.push("/login-example")} className="mt-6">
+        <Button onClick={() => router.push("/signin")} className="mt-6">
           Aller à la Connexion
         </Button>
       </div>
@@ -166,95 +164,84 @@ export default function UserProfileScreen() {
   }
 
   return (
-    <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col">
-      <header className="p-4 flex items-center border-b sticky top-0 bg-white z-10">
-        <Link href="/dashboard-example" passHref legacyBehavior>
-          <Button variant="ghost" size="icon" className="mr-2" aria-label="Back to Dashboard">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
-        <h1 className="text-lg font-semibold text-gray-800">Mon Profil</h1>
-      </header>
+    <div className="space-y-4">
+      <div className="text-center">
+        <Avatar className="h-24 w-24 mx-auto mb-3 ring-2 ring-primary/50 ring-offset-2">
+          <AvatarImage src={user.avatarUrl || "/placeholder.svg?width=100&height=100&query=avatar"} alt={user.name} />
+          <AvatarFallback className="text-3xl">{user.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <h2 className="text-xl font-semibold">{user.name}</h2>
+        <p className="text-sm text-muted-foreground">{user.email}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          className="mt-3"
+          onClick={() => router.push('/dashboard/profile/edit')}
+        >
+          <Edit3 className="h-4 w-4 mr-2" /> Modifier le profil
+        </Button>
+      </div>
 
-      <ScrollArea className="flex-grow">
-        <div className="p-5 text-center">
-          <Avatar className="h-24 w-24 mx-auto mb-3 ring-2 ring-primary/50 ring-offset-2">
-            <AvatarImage src={user.avatarUrl || "/placeholder.svg?width=100&height=100&query=avatar"} alt={user.name} />
-            <AvatarFallback className="text-3xl">{user.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <h2 className="text-xl font-semibold">{user.name}</h2>
-          <p className="text-sm text-muted-foreground">{user.email}</p>
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-3"
-            onClick={() => alert("Navigation vers la page d'édition du profil (non implémenté)")}
-          >
-            <Edit3 className="h-4 w-4 mr-2" /> Modifier le profil
-          </Button>
-        </div>
+      <Separator />
 
-        <Separator />
-
-        <div className="py-3 px-2 space-y-0.5">
-          <Card className="shadow-sm mb-3">
-            <CardHeader className="pb-2 pt-3">
-              <CardTitle className="text-base">Informations Personnelles</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <ProfileLinkItem icon={User} label="Nom complet" value={user.name} />
-              <ProfileLinkItem icon={Mail} label="Adresse e-mail" value={user.email} />
-              <ProfileLinkItem icon={Phone} label="Téléphone" value={user.phone || "Non défini"} />
-              {user.memberSince && (
-                <ProfileLinkItem
-                  icon={CalendarDays}
-                  label="Membre depuis"
-                  value={format(parseISO(user.memberSince), "d MMMM yyyy", { locale: fr })}
-                />
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-sm mb-3">
-            <CardHeader className="pb-2 pt-3">
-              <CardTitle className="text-base">Préférences</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
+      <div className="space-y-3">
+        <Card className="shadow-sm">
+          <CardHeader className="pb-2 pt-3">
+            <CardTitle className="text-base">Informations Personnelles</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ProfileLinkItem icon={User} label="Nom complet" value={user.name} />
+            <ProfileLinkItem icon={Mail} label="Adresse e-mail" value={user.email} />
+            <ProfileLinkItem icon={Phone} label="Téléphone" value={user.phone || "Non défini"} />
+            {user.memberSince && (
               <ProfileLinkItem
-                icon={DollarSign}
-                label="Devise par défaut"
-                value={user.defaultCurrency || "Non définie"}
-                onClick={() => alert("Navigation vers les paramètres de devise (non implémenté)")}
+                icon={CalendarDays}
+                label="Membre depuis"
+                value={format(parseISO(user.memberSince), "d MMMM yyyy", { locale: fr })}
               />
-              <ProfileLinkItem
-                icon={Bell}
-                label="Préférences de notification"
-                onClick={() => alert("Navigation vers les paramètres de notification (non implémenté)")}
-              />
-            </CardContent>
-          </Card>
+            )}
+          </CardContent>
+        </Card>
 
-          <Card className="shadow-sm mb-3">
-            <CardHeader className="pb-2 pt-3">
-              <CardTitle className="text-base">Sécurité et Support</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <ProfileLinkItem
-                icon={ShieldCheck}
-                label="Changer le mot de passe"
-                onClick={() => alert("Navigation vers la page de changement de mot de passe (non implémenté)")}
-              />
-              <ProfileLinkItem
-                icon={HelpCircle}
-                label="Aide et Support"
-                onClick={() => alert("Navigation vers la page d'aide (non implémenté)")}
-              />
-            </CardContent>
-          </Card>
-        </div>
-      </ScrollArea>
+        <Card className="shadow-sm">
+          <CardHeader className="pb-2 pt-3">
+            <CardTitle className="text-base">Préférences</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ProfileLinkItem
+              icon={DollarSign}
+              label="Devise par défaut"
+              value={user.defaultCurrency || "Non définie"}
+              onClick={() => alert("Navigation vers les paramètres de devise (non implémenté)")}
+            />
+            <ProfileLinkItem
+              icon={Bell}
+              label="Préférences de notification"
+              onClick={() => alert("Navigation vers les paramètres de notification (non implémenté)")}
+            />
+          </CardContent>
+        </Card>
 
-      <div className="p-4 border-t bg-slate-50 sticky bottom-0">
+        <Card className="shadow-sm">
+          <CardHeader className="pb-2 pt-3">
+            <CardTitle className="text-base">Sécurité et Support</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ProfileLinkItem
+              icon={ShieldCheck}
+              label="Changer le mot de passe"
+              onClick={() => alert("Navigation vers la page de changement de mot de passe (non implémenté)")}
+            />
+            <ProfileLinkItem
+              icon={HelpCircle}
+              label="Aide et Support"
+              onClick={() => alert("Navigation vers la page d'aide (non implémenté)")}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="p-4 border-t bg-slate-50">
         <Button variant="destructive" className="w-full h-11" onClick={handleLogout} disabled={isLoading}>
           {isLoading ? <Hourglass className="mr-2 h-5 w-5 animate-spin" /> : <LogOut className="mr-2 h-5 w-5" />}
           {isLoading ? "Déconnexion..." : "Se Déconnecter"}
@@ -263,4 +250,3 @@ export default function UserProfileScreen() {
     </div>
   )
 }
-// Removed defaultProps as user data is now fetched

@@ -10,10 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
-import { ArrowLeft, Camera, Check, ChevronRight, ChevronLeft, ImageIcon, AlertCircle, Loader2 } from "lucide-react"
+import { ArrowLeft, Camera, Check, ChevronRight, ChevronLeft, ImageIcon, AlertCircle, Loader2, Copy, CheckCircle } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { createGroupAction } from "@/app/actions/group-actions" // Import Server Action
 // Note: Supabase client for image upload would be needed here if doing direct-to-storage uploads
 // For simplicity, we'll assume image_url is handled or passed as a string for now.
 
@@ -43,6 +42,8 @@ export default function CreateGroupScreen() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [inviteCode, setInviteCode] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -58,28 +59,63 @@ export default function CreateGroupScreen() {
 
   const nextStep = async () => {
     setError(null)
-    if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1)
-    } else {
-      // Final step: submit group creation
+    
+    // Si on est à l'étape 2, créer le groupe
+    if (currentStep === 2) {
       setIsLoading(true)
-      const result = await createGroupAction({
-        groupName,
-        groupDescription,
-        groupType,
-        groupImagePreview, // Pass preview URL; real app: pass URL from Supabase Storage
-        defaultCurrency,
-        isInviteOnly,
-        requireApproval,
-      })
-      setIsLoading(false)
-      if (result.success) {
-        setSuccessMessage(result.message || "Groupe créé avec succès !")
-        // alert("Groupe créé avec succès ! Redirection...")
-        setTimeout(() => router.push("/groups-list-example"), 1500)
-      } else {
-        setError(result.error || "Erreur lors de la création du groupe.")
+      try {
+        console.log('🆕 FRONTEND CREATE - Début création groupe')
+        console.log('🆕 FRONTEND CREATE - Données:', {
+          groupName,
+          groupDescription,
+          groupType,
+          defaultCurrency,
+          isInviteOnly,
+          requireApproval,
+        })
+
+        const response = await fetch('/api/groups/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            groupName,
+            groupDescription,
+            groupType,
+            groupImagePreview,
+            defaultCurrency,
+            isInviteOnly,
+            requireApproval,
+          }),
+        })
+        
+        const result = await response.json()
+        console.log('🆕 FRONTEND CREATE - Réponse API:', result)
+        
+        if (result.success) {
+          setSuccessMessage(result.message || "Groupe créé avec succès !")
+          setInviteCode(result.inviteCode)
+          // Aller à l'étape 3 pour afficher le code d'invitation
+          setCurrentStep(currentStep + 1)
+        } else {
+          console.error('🆕 FRONTEND CREATE - Erreur:', result.error)
+          setError(result.error || "Erreur lors de la création du groupe.")
+        }
+      } catch (error) {
+        console.error("🆕 FRONTEND CREATE - Erreur inattendue:", error)
+        setError("Une erreur inattendue s'est produite.")
+      } finally {
+        setIsLoading(false)
       }
+    } 
+    // Si on est à l'étape 3 (succès), rediriger vers le dashboard
+    else if (currentStep === 3 && successMessage) {
+      router.push("/dashboard")
+    }
+    // Sinon, passer à l'étape suivante normalement
+    else if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1)
     }
   }
 
@@ -90,6 +126,18 @@ export default function CreateGroupScreen() {
   }
 
   const progressValue = (currentStep / totalSteps) * 100
+
+  const copyInviteCode = async () => {
+    if (inviteCode) {
+      try {
+        await navigator.clipboard.writeText(inviteCode)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      } catch (err) {
+        console.error('Erreur lors de la copie:', err)
+      }
+    }
+  }
 
   return (
     <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col">
@@ -121,12 +169,45 @@ export default function CreateGroupScreen() {
           </div>
         )}
         {successMessage && (
-          <div className="p-3 mb-4 bg-green-50 border border-green-200 text-green-700 rounded-md flex items-center">
-            <Check className="h-5 w-5 mr-2 flex-shrink-0" />
-            <p className="text-sm text-left">{successMessage}</p>
+          <div className="p-3 mb-4 bg-green-50 border border-green-200 text-green-700 rounded-md">
+            <div className="flex items-center mb-2">
+              <Check className="h-5 w-5 mr-2 flex-shrink-0" />
+              <p className="text-sm">{successMessage}</p>
+            </div>
+            {inviteCode && (
+              <div className="mt-3 p-3 bg-white border border-green-300 rounded-md">
+                <p className="text-sm text-gray-700 mb-2">Code d'invitation :</p>
+                <div className="flex items-center justify-between gap-2">
+                  <code className="text-lg font-mono bg-gray-100 px-3 py-2 rounded border flex-grow text-center">
+                    {inviteCode}
+                  </code>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={copyInviteCode}
+                    className="flex-shrink-0"
+                  >
+                    {copied ? (
+                      <>
+                        <CheckCircle className="mr-1 h-4 w-4" />
+                        Copié
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="mr-1 h-4 w-4" />
+                        Copier
+                      </>
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Partagez ce code avec les personnes que vous souhaitez inviter
+                </p>
+              </div>
+            )}
           </div>
         )}
-
         {currentStep === 1 && (
           <div className="space-y-5 animate-fadeIn">
             <h2 className="text-base font-semibold text-gray-700">1. Informations de Base</h2>
@@ -234,11 +315,44 @@ export default function CreateGroupScreen() {
         )}
         {currentStep === 3 && (
           <div className="space-y-5 animate-fadeIn">
-            <h2 className="text-base font-semibold text-gray-700">3. Ajouter des Membres (Optionnel)</h2>
-            <p className="text-sm text-muted-foreground">
-              Vous pourrez ajouter des membres après la création du groupe. Cette étape est pour l'instant une maquette.
-            </p>
-            {/* La logique d'ajout de membres sera plus complexe et gérée après la création du groupe */}
+            {successMessage ? (
+              <div className="text-center space-y-4">
+                <div className="flex justify-center">
+                  <CheckCircle className="w-16 h-16 text-green-500" />
+                </div>
+                <h2 className="text-lg font-semibold text-green-700">Groupe créé avec succès !</h2>
+                <p className="text-sm text-muted-foreground">{successMessage}</p>
+                
+                {inviteCode && (
+                  <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                    <h3 className="font-medium">Code d'invitation :</h3>
+                    <div className="flex items-center gap-2">
+                      <code className="bg-white px-3 py-2 rounded border text-lg font-mono flex-1 text-center">
+                        {inviteCode}
+                      </code>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={copyInviteCode}
+                        className="shrink-0"
+                      >
+                        {copied ? <CheckCircle className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Partagez ce code avec vos amis pour qu'ils rejoignent le groupe
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <h2 className="text-base font-semibold text-gray-700">3. Finalisation</h2>
+                <p className="text-sm text-muted-foreground">
+                  Création du groupe en cours...
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -247,7 +361,7 @@ export default function CreateGroupScreen() {
           type="button"
           variant="outline"
           onClick={prevStep}
-          disabled={currentStep === 1 || isLoading}
+          disabled={currentStep === 1 || isLoading || (currentStep === 3 && successMessage)}
           className="w-1/3"
         >
           <ChevronLeft className="mr-1 h-4 w-4" /> Précédent
@@ -257,12 +371,15 @@ export default function CreateGroupScreen() {
           onClick={nextStep}
           className="flex-1"
           disabled={
-            isLoading || (currentStep === 1 && !groupName) || (currentStep === totalSteps && successMessage !== null)
+            isLoading || (currentStep === 1 && !groupName)
           }
         >
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isLoading ? "Traitement..." : currentStep === totalSteps ? "Créer le Groupe" : "Suivant"}
-          {!isLoading && currentStep < totalSteps && <ChevronRight className="ml-1 h-4 w-4" />}
+          {isLoading ? "Création en cours..." : 
+           currentStep === 2 ? "Créer le Groupe" : 
+           currentStep === 3 && successMessage ? "Aller au Dashboard" : 
+           "Suivant"}
+          {!isLoading && currentStep < 2 && <ChevronRight className="ml-1 h-4 w-4" />}
         </Button>
       </div>
     </div>

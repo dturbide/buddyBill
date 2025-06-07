@@ -82,27 +82,28 @@ export default function RegistrationScreen() {
     setIsLoading(true)
     setError(null)
 
-    const { error: signUpError } = await supabase.auth.signUp({
+    console.log("Tentative d'inscription avec:", { email, firstName, lastName })
+
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           full_name: `${firstName} ${lastName}`,
-          // Vous pouvez ajouter d'autres métadonnées ici si nécessaire
-          // phone: `${selectedCountryCode}${phone}`, // Supabase Auth ne stocke pas le téléphone par défaut dans user_metadata directement de cette façon
+          phone: `${selectedCountryCode}${phone}`,
         },
       },
     })
 
+    console.log("Résultat de l'inscription:", { data, signUpError })
+
     if (signUpError) {
-      setError(signUpError.message)
+      console.error("Erreur Supabase:", signUpError)
+      setError(`Erreur lors de la création du compte: ${signUpError.message}`)
       setIsLoading(false)
     } else {
-      // Optionnel : créer un profil utilisateur dans votre table 'profiles' si handle_new_user trigger n'est pas utilisé ou si vous avez plus de données à ajouter.
-      // Pour l'instant, on suppose que le trigger handle_new_user s'occupe de la création du profil de base.
-      // Rediriger vers la page de vérification d'email ou une page de succès
-      router.push("/email-verification-example?email=" + encodeURIComponent(email))
-      // Note: Dans une vraie app, vous pourriez vouloir attendre la confirmation de l'email avant de rediriger vers le dashboard.
+      // Rediriger vers la page de vérification d'email ou le dashboard
+      router.push("/dashboard") 
     }
   }
 
@@ -192,6 +193,7 @@ export default function RegistrationScreen() {
               onChange={handlePasswordChange}
               placeholder="Créez un mot de passe fort"
               required
+              autoComplete="new-password"
             />
             <Button
               type="button"
@@ -222,6 +224,7 @@ export default function RegistrationScreen() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirmez votre mot de passe"
               required
+              autoComplete="new-password"
             />
             <Button
               type="button"
@@ -268,7 +271,7 @@ export default function RegistrationScreen() {
         </Button>
         <p className="mt-4 text-center text-sm">
           Déjà un compte ?{" "}
-          <Link href="/login-example" className="font-medium text-primary hover:underline">
+          <Link href="/signin" className="font-medium text-primary hover:underline">
             Se Connecter
           </Link>
         </p>

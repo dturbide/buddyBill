@@ -1,0 +1,73 @@
+{
+  "title": "Expenses",
+  "add_expense": "Add expense",
+  "edit_expense": "Edit expense",
+  "expense_details": "Expense details",
+  "form": {
+    "description": "Expense description",
+    "description_placeholder": "Enter description...",
+    "amount": "Amount",
+    "amount_placeholder": "0.00",
+    "group": "Group",
+    "group_placeholder": "Select a group",
+    "category": "Category",
+    "category_placeholder": "Select a category",
+    "date": "Expense date",
+    "notes": "Notes (optional)",
+    "notes_placeholder": "Add notes...",
+    "currency": "Currency",
+    "paid_by": "Paid by",
+    "split_type": "Split type",
+    "participants": "Participants"
+  },
+  "split_types": {
+    "equal": "Equal split",
+    "exact": "Exact amounts",
+    "percentage": "Percentages",
+    "shares": "Shares"
+  },
+  "categories": {
+    "food": "Food",
+    "transport": "Transport",
+    "accommodation": "Accommodation",
+    "entertainment": "Entertainment",
+    "shopping": "Shopping",
+    "utilities": "Utilities",
+    "healthcare": "Healthcare",
+    "other": "Other"
+  },
+  "status": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "settled": "Settled"
+  },
+  "actions": {
+    "save_expense": "Save expense",
+    "update_expense": "Update expense",
+    "delete_expense": "Delete expense",
+    "view_receipt": "View receipt",
+    "mark_settled": "Mark as settled"
+  },
+  "messages": {
+    "expense_created": "Expense created successfully",
+    "expense_updated": "Expense updated successfully",
+    "expense_deleted": "Expense deleted successfully",
+    "confirm_delete": "Are you sure you want to delete this expense?",
+    "no_groups": "You must be a member of at least one group to add an expense",
+    "select_group": "Please select a group",
+    "select_category": "Please select a category"
+  },
+  "filters": {
+    "all": "All",
+    "group": "By group",
+    "category": "By category",
+    "date_range": "Date range",
+    "status": "By status"
+  },
+  "summary": {
+    "total_expenses": "Total expenses",
+    "your_share": "Your share",
+    "you_paid": "You paid",
+    "balance": "Balance"
+  }
+}

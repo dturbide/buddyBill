@@ -1,8 +1,11 @@
-import React from "react"
+"use client"
+
+import React, { useEffect, useState, useCallback } from "react"
+import { useTranslation } from 'react-i18next'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area" // ScrollArea still used for main content
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import {
@@ -20,8 +23,17 @@ import {
   DollarSign,
   Activity,
   ArrowRight,
+  Eye,
+  Plus,
+  Settings,
+  ChevronRight,
+  Receipt,
 } from "lucide-react"
 import Link from "next/link"
+import { createClient } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
+import LanguageSwitcher from "./language-switcher"
+import QuickAddExpenseModal from '@/components/quick-add-expense-modal'
 
 interface SummaryCardProps {
   title: string
@@ -38,17 +50,12 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   bgColor = "bg-muted",
   textColor = "text-foreground",
 }) => (
-  // Removed fixed width and flex-shrink-0, card will take grid cell width
   <Card className={cn("w-full", bgColor, textColor)}>
     <CardHeader className="p-2 sm:p-3">
-      {" "}
-      {/* Adjusted padding slightly */}
       <CardTitle className="text-xs sm:text-sm font-medium truncate">{title}</CardTitle>
     </CardHeader>
     <CardContent className="p-2 pt-0 sm:p-3 sm:pt-0">
-      {" "}
-      {/* Adjusted padding slightly */}
-      <div className="text-base sm:text-xl font-bold">{value}</div> {/* Adjusted font size for smaller cards */}
+      <div className="text-base sm:text-xl font-bold">{value}</div>
       <Icon className="h-4 w-4 text-muted-foreground mt-1" />
     </CardContent>
   </Card>
@@ -95,98 +102,359 @@ const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, active, href = "#"
 )
 
 export default function DashboardScreen() {
-  const summaryData = [
-    {
-      title: "Total Owed to You",
-      value: "$125.50",
-      icon: DollarSign,
-      bgColor: "bg-emerald-50",
-      textColor: "text-emerald-700",
-    },
-    { title: "Total You Owe", value: "$42.00", icon: DollarSign, bgColor: "bg-rose-50", textColor: "text-rose-700" },
-    { title: "Month's Expenses", value: "$350.75", icon: CreditCard },
-    { title: "Active Groups", value: "3", icon: UsersRound },
-    { title: "Pending", value: "2", icon: Activity },
-  ]
+  const { t } = useTranslation(['dashboard', 'common'])
+  const router = useRouter()
+  const supabase = createClient()
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
+  const [userProfile, setUserProfile] = useState<any>(null)
+  const [groups, setGroups] = useState<any[]>([])
+  const [totalOwed, setTotalOwed] = useState("$0.00")
+  const [totalYouOwe, setTotalYouOwe] = useState("$0.00")
+  const [monthExpenses, setMonthExpenses] = useState("$0.00")
+  const [recentActivity, setRecentActivity] = useState<any[]>([])
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [pendingTransactions, setPendingTransactions] = useState(0)
+  const [isQuickAddExpenseModalOpen, setIsQuickAddExpenseModalOpen] = useState(false)
+  const [selectedGroup, setSelectedGroup] = useState<{ id: string; name: string; defaultCurrency?: string } | null>(null)
 
-  const recentActivities = [
-    { description: "Dinner with friends", amount: "-$25.50", type: "expense" as const },
-    { description: "Payment from Alex", amount: "+$50.00", type: "payment" as const },
-    { description: "Groceries", amount: "-$15.20", type: "expense" as const },
-  ]
+  // Fonction pour rafraîchir toutes les données
+  const refreshData = useCallback(async () => {
+    console.log('🔄 REFRESH DATA - Début du rafraîchissement')
+    setIsLoading(true)
+    setError(null)
+    
+    try {
+      await Promise.all([
+        fetchGroups(),
+        fetchRecentExpenses(),
+        fetchBalances()
+      ])
+      console.log('✅ REFRESH DATA - Rafraîchissement terminé avec succès')
+    } catch (err) {
+      console.error('❌ REFRESH DATA - Erreur lors du rafraîchissement:', err)
+      setError('Erreur lors du chargement des données')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  // Rafraîchir les données quand on revient sur la page
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        refreshData()
+      }
+    }
+
+    const handleFocus = () => {
+      refreshData()
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [refreshData])
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser()
+        
+        if (userError || !user) {
+          router.push("/signin")
+          return
+        }
+
+        setUser(user)
+
+        const { data: profile, error: profileError } = await supabase
+          .from("user_profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single()
+
+        if (profile) {
+          setUserProfile(profile)
+        }
+
+      } catch (error) {
+        console.error("Erreur lors du chargement des données:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUserData()
+    fetchBalances()
+    fetchRecentExpenses()
+    fetchGroups()
+  }, [router, supabase])
+
+  const fetchBalances = async () => {
+    try {
+      console.log('💰 FETCH BALANCES - Début récupération balances')
+      const response = await fetch('/api/balances')
+      
+      // Vérifier le status HTTP
+      if (!response.ok) {
+        console.error('❌ FETCH BALANCES - Erreur HTTP:', response.status, response.statusText)
+        setError(`Erreur HTTP ${response.status}`)
+        return
+      }
+      
+      // Vérifier le content-type
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        console.error('❌ FETCH BALANCES - Réponse non-JSON:', contentType)
+        const text = await response.text()
+        console.error('❌ FETCH BALANCES - Contenu de la réponse:', text.substring(0, 200))
+        setError('Erreur de format de réponse')
+        return
+      }
+      
+      const result = await response.json()
+      console.log('💰 FETCH BALANCES - Réponse API balances:', result)
+      
+      if (result.success) {
+        const newOwed = `$${result.data.totalOwed.toFixed(2)}`
+        const newYouOwe = `$${result.data.totalYouOwe.toFixed(2)}`
+        const newMonthExpenses = `$${result.data.monthExpenses.toFixed(2)}`
+        
+        console.log('💰 FETCH BALANCES - Mise à jour des états:', {
+          ancienOwed: totalOwed,
+          nouveauOwed: newOwed,
+          ancienYouOwe: totalYouOwe,
+          nouveauYouOwe: newYouOwe
+        })
+        
+        setTotalOwed(newOwed)
+        setTotalYouOwe(newYouOwe)
+        setMonthExpenses(newMonthExpenses)
+        setPendingTransactions(result.data.pendingTransactions || 0)
+      } else {
+        console.error('❌ FETCH BALANCES - Erreur API balances:', result.error)
+        setError(result.error)
+      }
+    } catch (error) {
+      console.error('❌ FETCH BALANCES - Erreur récupération balances:', error)
+      setError('Erreur de connexion')
+    }
+  }
+
+  const fetchRecentExpenses = async () => {
+    try {
+      const response = await fetch('/api/expenses/recent')
+      const result = await response.json()
+      if (result.success) {
+        setRecentActivity(result.data.slice(0, 3)) // Prendre les 3 plus récentes
+      }
+    } catch (error) {
+      console.error('Erreur récupération activité récente:', error)
+    }
+  }
+
+  const fetchGroups = async () => {
+    try {
+      console.log('🏠 FETCH GROUPS - Début récupération groupes')
+      const response = await fetch('/api/groups')
+      
+      if (!response.ok) {
+        console.error('🏠 FETCH GROUPS - Erreur HTTP:', response.status, response.statusText)
+        setGroups([])
+        return
+      }
+      
+      const result = await response.json()
+      console.log('🏠 FETCH GROUPS - Réponse API complète:', result)
+      
+      if (result.success && result.data) {
+        console.log('🏠 FETCH GROUPS - Groupes trouvés:', result.data.length)
+        setGroups(result.data)
+      } else if (result.success && result.data?.length === 0) {
+        console.log('🏠 FETCH GROUPS - Aucun groupe trouvé (tableau vide)')
+        setGroups([])
+      } else {
+        console.error('🏠 FETCH GROUPS - Erreur dans la réponse:', result.error || 'Format inattendu')
+        setGroups([])
+      }
+    } catch (error) {
+      console.error('🏠 FETCH GROUPS - Erreur récupération groupes:', error)
+      setGroups([])
+    }
+  }
 
   const navItems = [
-    { icon: HomeIcon, label: "Home", active: true, href: "/dashboard-example" },
-    { icon: LayoutGrid, label: "Groups", href: "/groups-list-example" },
-    { icon: ListChecks, label: "Expenses", href: "/add-expense-example" },
-    { icon: Scale, label: "Balances", href: "/settle-up-example" },
-    { icon: User, label: "Profile", href: "/user-profile-example" },
+    { icon: HomeIcon, label: t('common:navigation.dashboard'), active: true, href: "/dashboard" },
+    { icon: LayoutGrid, label: t('common:navigation.groups'), href: "/dashboard/groups" },
+    { icon: ListChecks, label: t('common:navigation.expenses'), href: "/dashboard/expenses" },
+    { icon: Scale, label: t('common:navigation.balances'), href: "/dashboard/settle-up" },
+    { icon: User, label: t('common:navigation.profile'), href: "/dashboard/profile" },
   ]
+
+  if (loading) {
+    return (
+      <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex items-center justify-center">
+        <p className="text-gray-500">{t('common:loading')}</p>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col">
       <header className="p-3 sm:p-4 flex items-center justify-between border-b">
-        <h1 className="text-lg sm:text-xl font-bold text-gray-800">SplitEase</h1>
+        <h1 className="text-lg sm:text-xl font-bold text-gray-800">BuddyBill</h1>
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="relative">
             <Bell className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600" />
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center">
-              3
+              0
             </span>
           </div>
           <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
-            <AvatarImage src="/placeholder.svg?width=32&height=32" alt="User" />
-            <AvatarFallback>ME</AvatarFallback>
+            <AvatarImage src={userProfile?.avatar_url} alt="User" />
+            <AvatarFallback>
+              {userProfile?.full_name ? userProfile.full_name.substring(0, 2).toUpperCase() : "??"}
+            </AvatarFallback>
           </Avatar>
+          <LanguageSwitcher />
         </div>
       </header>
       <ScrollArea className="flex-grow">
         <div className="p-3 sm:p-4 space-y-5 sm:space-y-6">
           <section>
-            <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-2">Overview</h2>
-            {/* Changed from ScrollArea to a responsive grid */}
+            <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-2">{t('dashboard:overview.title')}</h2>
+            <p className="text-sm text-gray-500 mb-3">
+              {t('dashboard:overview.welcome', { name: userProfile?.full_name || user?.email })}
+            </p>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-3">
-              {" "}
-              {/* lg:grid-cols-3 to prevent too many columns if more cards are added */}
-              {summaryData.map((item) => (
-                <SummaryCard key={item.title} {...item} />
-              ))}
+              <SummaryCard title={t('dashboard:overview.owedToYou')} value={totalOwed} icon={DollarSign} bgColor="bg-emerald-50" textColor="text-emerald-700" />
+              <SummaryCard title={t('dashboard:overview.youOwe')} value={totalYouOwe} icon={DollarSign} bgColor="bg-rose-50" textColor="text-rose-700" />
+              <SummaryCard title={t('dashboard:overview.thisMonth')} value={monthExpenses} icon={CreditCard} />
+              <SummaryCard title={t('dashboard:overview.activeGroups')} value={groups.length.toString()} icon={UsersRound} />
+              <SummaryCard title={t('dashboard:overview.pending')} value={pendingTransactions?.toString() || "0"} icon={Activity} />
             </div>
           </section>
-          <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white h-12 text-sm w-full">
-              <PlusCircle className="mr-2 h-5 w-5" /> Add Expense
-            </Button>
-            <Button variant="outline" size="lg" className="text-sm h-12 w-full">
-              <Send className="mr-2 h-5 w-5" /> Record Payment
-            </Button>
-            <Button variant="outline" size="lg" className="text-sm h-12 w-full">
-              <UsersRound className="mr-2 h-5 w-5" /> Create Group
-            </Button>
-            <Button variant="outline" size="lg" className="text-sm h-12 w-full">
-              <CheckCircle className="mr-2 h-5 w-5" /> Settle Up
-            </Button>
+          <section className="mb-6">
+            <h3 className="text-lg font-semibold mb-3 text-gray-800">{t('dashboard:groups.title')}</h3>
+            <Card>
+              <CardContent className="p-4">
+                {groups.length === 0 ? (
+                  <div className="text-center py-6">
+                    <UsersRound className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                    <p className="text-sm text-gray-500 mb-3">{t('dashboard:groups.noGroups')}</p>
+                    <Link href="/create-group">
+                      <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
+                        <Plus className="h-4 w-4 mr-2" />
+                        {t('dashboard:quickActions.createGroup')}
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {groups.slice(0, 3).map((group, index) => (
+                      <div key={group.id} className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div className="flex items-center space-x-3 w-full">
+                          <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                            <span className="text-white font-medium text-sm">
+                              {group.name?.charAt(0)?.toUpperCase() || 'G'}
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium text-sm text-gray-900">{group.name}</p>
+                            <p className="text-xs text-gray-500">{t('dashboard:groups.members', { count: group.memberCount || 0 })}</p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-700"
+                            onClick={() => {
+                              console.log('🐛 DEBUG groupe sélectionné:', group)
+                              console.log('🐛 DEBUG defaultCurrency:', group.defaultCurrency)
+                              setSelectedGroup({ id: group.id, name: group.name, defaultCurrency: group.defaultCurrency || 'EUR' })
+                              setIsQuickAddExpenseModalOpen(true)
+                            }}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                    {groups.length > 3 && (
+                      <Link href="/dashboard/groups">
+                        <Button variant="outline" size="sm" className="w-full">
+                          {t('dashboard:groups.viewAll', { count: groups.length })}
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </section>
+          <section>
+            <h3 className="text-lg font-semibold mb-3 text-gray-800">{t('dashboard:quickActions.title')}</h3>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex flex-col space-y-3 max-w-sm">
+                  <Link href="/create-group">
+                    <Button className="bg-blue-500 hover:bg-blue-600 text-white h-12 text-sm w-full justify-start">
+                      <UsersRound className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.createGroup')}
+                    </Button>
+                  </Link>
+                  <Link href="/join-group">
+                    <Button variant="outline" className="text-sm h-12 w-full justify-start">
+                      <PlusCircle className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.joinGroup')}
+                    </Button>
+                  </Link>
+                  <Link href="/dashboard/settle-up">
+                    <Button variant="outline" className="text-sm h-12 w-full justify-start">
+                      <CheckCircle className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.settleUp')}
+                    </Button>
+                  </Link>
+                  <Link href="/dashboard/expenses">
+                    <Button variant="outline" className="text-sm h-12 w-full justify-start">
+                      <Receipt className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.manageExpenses')}
+                    </Button>
+                  </Link>
+                  <Link href="/dashboard/recent-activity">
+                    <Button variant="outline" className="text-sm h-12 w-full justify-start">
+                      <Activity className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.viewFullActivity')}
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
           </section>
           <section>
             <div className="flex justify-between items-center mb-2">
-              <h2 className="text-base sm:text-lg font-semibold text-gray-700">Recent Activity</h2>
+              <h2 className="text-base sm:text-lg font-semibold text-gray-700">{t('dashboard:recentActivity.title')}</h2>
               <Link
-                href="/recent-activity-example"
+                href="/dashboard/recent-activity"
                 className="text-xs sm:text-sm text-primary hover:underline flex items-center"
               >
-                View All <ArrowRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4" />
+                {t('dashboard:recentActivity.viewAll')} <ArrowRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4" />
               </Link>
             </div>
             <Card>
-              <CardContent className="p-0">
-                {recentActivities.map((activity, index) => (
-                  <React.Fragment key={index}>
-                    <div className="px-3 sm:px-4">
-                      <ActivityItem {...activity} />
-                    </div>
-                    {index < recentActivities.length - 1 && <Separator />}
-                  </React.Fragment>
-                ))}
+              <CardContent className="p-4">
+                {recentActivity.length === 0 ? (
+                  <p className="text-sm text-gray-500 text-center">{t('dashboard:recentActivity.noActivity')}</p>
+                ) : (
+                  recentActivity.map((activity, index) => (
+                    <React.Fragment key={index}>
+                      <div className="px-3 sm:px-4">
+                        <ActivityItem {...activity} />
+                      </div>
+                      {index < recentActivity.length - 1 && <Separator />}
+                    </React.Fragment>
+                  ))
+                )}
               </CardContent>
             </Card>
           </section>
@@ -197,7 +465,21 @@ export default function DashboardScreen() {
           <NavItem key={item.label} {...item} />
         ))}
       </nav>
+      {selectedGroup && (
+        <QuickAddExpenseModal
+          isOpen={isQuickAddExpenseModalOpen}
+          onClose={() => {
+            setIsQuickAddExpenseModalOpen(false)
+            setSelectedGroup(null)
+          }}
+          groupId={selectedGroup.id}
+          groupName={selectedGroup.name}
+          defaultCurrency={selectedGroup.defaultCurrency}
+          onSuccess={() => {
+            refreshData()
+          }}
+        />
+      )}
     </div>
   )
 }
-DashboardScreen.defaultProps = {}

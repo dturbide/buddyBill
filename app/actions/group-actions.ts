@@ -1,77 +1,110 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { createClient as createServerSupabaseClient } from "@/lib/supabase/server" // Server client
+import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
 interface GroupFormData {
   groupName: string
   groupDescription?: string
   groupType?: string
-  // groupImage: File | null, // File uploads need different handling, often client-side to Supabase Storage then URL to DB
-  groupImagePreview?: string | null // Store URL from storage
+  groupImagePreview?: string | null
   defaultCurrency: string
   isInviteOnly: boolean
   requireApproval: boolean
-  // selectedMembers: string[], // Member addition would be a separate step or more complex logic
-  // manualEmail: string,
-  // sendInvitations: boolean,
 }
 
 export async function createGroupAction(formData: GroupFormData) {
-  const cookieStore = cookies()
-  const supabase = createServerSupabaseClient(cookieStore)
-
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    console.error("User not authenticated for creating group:", authError)
-    return { success: false, error: "Utilisateur non authentifié." }
-  }
-
   try {
-    const { error: insertError } = await supabase.from("groups").insert({
-      name: formData.groupName,
-      description: formData.groupDescription,
-      type: formData.groupType,
-      image_url: formData.groupImagePreview, // Assuming image is uploaded to storage and URL is passed
-      default_currency: formData.defaultCurrency,
-      is_invite_only: formData.isInviteOnly,
-      require_approval: formData.requireApproval,
-      created_by: user.id,
-    })
+    console.log("Starting createGroupAction with data:", formData)
+    
+    // Obtenir le cookie store
+    const cookieStore = await cookies()
+    const supabase = await createClient(cookieStore)
 
-    if (insertError) {
-      console.error("Error inserting group:", insertError)
-      return { success: false, error: `Erreur lors de la création du groupe: ${insertError.message}` }
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      console.error("User not authenticated for creating group:", authError)
+      return { success: false, error: "Utilisateur non authentifié." }
     }
 
-    // Après la création réussie, ajouter le créateur comme membre admin du groupe
-    const { error: memberInsertError } = await supabase.from("group_members").insert({
-      group_id: (
-        await supabase.from("groups").select("id").eq("name", formData.groupName).eq("created_by", user.id).single()
-      ).data?.id, // This is a bit fragile, better to get ID from insert
-      user_id: user.id,
-      role: "admin",
-    })
+    console.log("Authenticated user:", user.id)
 
-    if (memberInsertError) {
-      console.error("Error adding creator as group member:", memberInsertError)
-      // On pourrait choisir de rollback ou de notifier, pour l'instant on log l'erreur
-      return {
-        success: false,
-        error: `Groupe créé, mais erreur lors de l'ajout du créateur comme membre: ${memberInsertError.message}`,
+    // Créer le groupe - utiliser le nom de table avec le schéma
+    const { data: newGroup, error: insertError } = await supabase
+      .from("groups") // Supabase utilisera automatiquement le bon schéma via RLS
+      .insert({
+        name: formData.groupName,
+        description: formData.groupDescription || null,
+        image_url: formData.groupImagePreview || null,
+        currency: formData.defaultCurrency, // Pas besoin de cast
+        created_by: user.id,
+      })
+      .select()
+      .single()
+
+    if (insertError) {
+      console.error("Detailed error inserting group:", {
+        error: insertError,
+        code: insertError.code,
+        message: insertError.message,
+        details: insertError.details,
+        hint: insertError.hint
+      })
+      return { 
+        success: false, 
+        error: `Erreur lors de la création du groupe: ${insertError.message || insertError.code || 'Erreur inconnue'}` 
       }
     }
 
-    revalidatePath("/groups-list-example") // Revalidate la page de la liste des groupes
-    revalidatePath("/dashboard-example") // Et potentiellement le dashboard
+    if (!newGroup) {
+      console.error("No group data returned after insert")
+      return { success: false, error: "Erreur lors de la création du groupe: aucune donnée retournée" }
+    }
+
+    console.log("Group created successfully:", newGroup.id)
+
+    // Ajouter le créateur comme membre admin du groupe
+    const { error: memberInsertError } = await supabase
+      .from("group_members")
+      .insert({
+        group_id: newGroup.id,
+        user_id: user.id,
+        role: "admin",
+        invited_by: user.id,
+      })
+
+    if (memberInsertError) {
+      console.error("Detailed error adding creator as group member:", {
+        error: memberInsertError,
+        code: memberInsertError.code,
+        message: memberInsertError.message,
+        details: memberInsertError.details,
+        hint: memberInsertError.hint
+      })
+      // On pourrait faire un rollback ici
+      return {
+        success: false,
+        error: `Groupe créé, mais erreur lors de l'ajout du créateur comme membre: ${memberInsertError.message || memberInsertError.code || 'Erreur inconnue'}`,
+      }
+    }
+
+    console.log("Member added successfully")
+
+    // Revalider les pages qui affichent les groupes
+    revalidatePath("/dashboard/groups")
+    revalidatePath("/dashboard")
+    
     return { success: true, message: "Groupe créé avec succès !" }
   } catch (e: any) {
-    console.error("Unexpected error creating group:", e)
-    return { success: false, error: `Une erreur inattendue s'est produite: ${e.message}` }
+    console.error("Unexpected error in createGroupAction:", e)
+    return { 
+      success: false, 
+      error: `Une erreur inattendue s'est produite: ${e?.message || e?.toString() || "Erreur inconnue"}` 
+    }
   }
 }

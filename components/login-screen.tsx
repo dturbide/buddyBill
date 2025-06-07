@@ -45,7 +45,7 @@ export default function LoginScreen() {
       setIsLoading(false)
     } else {
       // Rediriger vers le tableau de bord ou la page d'accueil après connexion réussie
-      router.push("/dashboard-example")
+      router.push("/dashboard")
     }
   }
 

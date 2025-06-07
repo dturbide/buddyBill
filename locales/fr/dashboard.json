@@ -1,0 +1,48 @@
+{
+  "title": "Tableau de bord",
+  "welcome": "Bienvenue, {{name}}!",
+  "overview": {
+    "title": "Vue d'ensemble",
+    "welcome": "Bienvenue, {{name}}!",
+    "owedToYou": "On vous doit",
+    "youOwe": "Vous devez",
+    "thisMonth": "Ce mois-ci",
+    "activeGroups": "Groupes actifs",
+    "pending": "En attente",
+    "totalBalance": "Solde total",
+    "monthlyExpenses": "Dépenses mensuelles"
+  },
+  "groups": {
+    "title": "Vos groupes",
+    "members": "membres",
+    "viewAll": "Voir tous",
+    "noGroups": "Aucun groupe trouvé",
+    "membersCount": "{{count}} membre",
+    "membersCountPlural": "{{count}} membres",
+    "inviteCode": "Code d'invitation : {{code}}",
+    "copyCode": "Copier le code",
+    "addExpenseToGroup": "Ajouter une dépense"
+  },
+  "quickActions": {
+    "title": "Actions rapides",
+    "createGroup": "Créer un groupe",
+    "joinGroup": "Rejoindre un groupe",
+    "settleUp": "Régler les comptes",
+    "manageExpenses": "Gérer les dépenses",
+    "viewFullActivity": "Voir l'activité complète",
+    "addExpense": "Ajouter une dépense",
+    "viewGroups": "Voir tous les groupes"
+  },
+  "recentActivity": {
+    "title": "Activité récente",
+    "viewAll": "Voir tout",
+    "noActivity": "Aucune activité récente",
+    "expenseAdded": "{{user}} a ajouté une dépense de {{amount}} dans {{group}}",
+    "paymentMade": "{{user}} a payé {{amount}} à {{recipient}}"
+  },
+  "stats": {
+    "thisMonth": "Ce mois-ci",
+    "lastMonth": "Le mois dernier",
+    "total": "Total"
+  }
+}

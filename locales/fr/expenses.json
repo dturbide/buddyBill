@@ -1,0 +1,73 @@
+{
+  "title": "Dépenses",
+  "add_expense": "Ajouter une dépense",
+  "edit_expense": "Modifier la dépense",
+  "expense_details": "Détails de la dépense",
+  "form": {
+    "description": "Description de la dépense",
+    "description_placeholder": "Saisissez une description...",
+    "amount": "Montant",
+    "amount_placeholder": "0.00",
+    "group": "Groupe",
+    "group_placeholder": "Sélectionnez un groupe",
+    "category": "Catégorie",
+    "category_placeholder": "Sélectionnez une catégorie",
+    "date": "Date de la dépense",
+    "notes": "Notes (optionnel)",
+    "notes_placeholder": "Ajoutez des notes...",
+    "currency": "Devise",
+    "paid_by": "Payé par",
+    "split_type": "Type de partage",
+    "participants": "Participants"
+  },
+  "split_types": {
+    "equal": "Partage égal",
+    "exact": "Montants exacts",
+    "percentage": "Pourcentages",
+    "shares": "Parts"
+  },
+  "categories": {
+    "food": "Nourriture",
+    "transport": "Transport",
+    "accommodation": "Hébergement",
+    "entertainment": "Divertissement",
+    "shopping": "Achats",
+    "utilities": "Services publics",
+    "healthcare": "Santé",
+    "other": "Autre"
+  },
+  "status": {
+    "pending": "En attente",
+    "confirmed": "Confirmé",
+    "settled": "Réglé"
+  },
+  "actions": {
+    "save_expense": "Enregistrer la dépense",
+    "update_expense": "Mettre à jour la dépense",
+    "delete_expense": "Supprimer la dépense",
+    "view_receipt": "Voir le reçu",
+    "mark_settled": "Marquer comme réglé"
+  },
+  "messages": {
+    "expense_created": "Dépense créée avec succès",
+    "expense_updated": "Dépense mise à jour avec succès",
+    "expense_deleted": "Dépense supprimée avec succès",
+    "confirm_delete": "Êtes-vous sûr de vouloir supprimer cette dépense ?",
+    "no_groups": "Vous devez être membre d'au moins un groupe pour ajouter une dépense",
+    "select_group": "Veuillez sélectionner un groupe",
+    "select_category": "Veuillez sélectionner une catégorie"
+  },
+  "filters": {
+    "all": "Toutes",
+    "group": "Par groupe",
+    "category": "Par catégorie",
+    "date_range": "Plage de dates",
+    "status": "Par statut"
+  },
+  "summary": {
+    "total_expenses": "Total des dépenses",
+    "your_share": "Votre part",
+    "you_paid": "Vous avez payé",
+    "balance": "Solde"
+  }
+}
