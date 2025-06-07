@@ -6,14 +6,25 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Eye, EyeOff, Fingerprint, Mail, AlertCircle } from "lucide-react"
+import { Eye, EyeOff, Fingerprint, Mail, AlertCircle, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
+import { useBiometricAuth } from "@/hooks/use-biometric-auth"
 
 export default function LoginScreen() {
   const router = useRouter()
   const supabase = createClient()
+
+  // Hook pour l'authentification biométrique
+  const {
+    isSupported: isBiometricSupported,
+    hasCredentials,
+    biometricType,
+    authenticate: authenticateBiometric,
+    isLoading: isBiometricLoading,
+    error: biometricError
+  } = useBiometricAuth()
 
   const [emailOrUsername, setEmailOrUsername] = useState("") // Supabase utilise l'email pour la connexion
   const [password, setPassword] = useState("")
@@ -49,9 +60,20 @@ export default function LoginScreen() {
     }
   }
 
-  const handleBiometricLogin = () => {
-    alert("Connexion biométrique initiée (non implémentée)")
-    // L'intégration de la connexion biométrique (Passkeys) avec Supabase est plus avancée
+  const handleBiometricLogin = async () => {
+    try {
+      setError(null) // Clear existing errors
+      const success = await authenticateBiometric()
+      
+      if (success) {
+        // Rediriger vers le tableau de bord après connexion réussie
+        router.push("/dashboard")
+      } else if (biometricError) {
+        setError(biometricError)
+      }
+    } catch (error) {
+      setError("Erreur lors de la connexion biométrique")
+    }
   }
 
   return (
@@ -126,10 +148,27 @@ export default function LoginScreen() {
           <Button type="submit" className="w-full h-12 text-base" disabled={!isFormValid() || isLoading}>
             {isLoading ? "Connexion en cours..." : "Se Connecter"}
           </Button>
-          <Button variant="outline" className="w-full h-12 text-base" onClick={handleBiometricLogin}>
-            <Fingerprint className="mr-2 h-5 w-5" />
-            Connexion biométrique
-          </Button>
+          {isBiometricSupported && (
+            <Button 
+              type="button"
+              variant="outline" 
+              className="w-full h-12 text-base" 
+              onClick={handleBiometricLogin}
+              disabled={isBiometricLoading || !hasCredentials}
+            >
+              {isBiometricLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Authentification...
+                </>
+              ) : (
+                <>
+                  <Fingerprint className="mr-2 h-5 w-5" />
+                  {hasCredentials ? `Connexion ${biometricType}` : `Configurer ${biometricType}`}
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </form>
       <div className="p-4 border-t bg-slate-50 sticky bottom-0">

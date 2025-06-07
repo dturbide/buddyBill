@@ -1,20 +1,10 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Download, Share, MoreVertical, Plus, CheckCircle, Monitor, Smartphone } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { 
-  Smartphone, 
-  Download, 
-  Share, 
-  Plus, 
-  Chrome,
-  Monitor,
-  X,
-  CheckCircle
-} from 'lucide-react'
 import { safeLocalStorage } from '@/lib/safe-storage'
 
 interface BeforeInstallPromptEvent extends Event {
@@ -28,8 +18,15 @@ export default function InstallPWAInstructions() {
   const [showInstructions, setShowInstructions] = useState(false)
   const [isInstalled, setIsInstalled] = useState(false)
   const [deviceType, setDeviceType] = useState<'android' | 'ios' | 'desktop'>('desktop')
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isMounted) return
+
     // Vérifier si l'app est déjà installée
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true)
@@ -61,7 +58,7 @@ export default function InstallPWAInstructions() {
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     }
-  }, [deviceType])
+  }, [isMounted, deviceType])
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
@@ -89,12 +86,30 @@ export default function InstallPWAInstructions() {
     safeLocalStorage?.setItem('pwa-instructions-seen', 'true')
   }
 
+  // Rendu côté serveur ou avant montage
+  if (!isMounted) {
+    return (
+      <div className="max-w-4xl mx-auto text-center">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            📱 Install BuddyBill on your device
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Get the best experience with our mobile app
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   if (isInstalled) {
     return (
       <div className="text-center p-6">
-        <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+        <div className="h-16 w-16 text-green-500 mx-auto mb-4 flex items-center justify-center">
+          ✅
+        </div>
         <h3 className="text-xl font-semibold text-gray-900 mb-2">
-          {t("pwa.title", {ns: 'landing'})}
+          📱 Install BuddyBill on your device
         </h3>
         <p className="text-gray-600">
           App successfully installed!
@@ -107,10 +122,10 @@ export default function InstallPWAInstructions() {
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-12 reveal">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          {t("pwa.title", {ns: 'landing'})}
+          📱 Install BuddyBill on your device
         </h2>
         <p className="text-xl text-gray-600 mb-8">
-          {t("pwa.subtitle", {ns: 'landing'})}
+          Get the best experience with our mobile app
         </p>
         
         <Button 
@@ -119,7 +134,7 @@ export default function InstallPWAInstructions() {
           className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
         >
           <Download className="h-5 w-5 mr-2" />
-          {t("pwa.button", {ns: 'landing'})}
+          📱 Install BuddyBill on your device
         </Button>
       </div>
 
@@ -129,7 +144,7 @@ export default function InstallPWAInstructions() {
             <div className="flex justify-between items-start">
               <div>
                 <CardTitle className="text-xl text-blue-900">
-                  {t("pwa.whyInstall.title", {ns: 'landing'})}
+                  Why Install BuddyBill?
                 </CardTitle>
               </div>
               <Button 
@@ -138,7 +153,7 @@ export default function InstallPWAInstructions() {
                 onClick={handleDismiss}
                 className="text-gray-500 hover:text-gray-700"
               >
-                <X className="h-4 w-4" />
+                <MoreVertical className="h-4 w-4" />
               </Button>
             </div>
           </CardHeader>
@@ -147,12 +162,18 @@ export default function InstallPWAInstructions() {
               {/* Avantages */}
               <div>
                 <ul className="space-y-3">
-                  {(t("pwa.whyInstall.benefits", {ns: 'landing', returnObjects: true}) as string[]).map((benefit: string, index: number) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700">{benefit}</span>
-                    </li>
-                  ))}
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-gray-700">Faster navigation</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-gray-700">Offline access</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-gray-700">Push notifications</span>
+                  </li>
                 </ul>
               </div>
 
@@ -163,27 +184,48 @@ export default function InstallPWAInstructions() {
                     {deviceType === 'desktop' ? (
                       <>
                         <Monitor className="h-5 w-5" />
-                        {t("pwa.desktop.title", {ns: 'landing'})}
+                        Install on Desktop
                       </>
                     ) : deviceType === 'android' ? (
                       <>
                         <Smartphone className="h-5 w-5" />
-                        {t("pwa.mobile.title", {ns: 'landing'})}
+                        Install on Android
                       </>
                     ) : (
                       <>
                         <Smartphone className="h-5 w-5" />
-                        {t("pwa.mobile.title", {ns: 'landing'})}
+                        Install on iOS
                       </>
                     )}
                   </h4>
                   <ol className="space-y-2 text-sm text-gray-600">
-                    {(t(`pwa.${deviceType === 'desktop' ? 'desktop' : 'mobile'}.steps`, {ns: 'landing', returnObjects: true}) as string[]).map((step: string, index: number) => (
-                      <li key={index} className="flex gap-2">
-                        <span className="font-medium">{index + 1}.</span>
-                        <span>{step}</span>
-                      </li>
-                    ))}
+                    {deviceType === 'desktop' ? (
+                      <>
+                        <li className="flex gap-2">
+                          <span className="font-medium">1.</span>
+                          <span>Click the Install button</span>
+                        </li>
+                        <li className="flex gap-2">
+                          <span className="font-medium">2.</span>
+                          <span>Follow the prompts to install</span>
+                        </li>
+                      </>
+                    ) : (
+                      <>
+                        <li className="flex gap-2">
+                          <span className="font-medium">1.</span>
+                          <span>Open the app in your browser</span>
+                        </li>
+                        <li className="flex gap-2">
+                          <span className="font-medium">2.</span>
+                          <span>Tap the Share icon</span>
+                        </li>
+                        <li className="flex gap-2">
+                          <span className="font-medium">3.</span>
+                          <span>Tap Add to Home Screen</span>
+                        </li>
+                      </>
+                    )}
                   </ol>
                 </div>
               </div>

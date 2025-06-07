@@ -20,12 +20,14 @@ import {
   CalendarDays,
   AlertCircle,
   Hourglass,
+  Fingerprint,
 } from "lucide-react"
 import { format, parseISO } from "date-fns"
 import { fr } from "date-fns/locale"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { useState, useEffect } from "react" // Added for user state
+import { useBiometricAuth } from "@/hooks/use-biometric-auth"
 
 interface UserData {
   id: string
@@ -79,6 +81,7 @@ export default function UserProfileScreen() {
   const [user, setUser] = useState<UserData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const { isSupported: isBiometricSupported, hasCredentials } = useBiometricAuth()
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -232,6 +235,14 @@ export default function UserProfileScreen() {
               label="Changer le mot de passe"
               onClick={() => alert("Navigation vers la page de changement de mot de passe (non implémenté)")}
             />
+            {isBiometricSupported && (
+              <ProfileLinkItem
+                icon={Fingerprint}
+                label="Authentification biométrique"
+                value={hasCredentials ? "Activée" : "Configurer"}
+                onClick={() => router.push('/dashboard/parametres/biometrique')}
+              />
+            )}
             <ProfileLinkItem
               icon={HelpCircle}
               label="Aide et Support"

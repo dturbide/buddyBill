@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     siteName: 'BuddyBill',
     images: [
       {
-        url: '/icons/icon-512x512.png',
+        url: '/icons/icon-512x512.svg',
         width: 512,
         height: 512,
         alt: 'BuddyBill App Icon',
@@ -46,14 +46,14 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'BuddyBill - Partage de Dépenses Multi-Devises',
     description: 'Simplifiez vos dépenses de groupe avec BuddyBill. Gestion multi-devises, conversion temps réel.',
-    images: ['/icons/icon-512x512.png'],
+    images: ['/icons/icon-512x512.svg'],
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
     title: 'BuddyBill',
     startupImage: [
-      '/icons/icon-192x192.png',
+      '/icons/icon-192x192.svg',
     ],
   },
   verification: {
@@ -65,8 +65,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#3b82f6' },
-    { media: '(prefers-color-scheme: dark)', color: '#1e40af' },
+    { media: '(prefers-color-scheme: light)', color: '#ff9f43' },
+    { media: '(prefers-color-scheme: dark)', color: '#ff7675' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -84,15 +84,15 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" href="/icons/icon-192x192.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
-        <link rel="shortcut icon" href="/icons/icon-96x96.png" />
+        <link rel="icon" href="/icons/icon-192x192.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icons/icon-152x152.svg" />
+        <link rel="shortcut icon" href="/icons/icon-96x96.svg" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="BuddyBill" />
-        <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
-        <meta name="msapplication-TileColor" content="#3b82f6" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="msapplication-TileImage" content="/icons/icon-144x144.svg" />
+        <meta name="msapplication-TileColor" content="#ff9f43" />
+        <meta name="theme-color" content="#ff7675" />
       </head>
       <body>
         <I18nProvider locale="en">
