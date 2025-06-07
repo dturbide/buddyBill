@@ -1,0 +1,142 @@
+{
+  "new": "Nouveau",
+  "login": "Se connecter",
+  "hero": {
+    "title": "Partagez vos dépenses sans prise de tête",
+    "subtitle": "BuddyBill simplifie le partage des dépenses entre amis, famille ou colocataires. Fini les calculs compliqués, les rappels gênants et les remboursements oubliés.",
+    "cta": "Commencer gratuitement",
+    "demo": "Voir la démo"
+  },
+  "problem": {
+    "title": "Simplifiez vos partages de dépenses",
+    "subtitle": "La gestion des dépenses partagées peut être source de tensions. BuddyBill résout ce problème avec élégance.",
+    "challenges": [
+      {
+        "title": "Calculs complexes",
+        "description": "Fini les calculs sur Excel ou papier pour savoir qui doit quoi à qui"
+      },
+      {
+        "title": "Suivi fastidieux",
+        "description": "Plus besoin de noter manuellement qui a payé quoi lors de vos sorties ou voyages" 
+      },
+      {
+        "title": "Remboursements oubliés",
+        "description": "Évitez les situations embarrassantes de rappels de dettes entre amis"
+      }
+    ],
+    "solutions": [
+      {
+        "title": "Partage intelligent",
+        "description": "Répartition automatique et équitable des dépenses entre tous les participants"
+      },
+      {
+        "title": "Calcul en temps réel",
+        "description": "Visualisez instantanément qui doit quoi à qui après chaque dépense"
+      },
+      {
+        "title": "Rappels automatiques",
+        "description": "Notifications discrètes pour les règlements en attente sans créer de malaise"
+      }
+    ]
+  },
+  "features": {
+    "title": "Fonctionnalités qui font la différence",
+    "subtitle": "Une application conçue pour simplifier la vie de groupe",
+    "groups": {
+      "title": "Groupes intelligents",
+      "description": "Créez facilement des groupes pour vos voyages, colocations ou sorties"
+    },
+    "currency": {
+      "title": "Multi-devises",
+      "description": "Support de 12 devises internationales avec conversion en temps réel"
+    },
+    "expenses": {
+      "title": "Dépenses simplifiées",
+      "description": "Ajout rapide et catégorisation intuitive des dépenses partagées"
+    },
+    "balances": {
+      "title": "Équilibres clairs",
+      "description": "Visualisez qui doit combien et à qui en un coup d'œil"
+    },
+    "settle": {
+      "title": "Règlements faciles",
+      "description": "Plusieurs méthodes pour régler les dettes entre membres"
+    },
+    "reports": {
+      "title": "Statistiques détaillées",
+      "description": "Analysez vos dépenses de groupe avec des graphiques clairs"
+    }
+  },
+  "howItWorks": {
+    "title": "Comment ça marche",
+    "steps": [
+      {
+        "title": "Créez un groupe",
+        "description": "Invitez amis, famille ou collègues à rejoindre votre groupe"
+      },
+      {
+        "title": "Ajoutez vos dépenses",
+        "description": "Enregistrez facilement qui a payé quoi et pour qui"
+      },
+      {
+        "title": "Visualisez les équilibres",
+        "description": "BuddyBill calcule automatiquement qui doit quoi à qui"
+      },
+      {
+        "title": "Réglez les comptes",
+        "description": "Enregistrez les remboursements ou envoyez des rappels"
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "Ce qu'en disent nos utilisateurs",
+    "subtitle": "Des milliers d'utilisateurs simplifient leur vie sociale avec BuddyBill",
+    "quotes": [
+      {
+        "text": "BuddyBill a révolutionné nos voyages entre amis. Plus de disputes sur qui doit quoi !",
+        "name": "Marie Dupont",
+        "role": "Voyageuse fréquente"
+      },
+      {
+        "text": "Parfait pour notre colocation à 4. Tout est clair et on règle les comptes sans stress.",
+        "name": "Thomas Martin",
+        "role": "Étudiant en colocation"
+      },
+      {
+        "text": "Enfin une application qui gère correctement les devises multiples dans nos voyages internationaux.",
+        "name": "Sophie Bernard",
+        "role": "Globe-trotteuse"
+      }
+    ]
+  },
+  "cta": {
+    "title": "Prêt à simplifier vos partages de dépenses ?",
+    "subtitle": "Rejoignez des milliers d'utilisateurs qui font confiance à BuddyBill pour leurs dépenses partagées",
+    "primary": "Créer un compte",
+    "secondary": "Essayer la démo"
+  },
+  "footer": {
+    "tagline": "Simplifiez vos partages de dépenses entre amis, famille et collègues",
+    "copyright": "Tous droits réservés",
+    "product": {
+      "title": "Produit",
+      "features": "Fonctionnalités",
+      "pricing": "Tarifs",
+      "demo": "Démonstration",
+      "security": "Sécurité"
+    },
+    "company": {
+      "title": "Entreprise",
+      "about": "À propos",
+      "blog": "Blog",
+      "careers": "Carrières",
+      "contact": "Contact"
+    },
+    "legal": {
+      "title": "Mentions légales",
+      "terms": "Conditions d'utilisation",
+      "privacy": "Politique de confidentialité",
+      "cookies": "Cookies"
+    }
+  }
+}

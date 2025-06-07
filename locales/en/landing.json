@@ -1,0 +1,142 @@
+{
+  "new": "New",
+  "login": "Login",
+  "hero": {
+    "title": "Share expenses without the headache",
+    "subtitle": "BuddyBill simplifies expense sharing between friends, family, or roommates. No more complicated calculations, awkward reminders, or forgotten reimbursements.",
+    "cta": "Get started for free",
+    "demo": "See demo"
+  },
+  "problem": {
+    "title": "Simplify your expense sharing",
+    "subtitle": "Managing shared expenses can create tension. BuddyBill elegantly solves this problem.",
+    "challenges": [
+      {
+        "title": "Complex calculations",
+        "description": "No more Excel or paper calculations to figure out who owes what to whom"
+      },
+      {
+        "title": "Tedious tracking",
+        "description": "No need to manually record who paid for what during your outings or trips"
+      },
+      {
+        "title": "Forgotten repayments",
+        "description": "Avoid embarrassing situations of debt reminders between friends"
+      }
+    ],
+    "solutions": [
+      {
+        "title": "Smart sharing",
+        "description": "Automatic and fair distribution of expenses among all participants"
+      },
+      {
+        "title": "Real-time calculation",
+        "description": "Instantly see who owes what to whom after each expense"
+      },
+      {
+        "title": "Automatic reminders",
+        "description": "Discrete notifications for pending settlements without creating awkwardness"
+      }
+    ]
+  },
+  "features": {
+    "title": "Features that make the difference",
+    "subtitle": "An application designed to simplify group life",
+    "groups": {
+      "title": "Smart groups",
+      "description": "Easily create groups for your trips, shared housing, or outings"
+    },
+    "currency": {
+      "title": "Multi-currency",
+      "description": "Support for 12 international currencies with real-time conversion"
+    },
+    "expenses": {
+      "title": "Simplified expenses",
+      "description": "Quick addition and intuitive categorization of shared expenses"
+    },
+    "balances": {
+      "title": "Clear balances",
+      "description": "See who owes how much and to whom at a glance"
+    },
+    "settle": {
+      "title": "Easy settlements",
+      "description": "Multiple methods to settle debts between members"
+    },
+    "reports": {
+      "title": "Detailed statistics",
+      "description": "Analyze your group expenses with clear charts"
+    }
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "steps": [
+      {
+        "title": "Create a group",
+        "description": "Invite friends, family, or colleagues to join your group"
+      },
+      {
+        "title": "Add your expenses",
+        "description": "Easily record who paid what and for whom"
+      },
+      {
+        "title": "View balances",
+        "description": "BuddyBill automatically calculates who owes what to whom"
+      },
+      {
+        "title": "Settle up",
+        "description": "Record repayments or send reminders"
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "What our users are saying",
+    "subtitle": "Thousands of users are simplifying their social life with BuddyBill",
+    "quotes": [
+      {
+        "text": "BuddyBill has revolutionized our trips with friends. No more arguments about who owes what!",
+        "name": "Mary Smith",
+        "role": "Frequent traveler"
+      },
+      {
+        "text": "Perfect for our 4-person apartment. Everything is clear and we settle accounts without stress.",
+        "name": "Thomas Johnson",
+        "role": "Student in shared housing"
+      },
+      {
+        "text": "Finally an app that properly handles multiple currencies for our international trips.",
+        "name": "Sophie Williams",
+        "role": "Globe-trotter"
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to simplify your expense sharing?",
+    "subtitle": "Join thousands of users who trust BuddyBill for their shared expenses",
+    "primary": "Create an account",
+    "secondary": "Try the demo"
+  },
+  "footer": {
+    "tagline": "Simplify your expense sharing between friends, family, and colleagues",
+    "copyright": "All rights reserved",
+    "product": {
+      "title": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "demo": "Demo",
+      "security": "Security"
+    },
+    "company": {
+      "title": "Company",
+      "about": "About",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookies"
+    }
+  }
+}

@@ -25,10 +25,11 @@ i18nInstance = i18nInstance.use(
 // Configuration initiale sans dépendance au navigateur
 i18nInstance.init({
     lng: 'fr', // Langue par défaut
-    fallbackLng: 'en',
-    supportedLngs: ['en', 'fr'],
+    fallbackLng: 'fr',
+    supportedLngs: ['fr', 'en'],
     defaultNS: 'common',
     fallbackNS: 'common',
+    ns: ['common', 'dashboard', 'expenses', 'groups', 'landing'],
     debug: process.env.NODE_ENV === 'development',
     interpolation: {
       escapeValue: false,
