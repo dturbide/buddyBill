@@ -1,54 +1,57 @@
-<svg width="152" height="152" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Fond orange avec coin arrondi iOS -->
-  <rect width="512" height="512" rx="115" fill="url(#gradient)"/>
-  
-  <!-- Définition du gradient orange -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Gradient de fond orange -->
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#ff9f43;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#ff7675;stop-opacity:1" />
     </linearGradient>
+    
+    <!-- Gradient pour le cercle subtil -->
+    <radialGradient id="circle-gradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.05" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.02" />
+    </radialGradient>
   </defs>
   
-  <!-- Cercle décoratif gauche -->
-  <circle cx="120" cy="120" r="60" fill="rgba(255,255,255,0.1)"/>
+  <!-- Background carré arrondi style iOS -->
+  <rect width="512" height="512" rx="115" fill="url(#bg-gradient)"/>
   
-  <!-- Cercle décoratif droite -->
-  <circle cx="392" cy="392" r="80" fill="rgba(255,255,255,0.08)"/>
+  <!-- Cercle décoratif subtil -->
+  <circle cx="256" cy="256" r="200" fill="url(#circle-gradient)"/>
   
-  <!-- Personne 1 (jaune/or) -->
-  <g transform="translate(140, 180)">
+  <!-- Personne de gauche (jaune/orange) -->
+  <g transform="translate(120, 180)">
     <!-- Tête -->
-    <circle cx="0" cy="0" r="25" fill="#ffeaa7"/>
+    <circle cx="40" cy="40" r="25" fill="#FCD34D"/>
     <!-- Corps -->
-    <path d="M -20 15 Q -25 40 -20 60 L 20 60 Q 25 40 20 15 Z" fill="#fdcb6e"/>
+    <rect x="15" y="60" width="50" height="60" rx="25" fill="#FCD34D"/>
   </g>
   
-  <!-- Personne 2 (vert/turquoise) -->
-  <g transform="translate(372, 180)">
-    <!-- Tête -->
-    <circle cx="0" cy="0" r="25" fill="#74b9ff"/>
-    <!-- Corps -->
-    <path d="M -20 15 Q -25 40 -20 60 L 20 60 Q 25 40 20 15 Z" fill="#0984e3"/>
-  </g>
-  
-  <!-- Symbole Dollar ($) -->
-  <g transform="translate(256, 160)">
-    <text x="0" y="15" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="60" font-weight="900" fill="#2d3436">$</text>
+  <!-- Symbole dollar central -->
+  <g transform="translate(230, 120)">
+    <text x="26" y="80" font-family="Arial, sans-serif" font-size="80" font-weight="bold" text-anchor="middle" fill="#2D3748">$</text>
   </g>
   
   <!-- Flèches bidirectionnelles -->
-  <g transform="translate(256, 220)">
+  <g transform="translate(180, 200)">
     <!-- Flèche gauche -->
-    <path d="M -60 0 L -40 -12 L -40 -6 L 0 -6 L 0 6 L -40 6 L -40 12 Z" fill="#2d3436"/>
+    <path d="M0 20 L20 10 L20 15 L40 15 L40 25 L20 25 L20 30 Z" fill="#2D3748"/>
     <!-- Flèche droite -->
-    <path d="M 60 0 L 40 12 L 40 6 L 0 6 L 0 -6 L 40 -6 L 40 -12 Z" fill="#2d3436"/>
+    <path d="M152 20 L132 10 L132 15 L112 15 L112 25 L132 25 L132 30 Z" fill="#2D3748"/>
+    <!-- Ligne centrale -->
+    <rect x="40" y="17" width="72" height="6" fill="#2D3748"/>
+  </g>
+  
+  <!-- Personne de droite (turquoise/vert) -->
+  <g transform="translate(352, 180)">
+    <!-- Tête -->
+    <circle cx="40" cy="40" r="25" fill="#34D399"/>
+    <!-- Corps -->
+    <rect x="15" y="60" width="50" height="60" rx="25" fill="#34D399"/>
   </g>
   
   <!-- Texte BuddyBill -->
-  <g transform="translate(256, 370)">
-    <text x="0" y="0" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="48" font-weight="900" fill="#2d3436">
-      BuddyBill
-    </text>
+  <g transform="translate(256, 380)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="#2D3748">BuddyBill</text>
   </g>
 </svg>
