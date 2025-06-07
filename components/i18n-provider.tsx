@@ -9,11 +9,24 @@ interface I18nProviderProps {
   locale?: string
 }
 
-export default function I18nProvider({ children, locale = 'fr' }: I18nProviderProps) {
+export default function I18nProvider({ children, locale = 'en' }: I18nProviderProps) {
   useEffect(() => {
-    // Initialiser la langue si fournie
+    // Initialiser la langue si fournie, de manière simple
     if (locale && i18next.language !== locale) {
       i18next.changeLanguage(locale)
+    }
+
+    // Écouter les changements de langue et mettre à jour le document
+    const handleLanguageChange = (lng: string) => {
+      if (typeof document !== 'undefined') {
+        document.documentElement.lang = lng
+      }
+    }
+
+    i18next.on('languageChanged', handleLanguageChange)
+
+    return () => {
+      i18next.off('languageChanged', handleLanguageChange)
     }
   }, [locale])
 

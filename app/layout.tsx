@@ -81,7 +81,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="fr">
+    <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/icons/icon-192x192.png" type="image/png" />
@@ -95,7 +95,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#3b82f6" />
       </head>
       <body>
-        <I18nProvider locale="fr">
+        <I18nProvider locale="en">
           <NotificationProvider>
             {children}
           </NotificationProvider>

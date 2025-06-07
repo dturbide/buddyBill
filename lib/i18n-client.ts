@@ -7,43 +7,38 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import { isClient } from './safe-storage'
 
 // Configuration i18n côté client
-let i18nInstance = i18next.use(initReactI18next);
-
-// N'utilise le détecteur de langue que côté client
-if (isClient) {
-  i18nInstance = i18nInstance.use(LanguageDetector);
-}
-
-// Utilisation du backend pour charger les fichiers de traduction
-i18nInstance = i18nInstance.use(
-  resourcesToBackend(
-    (language: string, namespace: string) =>
-      import(`@/locales/${language}/${namespace}.json`)
-  )
-);
-
-// Configuration initiale sans dépendance au navigateur
-i18nInstance.init({
-    lng: 'fr', // Langue par défaut
-    fallbackLng: 'fr',
-    supportedLngs: ['fr', 'en'],
+i18next
+  .use(resourcesToBackend((language: string, namespace: string) => import(`../locales/${language}/${namespace}.json`)))
+  .use(initReactI18next)
+  .init({
+    lng: 'en', // Forcer l'anglais
+    fallbackLng: 'en',
+    debug: false,
+    
+    ns: ['common', 'landing'],
     defaultNS: 'common',
     fallbackNS: 'common',
-    ns: ['common', 'dashboard', 'expenses', 'groups', 'landing'],
-    debug: process.env.NODE_ENV === 'development',
+    
     interpolation: {
       escapeValue: false,
     },
-    react: {
-      useSuspense: false,
+    
+    // Désactiver la détection automatique
+    detection: {
+      order: [],
+      caches: []
     },
-    // Configuration de détection uniquement côté client
-    detection: isClient ? {
-      order: ['cookie', 'localStorage', 'navigator', 'htmlTag'],
-      caches: ['cookie', 'localStorage'],
-      lookupCookie: 'i18next',
-      lookupLocalStorage: 'i18nextLng',
-    } : undefined,
+    
+    // Forcer le chargement des ressources
+    load: 'languageOnly',
+    preload: ['en', 'fr'],
+    
+    // S'assurer que les ressources sont chargées de manière synchrone au début
+    initImmediate: false,
+    
+    react: {
+      useSuspense: false
+    }
   })
 
-export default i18nInstance
+export default i18next

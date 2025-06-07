@@ -110,7 +110,7 @@ export default function RegistrationScreen() {
   return (
     <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col">
       <header className="p-4 flex items-center border-b sticky top-0 bg-white z-10">
-        <Link href="/welcome-example" passHref legacyBehavior>
+        <Link href="/welcome" passHref legacyBehavior>
           <Button variant="ghost" size="icon" className="mr-2" aria-label="Back">
             <ArrowLeft className="h-5 w-5" />
           </Button>

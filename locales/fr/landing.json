@@ -1,50 +1,59 @@
 {
   "new": "Nouveau",
-  "login": "Se connecter",
+  "login": "Connexion",
   "hero": {
     "title": "Partagez vos dépenses sans prise de tête",
-    "subtitle": "BuddyBill simplifie le partage des dépenses entre amis, famille ou colocataires. Fini les calculs compliqués, les rappels gênants et les remboursements oubliés.",
+    "subtitle": "BuddyBill simplifie le partage de dépenses entre amis, en famille ou en colocation. Fini les calculs compliqués, les rappels gênants ou les remboursements oubliés.",
     "cta": "Commencer gratuitement",
-    "demo": "Voir la démo"
+    "secure": " 100% Sécurisé",
+    "users": " 10 000+ Utilisateurs",
+    "rating": " 4,9/5 Évaluation"
   },
   "problem": {
     "title": "Simplifiez vos partages de dépenses",
-    "subtitle": "La gestion des dépenses partagées peut être source de tensions. BuddyBill résout ce problème avec élégance.",
-    "challenges": [
-      {
-        "title": "Calculs complexes",
-        "description": "Fini les calculs sur Excel ou papier pour savoir qui doit quoi à qui"
-      },
-      {
-        "title": "Suivi fastidieux",
-        "description": "Plus besoin de noter manuellement qui a payé quoi lors de vos sorties ou voyages" 
-      },
-      {
-        "title": "Remboursements oubliés",
-        "description": "Évitez les situations embarrassantes de rappels de dettes entre amis"
-      }
-    ],
-    "solutions": [
-      {
-        "title": "Partage intelligent",
-        "description": "Répartition automatique et équitable des dépenses entre tous les participants"
-      },
-      {
-        "title": "Calcul en temps réel",
-        "description": "Visualisez instantanément qui doit quoi à qui après chaque dépense"
-      },
-      {
-        "title": "Rappels automatiques",
-        "description": "Notifications discrètes pour les règlements en attente sans créer de malaise"
-      }
-    ]
+    "subtitle": "Gérer des dépenses partagées peut créer des tensions. BuddyBill résout élégamment ce problème.",
+    "badge": "Problèmes Résolus",
+    "challenges": {
+      "title": "Défis courants des dépenses partagées",
+      "items": [
+        {
+          "title": "Calculs complexes",
+          "description": "Fini les calculs Excel ou papier pour savoir qui doit quoi à qui"
+        },
+        {
+          "title": "Suivi fastidieux",
+          "description": "Plus besoin de noter manuellement qui a payé quoi pendant vos sorties ou voyages"
+        },
+        {
+          "title": "Remboursements oubliés",
+          "description": "Évitez les situations gênantes de rappels de dettes entre amis"
+        }
+      ]
+    },
+    "solutions": {
+      "title": "Nos solutions intelligentes",
+      "items": [
+        {
+          "title": "Partage intelligent",
+          "description": "Répartition automatique et équitable des dépenses entre tous les participants"
+        },
+        {
+          "title": "Calcul en temps réel",
+          "description": "Voyez instantanément qui doit quoi à qui après chaque dépense"
+        },
+        {
+          "title": "Rappels automatiques",
+          "description": "Notifications discrètes pour les règlements en attente sans créer de gêne"
+        }
+      ]
+    }
   },
   "features": {
-    "title": "Fonctionnalités qui font la différence",
-    "subtitle": "Une application conçue pour simplifier la vie de groupe",
+    "title": "Des fonctionnalités qui font la différence",
+    "subtitle": "Une application pensée pour simplifier la vie en groupe",
     "groups": {
       "title": "Groupes intelligents",
-      "description": "Créez facilement des groupes pour vos voyages, colocations ou sorties"
+      "description": "Créez facilement des groupes pour vos voyages, colocation ou sorties"
     },
     "currency": {
       "title": "Multi-devises",
@@ -55,8 +64,8 @@
       "description": "Ajout rapide et catégorisation intuitive des dépenses partagées"
     },
     "balances": {
-      "title": "Équilibres clairs",
-      "description": "Visualisez qui doit combien et à qui en un coup d'œil"
+      "title": "Soldes clairs",
+      "description": "Voyez d'un coup d'œil qui doit combien et à qui"
     },
     "settle": {
       "title": "Règlements faciles",
@@ -69,42 +78,47 @@
   },
   "howItWorks": {
     "title": "Comment ça marche",
-    "steps": [
-      {
-        "title": "Créez un groupe",
-        "description": "Invitez amis, famille ou collègues à rejoindre votre groupe"
+    "steps": {
+      "step1": {
+        "title": "Créez votre groupe",
+        "description": "Commencez par créer un groupe et inviter vos amis, famille ou collègues avec un simple lien ou invitation email.",
+        "tip": " Astuce : Donnez un nom mémorable à votre groupe comme 'Voyage Paris 2024' ou 'Appart 3B'"
       },
-      {
-        "title": "Ajoutez vos dépenses",
-        "description": "Enregistrez facilement qui a payé quoi et pour qui"
+      "step2": {
+        "title": "Ajoutez les dépenses au fur et à mesure",
+        "description": "Enregistrez rapidement les dépenses avec notre interface intuitive. Photographiez les reçus et répartissez équitablement les coûts.",
+        "tip": " Astuce : Utilisez la fonction appareil photo pour extraire automatiquement les montants des reçus"
       },
-      {
-        "title": "Visualisez les équilibres",
-        "description": "BuddyBill calcule automatiquement qui doit quoi à qui"
+      "step3": {
+        "title": "Suivez les soldes en temps réel",
+        "description": "BuddyBill calcule automatiquement qui doit quoi à qui. Visualisez l'état financier de votre groupe d'un coup d'œil.",
+        "tip": " Astuce : Les soldes se mettent à jour instantanément - pas besoin d'actualiser"
       },
-      {
-        "title": "Réglez les comptes",
-        "description": "Enregistrez les remboursements ou envoyez des rappels"
+      "step4": {
+        "title": "Réglez sans effort",
+        "description": "Le moment venu, marquez les paiements comme terminés ou envoyez des rappels amicaux. Plusieurs méthodes de paiement supportées.",
+        "tip": " Astuce : Utilisez la fonction 'Simplifier les dettes' pour minimiser le nombre de transactions"
       }
-    ]
+    }
   },
   "testimonials": {
-    "title": "Ce qu'en disent nos utilisateurs",
+    "title": "Ce que disent nos utilisateurs",
     "subtitle": "Des milliers d'utilisateurs simplifient leur vie sociale avec BuddyBill",
+    "badge": "Témoignages",
     "quotes": [
       {
         "text": "BuddyBill a révolutionné nos voyages entre amis. Plus de disputes sur qui doit quoi !",
-        "name": "Marie Dupont",
+        "name": "Marie Dubois",
         "role": "Voyageuse fréquente"
       },
       {
-        "text": "Parfait pour notre colocation à 4. Tout est clair et on règle les comptes sans stress.",
+        "text": "Parfait pour notre appartement à 4. Tout est clair et on règle les comptes sans stress.",
         "name": "Thomas Martin",
         "role": "Étudiant en colocation"
       },
       {
-        "text": "Enfin une application qui gère correctement les devises multiples dans nos voyages internationaux.",
-        "name": "Sophie Bernard",
+        "text": "Enfin une app qui gère bien les multiples devises pour nos voyages internationaux.",
+        "name": "Sophie Bernand",
         "role": "Globe-trotteuse"
       }
     ]
@@ -113,7 +127,12 @@
     "title": "Prêt à simplifier vos partages de dépenses ?",
     "subtitle": "Rejoignez des milliers d'utilisateurs qui font confiance à BuddyBill pour leurs dépenses partagées",
     "primary": "Créer un compte",
-    "secondary": "Essayer la démo"
+    "secondary": "En savoir plus",
+    "guarantee": {
+      "free": "100% Gratuit",
+      "secure": "100% Sécurisé", 
+      "easy": "Facile à Utiliser"
+    }
   },
   "footer": {
     "tagline": "Simplifiez vos partages de dépenses entre amis, famille et collègues",
@@ -122,21 +141,77 @@
       "title": "Produit",
       "features": "Fonctionnalités",
       "pricing": "Tarifs",
-      "demo": "Démonstration",
+      "tutorials": "Tutoriels",
       "security": "Sécurité"
     },
     "company": {
       "title": "Entreprise",
       "about": "À propos",
-      "blog": "Blog",
+      "news": "Actualités",
       "careers": "Carrières",
       "contact": "Contact"
     },
     "legal": {
-      "title": "Mentions légales",
+      "title": "Légal",
       "terms": "Conditions d'utilisation",
       "privacy": "Politique de confidentialité",
       "cookies": "Cookies"
+    }
+  },
+  "pwa": {
+    "title": "📱 Installez BuddyBill sur votre appareil",
+    "subtitle": "Accès rapide depuis votre écran d'accueil",
+    "button": "Télécharger l'app",
+    "linkText": "Installez l'app pour une meilleure expérience",
+    "dedicatedSection": {
+      "badge": "Télécharger l'App Maintenant",
+      "title": "Accédez à BuddyBill",
+      "titleSecond": "depuis votre téléphone",
+      "description": "Installez BuddyBill sur votre appareil pour un accès rapide et une expérience optimisée.",
+      "descriptionBold": "Gratuit et sécurisé.",
+      "downloadButton": "Télécharger BuddyBill",
+      "benefits": {
+        "instantAccess": {
+          "title": "Accès Instant",
+          "description": "Lancez l'app directement depuis votre écran d'accueil"
+        },
+        "secure": {
+          "title": "100% Sécurisé",
+          "description": "Vos données sont protégées avec un chiffrement bancaire"
+        },
+        "free": {
+          "title": "Gratuit",
+          "description": "Aucun frais caché, aucun abonnement requis"
+        }
+      }
+    },
+    "whyInstall": {
+      "title": "Pourquoi installer l'app ?",
+      "benefits": [
+        " Accès instantané depuis votre écran d'accueil",
+        " Performance optimisée et navigation plus fluide",
+        " Notifications push pour les nouvelles dépenses et règlements",
+        " Fonctionne même en mode hors ligne pour consulter les données",
+        " Synchronisation automatique des données quand vous revenez en ligne"
+      ]
+    },
+    "mobile": {
+      "title": "Sur Mobile (Android/iOS)",
+      "steps": [
+        "Appuyez sur le bouton 'Installer l'App' ci-dessus",
+        "Ou utilisez l'option 'Ajouter à l'écran d'accueil' de votre navigateur",
+        "Suivez les instructions d'installation",
+        "Trouvez BuddyBill sur votre écran d'accueil"
+      ]
+    },
+    "desktop": {
+      "title": "Sur Ordinateur (Chrome/Edge)",
+      "steps": [
+        "Cliquez sur l'icône d'installation dans la barre d'adresse",
+        "Ou allez dans Menu → 'Installer BuddyBill...'",
+        "Cliquez sur 'Installer' dans la popup",
+        "L'app s'ouvrira dans une fenêtre dédiée"
+      ]
     }
   }
 }

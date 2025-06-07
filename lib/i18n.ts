@@ -47,6 +47,6 @@ export const languages = [
   { code: 'fr', name: 'Français', flag: '🇫🇷' }
 ]
 
-export const defaultLanguage = 'fr'
+export const defaultLanguage = 'en'
 
 export const cookieName = 'i18next'

@@ -5,39 +5,48 @@
     "title": "Share expenses without the headache",
     "subtitle": "BuddyBill simplifies expense sharing between friends, family, or roommates. No more complicated calculations, awkward reminders, or forgotten reimbursements.",
     "cta": "Get started for free",
-    "demo": "See demo"
+    "secure": " 100% Secure",
+    "users": " 10,000+ Users",
+    "rating": " 4.9/5 Rating"
   },
   "problem": {
     "title": "Simplify your expense sharing",
     "subtitle": "Managing shared expenses can create tension. BuddyBill elegantly solves this problem.",
-    "challenges": [
-      {
-        "title": "Complex calculations",
-        "description": "No more Excel or paper calculations to figure out who owes what to whom"
-      },
-      {
-        "title": "Tedious tracking",
-        "description": "No need to manually record who paid for what during your outings or trips"
-      },
-      {
-        "title": "Forgotten repayments",
-        "description": "Avoid embarrassing situations of debt reminders between friends"
-      }
-    ],
-    "solutions": [
-      {
-        "title": "Smart sharing",
-        "description": "Automatic and fair distribution of expenses among all participants"
-      },
-      {
-        "title": "Real-time calculation",
-        "description": "Instantly see who owes what to whom after each expense"
-      },
-      {
-        "title": "Automatic reminders",
-        "description": "Discrete notifications for pending settlements without creating awkwardness"
-      }
-    ]
+    "badge": "Pain Points Solved",
+    "challenges": {
+      "title": "Common challenges with shared expenses",
+      "items": [
+        {
+          "title": "Complex calculations",
+          "description": "No more Excel or paper calculations to figure out who owes what to whom"
+        },
+        {
+          "title": "Tedious tracking",
+          "description": "No need to manually record who paid for what during your outings or trips"
+        },
+        {
+          "title": "Forgotten repayments",
+          "description": "Avoid embarrassing situations of debt reminders between friends"
+        }
+      ]
+    },
+    "solutions": {
+      "title": "Our smart solutions",
+      "items": [
+        {
+          "title": "Smart sharing",
+          "description": "Automatic and fair distribution of expenses among all participants"
+        },
+        {
+          "title": "Real-time calculation",
+          "description": "Instantly see who owes what to whom after each expense"
+        },
+        {
+          "title": "Automatic reminders",
+          "description": "Discrete notifications for pending settlements without creating awkwardness"
+        }
+      ]
+    }
   },
   "features": {
     "title": "Features that make the difference",
@@ -69,28 +78,33 @@
   },
   "howItWorks": {
     "title": "How it works",
-    "steps": [
-      {
-        "title": "Create a group",
-        "description": "Invite friends, family, or colleagues to join your group"
+    "steps": {
+      "step1": {
+        "title": "Create your group",
+        "description": "Start by creating a group and inviting friends, family, or colleagues with a simple link or email invitation.",
+        "tip": " Tip: Give your group a memorable name like 'Paris Trip 2024' or 'Apartment 3B'"
       },
-      {
-        "title": "Add your expenses",
-        "description": "Easily record who paid what and for whom"
+      "step2": {
+        "title": "Add expenses as they happen",
+        "description": "Quickly record expenses with our intuitive interface. Snap a photo of receipts and split costs fairly among group members.",
+        "tip": " Tip: Use the camera feature to automatically extract amounts from receipts"
       },
-      {
-        "title": "View balances",
-        "description": "BuddyBill automatically calculates who owes what to whom"
+      "step3": {
+        "title": "Track balances in real-time",
+        "description": "BuddyBill automatically calculates who owes what to whom. See your group's financial status at a glance with clear, visual summaries.",
+        "tip": " Tip: Balances update instantly - no need to refresh or wait for calculations"
       },
-      {
-        "title": "Settle up",
-        "description": "Record repayments or send reminders"
+      "step4": {
+        "title": "Settle up effortlessly",
+        "description": "When it's time to settle, mark payments as complete or send friendly reminders. Multiple payment methods supported for convenience.",
+        "tip": " Tip: Use the 'Simplify debts' feature to minimize the number of transactions needed"
       }
-    ]
+    }
   },
   "testimonials": {
-    "title": "What our users are saying",
-    "subtitle": "Thousands of users are simplifying their social life with BuddyBill",
+    "title": "What our users say",
+    "subtitle": "Thousands of users simplify their social life with BuddyBill",
+    "badge": "Success Stories",
     "quotes": [
       {
         "text": "BuddyBill has revolutionized our trips with friends. No more arguments about who owes what!",
@@ -113,7 +127,12 @@
     "title": "Ready to simplify your expense sharing?",
     "subtitle": "Join thousands of users who trust BuddyBill for their shared expenses",
     "primary": "Create an account",
-    "secondary": "Try the demo"
+    "secondary": "Learn more",
+    "guarantee": {
+      "free": "100% Free",
+      "secure": "100% Secure", 
+      "easy": "Easy to Use"
+    }
   },
   "footer": {
     "tagline": "Simplify your expense sharing between friends, family, and colleagues",
@@ -122,13 +141,13 @@
       "title": "Product",
       "features": "Features",
       "pricing": "Pricing",
-      "demo": "Demo",
+      "tutorials": "Tutorials",
       "security": "Security"
     },
     "company": {
       "title": "Company",
       "about": "About",
-      "blog": "Blog",
+      "news": "News",
       "careers": "Careers",
       "contact": "Contact"
     },
@@ -137,6 +156,62 @@
       "terms": "Terms of Service",
       "privacy": "Privacy Policy",
       "cookies": "Cookies"
+    }
+  },
+  "pwa": {
+    "title": "📱 Install BuddyBill on your device",
+    "subtitle": "Quick access from your home screen",
+    "button": "Download App",
+    "linkText": "Install the app for the best experience",
+    "dedicatedSection": {
+      "badge": "Download the App Now",
+      "title": "Access BuddyBill",
+      "titleSecond": "from your phone",
+      "description": "Install BuddyBill on your device for quick access and an optimized experience.",
+      "descriptionBold": "Free and secure.",
+      "downloadButton": "Download BuddyBill",
+      "benefits": {
+        "instantAccess": {
+          "title": "Instant Access",
+          "description": "Launch the app directly from your home screen"
+        },
+        "secure": {
+          "title": "100% Secure",
+          "description": "Your data is protected with bank-level encryption"
+        },
+        "free": {
+          "title": "Free",
+          "description": "No hidden fees, no subscription required"
+        }
+      }
+    },
+    "whyInstall": {
+      "title": "Why install the app?",
+      "benefits": [
+        " Instant access from your home screen",
+        " Optimized performance and smoother navigation",
+        " Push notifications for new expenses and settlements",
+        " Works even in offline mode for viewing data",
+        " Automatic data synchronization when back online"
+      ]
+    },
+    "mobile": {
+      "title": "On Mobile (Android/iOS)",
+      "steps": [
+        "Tap the 'Install App' button above",
+        "Or use your browser's 'Add to Home Screen' option",
+        "Follow the installation prompts",
+        "Find BuddyBill on your home screen"
+      ]
+    },
+    "desktop": {
+      "title": "On Desktop (Chrome/Edge)",
+      "steps": [
+        "Click the install icon in the address bar",
+        "Or go to Menu → 'Install BuddyBill...'",
+        "Click 'Install' in the popup",
+        "The app will open in a dedicated window"
+      ]
     }
   }
 }
