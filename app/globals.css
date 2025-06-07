@@ -89,3 +89,145 @@
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
+
+/* PWA Styles - Adaptation Mobile Optimisée */
+@media (display-mode: standalone) {
+  /* Styles spécifiques au mode PWA standalone */
+  :root {
+    --pwa-safe-area-top: env(safe-area-inset-top, 0px);
+    --pwa-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --pwa-safe-area-left: env(safe-area-inset-left, 0px);
+    --pwa-safe-area-right: env(safe-area-inset-right, 0px);
+  }
+
+  /* Éviter la perte d'espace sur les écrans avec notch */
+  body {
+    padding-top: var(--pwa-safe-area-top);
+    padding-bottom: var(--pwa-safe-area-bottom);
+    padding-left: var(--pwa-safe-area-left);
+    padding-right: var(--pwa-safe-area-right);
+  }
+
+  /* Optimisation pour les barres de statut iOS */
+  .ios-status-bar {
+    height: var(--pwa-safe-area-top);
+    background: var(--theme-color, #3b82f6);
+  }
+}
+
+/* Adaptation responsable universelle */
+@media screen and (max-width: 480px) {
+  /* Smartphones petits écrans */
+  html {
+    font-size: 14px;
+  }
+  
+  .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Éviter le débordement horizontal */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  /* iPhone 12 mini et petits écrans */
+  html {
+    font-size: 13px;
+  }
+  
+  .text-base {
+    font-size: 0.9rem;
+  }
+  
+  .p-4 {
+    padding: 0.75rem;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  /* Très petits écrans Android */
+  html {
+    font-size: 12px;
+  }
+  
+  .container {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}
+
+/* Adaptation pour les grands écrans mobiles */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  /* Tablettes et phablets */
+  .grid-cols-1 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Optimisations pour PWA */
+.pwa-container {
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height pour mobile */
+  display: flex;
+  flex-direction: column;
+}
+
+.pwa-main {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling iOS */
+}
+
+/* Fix pour les problèmes de viewport sur mobile */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari specific */
+  .h-screen {
+    height: -webkit-fill-available;
+  }
+  
+  .min-h-screen {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Éviter le zoom sur les inputs mobile */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important; /* Évite le zoom automatique sur iOS */
+  }
+}
+
+/* Masquer la barre d'adresse sur Android */
+@media screen and (max-width: 768px) {
+  .hide-address-bar {
+    height: calc(100vh + 56px); /* Hauteur de la barre d'adresse Android */
+    margin-top: -56px;
+    padding-top: 56px;
+  }
+}
+
+/* Animation reveal pour landing page */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+}
+
+.animate-reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fix pour les problèmes de débordement */
+.overflow-x-hidden {
+  overflow-x: hidden !important;
+}
+
+body {
+  overflow-x: hidden;
+}

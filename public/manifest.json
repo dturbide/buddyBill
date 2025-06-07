@@ -6,11 +6,30 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "categories": ["finance", "travel", "productivity"],
   "lang": "fr",
   "dir": "ltr",
   "scope": "/",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "edge_side_panel": {},
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Nouvelle dépense",
+      "short_name": "Dépense",
+      "description": "Ajouter une nouvelle dépense",
+      "url": "/dashboard/expenses/add",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Créer un groupe",
+      "short_name": "Groupe",
+      "description": "Créer un nouveau groupe",
+      "url": "/create-group",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ],
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -60,63 +79,5 @@
       "type": "image/png",
       "purpose": "maskable any"
     }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/mobile-dashboard.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Dashboard principal avec balances et groupes"
-    },
-    {
-      "src": "/screenshots/mobile-expenses.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Gestion des dépenses multi-devises"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Nouveau Groupe",
-      "short_name": "Groupe",
-      "description": "Créer un nouveau groupe de dépenses",
-      "url": "/dashboard/groups/create",
-      "icons": [
-        {
-          "src": "/icons/shortcut-group.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Ajouter Dépense",
-      "short_name": "Dépense",
-      "description": "Ajouter une nouvelle dépense",
-      "url": "/dashboard/expenses/add",
-      "icons": [
-        {
-          "src": "/icons/shortcut-expense.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Voir Balances",
-      "short_name": "Balances",
-      "description": "Consulter les balances et règlements",
-      "url": "/dashboard/balances",
-      "icons": [
-        {
-          "src": "/icons/shortcut-balance.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    }
-  ],
-  "prefer_related_applications": false
+  ]
 }

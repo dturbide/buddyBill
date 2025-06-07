@@ -8,7 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
-import InstallPWAInstructions from "@/components/install-pwa-instructions"
+import PWAInstallButton from "@/components/pwa-install-button"
+import { usePWAStandalone } from "@/hooks/use-pwa-standalone"
 import {
   Bell,
   PlusCircle,
@@ -119,6 +120,8 @@ export default function DashboardScreen() {
   const [pendingTransactions, setPendingTransactions] = useState(0)
   const [isQuickAddExpenseModalOpen, setIsQuickAddExpenseModalOpen] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState<{ id: string; name: string; defaultCurrency?: string } | null>(null)
+
+  const isStandalone = usePWAStandalone()
 
   // Fonction pour rafraîchir toutes les données
   const refreshData = useCallback(async () => {
@@ -308,7 +311,7 @@ export default function DashboardScreen() {
 
   return (
     <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col">
-      <InstallPWAInstructions />
+      {!isStandalone && <PWAInstallButton />}
       <header className="p-3 sm:p-4 flex items-center justify-between border-b">
         <h1 className="text-lg sm:text-xl font-bold text-gray-800">BuddyBill</h1>
         <div className="flex items-center gap-2 sm:gap-3">
