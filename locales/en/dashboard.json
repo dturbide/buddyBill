@@ -31,7 +31,8 @@
     "manageExpenses": "Manage expenses",
     "viewFullActivity": "View full activity",
     "addExpense": "Add expense",
-    "viewGroups": "View all groups"
+    "viewGroups": "View all groups",
+    "currencyConverter": "Currency Converter"
   },
   "recentActivity": {
     "title": "Recent activity",

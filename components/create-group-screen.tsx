@@ -400,7 +400,7 @@ export default function CreateGroupScreen() {
           type="button"
           variant="outline"
           onClick={prevStep}
-          disabled={currentStep === 1 || isLoading || (currentStep === 3 && successMessage)}
+          disabled={currentStep === 1 || isLoading || Boolean(currentStep === 3 && successMessage)}
           className="w-1/3"
         >
           <ChevronLeft className="mr-1 h-4 w-4" /> Précédent

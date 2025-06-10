@@ -31,7 +31,8 @@
     "manageExpenses": "Gérer les dépenses",
     "viewFullActivity": "Voir l'activité complète",
     "addExpense": "Ajouter une dépense",
-    "viewGroups": "Voir tous les groupes"
+    "viewGroups": "Voir tous les groupes",
+    "currencyConverter": "Convertisseur de devises"
   },
   "recentActivity": {
     "title": "Activité récente",

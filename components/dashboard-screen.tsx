@@ -32,6 +32,7 @@ import {
   ChevronRight,
   Receipt,
   RefreshCw,
+  ArrowRightLeft,
 } from "lucide-react"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
@@ -444,6 +445,11 @@ export default function DashboardScreen() {
                     <Link href="/dashboard/recent-activity">
                       <Button variant="outline" className="text-mobile-sm sm:text-mobile-base min-h-button w-full justify-start touch-target">
                         <Activity className="mr-mobile-md h-5 w-5 sm:h-6 sm:w-6" /> {t('dashboard:quickActions.viewFullActivity')}
+                      </Button>
+                    </Link>
+                    <Link href="/dashboard/currency-converter">
+                      <Button variant="outline" className="text-mobile-sm sm:text-mobile-base min-h-button w-full justify-start touch-target">
+                        <ArrowRightLeft className="mr-mobile-md h-5 w-5 sm:h-6 sm:w-6" /> {t('dashboard:quickActions.currencyConverter')}
                       </Button>
                     </Link>
                   </div>
