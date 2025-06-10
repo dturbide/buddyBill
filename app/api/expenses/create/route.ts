@@ -25,6 +25,14 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
+    // Validation et conversion de devise pour éviter l'erreur enum
+    const supportedCurrencies = ['EUR', 'USD', 'GBP', 'CAD']
+    const validatedCurrency = currency && supportedCurrencies.includes(currency) ? currency : 'USD'
+    
+    if (currency && !supportedCurrencies.includes(currency)) {
+      console.warn(`Devise ${currency} non supportée par l'enum DB, conversion vers USD`)
+    }
+
     // Vérifier que l'utilisateur est membre du groupe
     const { data: membership, error: membershipError } = await supabase
       .from('group_members')
@@ -62,7 +70,7 @@ export async function POST(request: NextRequest) {
       amount: parseFloat(amount),
       category_id: (categoryId && categoryId.length > 10) ? categoryId : null,
       paid_by: user.id,
-      currency: currency || 'USD',
+      currency: validatedCurrency,
       split_type: splitType || 'equal',
       created_by: user.id,
       expense_date: new Date().toISOString()
@@ -113,7 +121,7 @@ export async function POST(request: NextRequest) {
         console.error("Erreur insertion participants:", participantsError)
         console.warn("Dépense créée mais participants non ajoutés")
       } else {
-        console.log("DEBUG Expense: Participants ajoutés avec succès", Array.isArray(participantsResult) ? participantsResult.length : 'participants insérés')
+        console.log("DEBUG Expense: Participants ajoutés avec succès", participantsResult ? (Array.isArray(participantsResult) ? participantsResult.length : 1) : 'participants insérés')
       }
     }
 

@@ -94,11 +94,10 @@ export async function GET(request: NextRequest) {
     const totalMonthExpenses = monthExpenses?.reduce((sum: number, expense: any) => sum + expense.amount, 0) || 0
     
     // CALCUL RÉEL DES BALANCES
-    // Récupérer toutes les dépenses des groupes de l'utilisateur avec gestion d'erreur
-    console.log('DEBUG API balances - Tentative récupération dépenses...')
-    
-    let expenses: any[] = []
+    // Récupération des dépenses avec participants (fix pour relation problématique)
+    let expenses: { id: string, group_id: string, amount: number, currency: string, description: string, created_by: string, paid_by: string, created_at: string, expense_participants: { id: string, expense_id: string, user_id: string, share_amount: number }[] }[] = []
     try {
+      // D'abord récupérer les dépenses seules
       const { data: expensesData, error: expensesError } = await supabase
         .from('expenses')
         .select(`
@@ -108,40 +107,50 @@ export async function GET(request: NextRequest) {
           currency,
           description,
           created_by,
-          created_at,
-          expense_participants (
-            id,
-            user_id,
-            share_amount
-          )
+          paid_by,
+          created_at
         `)
         .in('group_id', groupIds)
 
       if (expensesError) {
-        console.error('Erreur récupération toutes dépenses:', expensesError)
-        // Si la table expense_participants n'existe pas, récupérer seulement les dépenses
-        const { data: simpleExpenses, error: simpleError } = await supabase
-          .from('expenses')
-          .select('*')
-          .in('group_id', groupIds)
-        
-        if (simpleError) {
-          console.error('Erreur récupération dépenses simples:', simpleError)
-          expenses = []
-        } else {
-          expenses = simpleExpenses || []
-          console.log('DEBUG API balances - Dépenses récupérées (sans participants):', expenses.length)
-        }
+        console.error('Erreur récupération dépenses:', expensesError)
+        expenses = []
       } else {
-        expenses = expensesData || []
-        console.log('DEBUG API balances - Dépenses récupérées (avec participants):', expenses.length)
+        console.log(`DEBUG API balances - Dépenses récupérées: ${expensesData?.length || 0}`)
+        
+        // Ensuite récupérer les participants séparément
+        if (expensesData && expensesData.length > 0) {
+          const expenseIds = expensesData.map(e => e.id)
+          
+          const { data: participantsData, error: participantsError } = await supabase
+            .from('expense_participants')
+            .select('id, expense_id, user_id, share_amount')
+            .in('expense_id', expenseIds)
+
+          if (participantsError) {
+            console.warn('Impossible de récupérer les participants:', participantsError)
+            // Continuer sans les participants
+            expenses = expensesData.map(expense => ({
+              ...expense,
+              expense_participants: []
+            }))
+          } else {
+            // Associer les participants aux dépenses
+            expenses = expensesData.map(expense => ({
+              ...expense,
+              expense_participants: participantsData?.filter(p => p.expense_id === expense.id) || []
+            }))
+          }
+        } else {
+          expenses = []
+        }
       }
     } catch (error) {
-      console.error('Erreur catch récupération dépenses:', error)
+      console.error('Erreur récupération dépenses:', error)
       expenses = []
     }
 
-    // Récupérer les paiements effectués (avec gestion d'erreur)
+    // Récupérer les paiements (avec gestion d'erreur pour colonne manquante)
     let payments: any[] = []
     try {
       const { data: paymentsData, error: paymentsError } = await supabase
@@ -155,10 +164,9 @@ export async function GET(request: NextRequest) {
         payments = []
       } else {
         payments = paymentsData || []
-        console.log('DEBUG API balances - Paiements récupérés:', payments.length)
       }
     } catch (error) {
-      console.error('Erreur catch récupération paiements:', error)
+      console.warn('Table payments indisponible, calcul sans paiements:', error)
       payments = []
     }
 
