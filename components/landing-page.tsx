@@ -85,58 +85,52 @@ export default function LandingPage() {
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 via-white to-indigo-50">
       {/* Header avec effet de verre */}
       <header className="border-b border-blue-100 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-2.5 rounded-xl group-hover:shadow-lg transition-all duration-300">
-              <DollarSign size={20} strokeWidth={2.5} />
+        <div className="container mx-auto px-mobile-sm sm:px-4 py-mobile-sm sm:py-3 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-mobile-xs sm:gap-2 group">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-1.5 sm:p-2.5 rounded-xl group-hover:shadow-lg transition-all duration-300">
+              <DollarSign size={16} className="sm:w-5 sm:h-5" strokeWidth={2.5} />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text group-hover:from-blue-700 group-hover:to-indigo-700 transition-all duration-300">BuddyBill</span>
+            <span className="text-mobile-base sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text group-hover:from-blue-700 group-hover:to-indigo-700 transition-all duration-300">BuddyBill</span>
           </Link>
           
-          <div className="flex items-center gap-4">
-            <Tabs defaultValue={language} className="w-[180px]">
-              <TabsList className="grid w-full grid-cols-2 bg-blue-50">
-                <TabsTrigger 
-                  value="fr" 
-                  onClick={() => handleLanguageChange("fr")}
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
-                >
-                  🇫🇷 FR
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="en" 
-                  onClick={() => handleLanguageChange("en")}
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
-                >
-                  🇬🇧 EN
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-            
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="border-blue-200 hover:border-blue-300 hover:bg-blue-50 text-blue-700 hover:text-blue-800 transition-all duration-300">
-                <Link href="/signup" className="flex items-center">
-                  <Users className="h-4 w-4 mr-1" />
-                  New
-                </Link>
-              </Button>
-              
-              <Button variant="outline" size="sm" className="border-blue-200 hover:border-blue-300 hover:bg-blue-50 text-blue-700 hover:text-blue-800 transition-all duration-300">
-                <Link href="/signin" className="flex items-center">
-                  <User className="h-4 w-4 mr-1" />
-                  Login
-                </Link>
-              </Button>
-              
-              <PWAInstallButton 
-                variant="outline" 
-                size="sm"
-                className="border-2 border-green-500 hover:border-green-600 hover:bg-green-50 text-green-700 hover:text-green-800 transition-all duration-300 text-lg px-8 py-3 shadow-lg hover:shadow-xl"
+          <div className="flex items-center gap-mobile-xs sm:gap-4">
+            {/* Sélecteur de langue optimisé pour mobile */}
+            <div className="flex bg-blue-50 rounded-lg p-1">
+              <button
+                onClick={() => handleLanguageChange("fr")}
+                className={`px-mobile-xs sm:px-2 py-1 rounded text-mobile-xs sm:text-sm transition-all duration-200 ${
+                  language === 'fr' 
+                    ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-sm' 
+                    : 'text-blue-600 hover:bg-blue-100'
+                }`}
               >
-                <Smartphone className="h-5 w-5 mr-2" />
-                Install App
-                <ChevronRight className="h-5 w-5 ml-2" />
-              </PWAInstallButton>
+                🇫🇷
+              </button>
+              <button
+                onClick={() => handleLanguageChange("en")}
+                className={`px-mobile-xs sm:px-2 py-1 rounded text-mobile-xs sm:text-sm transition-all duration-200 ${
+                  language === 'en' 
+                    ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-sm' 
+                    : 'text-blue-600 hover:bg-blue-100'
+                }`}
+              >
+                🇬🇧
+              </button>
+            </div>
+            
+            <div className="flex gap-mobile-xs sm:gap-2">
+              <Button variant="outline" size="sm" className="border-blue-200 hover:border-blue-300 hover:bg-blue-50 text-blue-700 hover:text-blue-800 transition-all duration-300 px-mobile-xs sm:px-3 text-mobile-xs sm:text-sm">
+                <Link href="/signup" className="flex items-center">
+                  <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                  <span className="hidden xs:inline">New</span>
+                </Link>
+              </Button>
+              <Button size="sm" className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-md hover:shadow-lg transition-all duration-300 px-mobile-xs sm:px-3 text-mobile-xs sm:text-sm">
+                <Link href="/signin" className="flex items-center">
+                  <UserCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                  <span className="hidden xs:inline">Login</span>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

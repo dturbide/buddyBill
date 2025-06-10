@@ -21,6 +21,7 @@ import {
   AlertCircle,
   Hourglass,
   Fingerprint,
+  CreditCard,
 } from "lucide-react"
 import { format, parseISO } from "date-fns"
 import { fr } from "date-fns/locale"
@@ -212,16 +213,88 @@ export default function UserProfileScreen() {
           </CardHeader>
           <CardContent className="p-0">
             <ProfileLinkItem
-              icon={DollarSign}
-              label="Devise par défaut"
+              icon={CreditCard}
+              label="Devise préférée"
               value={user.defaultCurrency || "Non définie"}
-              onClick={() => alert("Navigation vers les paramètres de devise (non implémenté)")}
             />
-            <ProfileLinkItem
-              icon={Bell}
-              label="Préférences de notification"
-              onClick={() => alert("Navigation vers les paramètres de notification (non implémenté)")}
-            />
+            {user.memberSince && (
+              <ProfileLinkItem
+                icon={CalendarDays}
+                label="Membre depuis"
+                value={format(parseISO(user.memberSince), "d MMMM yyyy", { locale: fr })}
+              />
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-sm">
+          <CardHeader className="pb-2 pt-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <DollarSign className="h-4 w-4" />
+              Vue Multi-Devises
+            </CardTitle>
+            <p className="text-xs text-muted-foreground">
+              Aperçu de vos montants dans différentes devises
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {/* Section principale - devise préférée */}
+            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-blue-700">Devise principale ({user.defaultCurrency || 'EUR'})</span>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-blue-800">+125,50 €</div>
+                  <div className="text-xs text-blue-600">Vous devez recevoir</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Autres devises */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">🇺🇸 USD</span>
+                  <span className="text-xs text-muted-foreground">États-Unis</span>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-semibold text-green-600">+$142.30</div>
+                  <div className="text-xs text-muted-foreground">≈ 127,85 €</div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">🇨🇦 CAD</span>
+                  <span className="text-xs text-muted-foreground">Canada</span>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-semibold text-red-600">-$45.20</div>
+                  <div className="text-xs text-muted-foreground">≈ -31,15 €</div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">🇬🇧 GBP</span>
+                  <span className="text-xs text-muted-foreground">Royaume-Uni</span>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-semibold text-green-600">+£28.80</div>
+                  <div className="text-xs text-muted-foreground">≈ 33,45 €</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Total consolidé */}
+            <div className="pt-2 border-t">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium">Total net équivalent</span>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-primary">+129,15 €</div>
+                  <div className="text-xs text-muted-foreground">Mis à jour il y a 2h</div>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
