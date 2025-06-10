@@ -119,12 +119,17 @@
 @media screen and (max-width: 480px) {
   /* Smartphones petits écrans */
   html {
-    font-size: 14px;
+    font-size: 16px; /* Augmenté de 14px à 16px */
+  }
+  
+  body {
+    font-size: 1rem; /* Taille de base plus large */
+    line-height: 1.5; /* Meilleur espacement des lignes */
   }
   
   .container {
-    padding-left: 12px !important;
-    padding-right: 12px !important;
+    padding-left: 16px !important; /* Augmenté de 12px à 16px */
+    padding-right: 16px !important;
   }
 
   /* Éviter le débordement horizontal */
@@ -132,32 +137,118 @@
     max-width: 100%;
     box-sizing: border-box;
   }
+  
+  /* Boutons plus gros sur mobile */
+  .btn, button, [role="button"] {
+    min-height: 44px; /* Taille recommandée pour le tactile */
+    padding: 12px 16px;
+    font-size: 1rem;
+  }
+  
+  /* Champs de saisie plus lisibles */
+  input, textarea, select {
+    min-height: 44px;
+    font-size: 16px; /* Évite le zoom automatique sur iOS */
+    padding: 12px;
+  }
+  
+  /* Cartes et conteneurs plus spacieux */
+  .card {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  /* Texte plus grand pour les éléments importants */
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1.125rem; }
+  
+  .text-lg { font-size: 1.25rem; }
+  .text-base { font-size: 1.125rem; }
+  .text-sm { font-size: 1rem; }
+  .text-xs { font-size: 0.875rem; }
 }
 
 @media screen and (max-width: 390px) {
   /* iPhone 12 mini et petits écrans */
   html {
-    font-size: 13px;
+    font-size: 15px; /* Augmenté de 13px à 15px */
+  }
+  
+  body {
+    font-size: 1rem;
+    line-height: 1.6;
   }
   
   .text-base {
-    font-size: 0.9rem;
+    font-size: 1rem; /* Au lieu de 0.9rem */
   }
   
   .p-4 {
-    padding: 0.75rem;
-  }
-}
-
-@media screen and (max-width: 360px) {
-  /* Très petits écrans Android */
-  html {
-    font-size: 12px;
+    padding: 1rem; /* Au lieu de 0.75rem */
   }
   
-  .container {
-    padding-left: 8px !important;
-    padding-right: 8px !important;
+  /* Navigation plus accessible */
+  .nav-item {
+    min-height: 48px;
+    padding: 8px 12px;
+  }
+  
+  /* Icônes légèrement plus grandes */
+  .icon-sm { width: 20px; height: 20px; }
+  .icon-md { width: 24px; height: 24px; }
+  .icon-lg { width: 28px; height: 28px; }
+}
+
+/* Styles spécifiques pour améliorer la lisibilité mobile */
+@media screen and (max-width: 640px) {
+  /* Espacement généreux pour tous les mobiles */
+  .mobile-spacing {
+    padding: 1rem;
+    margin: 0.5rem 0;
+  }
+  
+  /* Zone tactile élargie */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Amélioration de la lisibilité du texte */
+  .mobile-text {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    letter-spacing: 0.025em;
+  }
+  
+  /* Navigation mobile plus accessible */
+  .mobile-nav {
+    padding: 1rem 0;
+    font-size: 1rem;
+  }
+  
+  /* Formulaires plus confortables */
+  .mobile-form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .mobile-form-group label {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  
+  .mobile-form-group input,
+  .mobile-form-group textarea,
+  .mobile-form-group select {
+    font-size: 16px;
+    padding: 14px;
+    border-radius: 8px;
+    width: 100%;
   }
 }
 

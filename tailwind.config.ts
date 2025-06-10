@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+import type { Config } from "tailwindcss"
 
 const config: Config = {
     darkMode: ["class"],
@@ -10,6 +10,41 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+      // Breakpoints mobile améliorés
+      screens: {
+        'xs': '375px',
+        'mobile': '480px',
+        'tablet': '768px',
+      },
+      // Tailles de police mobile-first
+      fontSize: {
+        'mobile-xs': ['0.875rem', { lineHeight: '1.5' }],
+        'mobile-sm': ['1rem', { lineHeight: '1.5' }],
+        'mobile-base': ['1.125rem', { lineHeight: '1.6' }],
+        'mobile-lg': ['1.25rem', { lineHeight: '1.6' }],
+        'mobile-xl': ['1.5rem', { lineHeight: '1.6' }],
+        'mobile-2xl': ['1.75rem', { lineHeight: '1.6' }],
+      },
+      // Espacements optimisés pour mobile
+      spacing: {
+        'mobile-xs': '0.5rem',
+        'mobile-sm': '0.75rem', 
+        'mobile-md': '1rem',
+        'mobile-lg': '1.5rem',
+        'mobile-xl': '2rem',
+        'touch': '44px', // Taille minimale tactile
+      },
+      // Hauteurs minimales pour éléments tactiles
+      minHeight: {
+        'touch': '44px',
+        'button': '48px',
+        'input': '44px',
+      },
+      // Largeurs minimales pour éléments tactiles
+      minWidth: {
+        'touch': '44px',
+        'button': '120px',
+      },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -65,7 +100,9 @@ const config: Config = {
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			sm: 'calc(var(--radius) - 4px)',
+        'mobile': '8px',
+        'mobile-lg': '12px',
   		},
   		keyframes: {
   			'accordion-down': {
@@ -92,5 +129,5 @@ const config: Config = {
   	}
   },
   plugins: [require("tailwindcss-animate")],
-};
-export default config;
+}
+export default config

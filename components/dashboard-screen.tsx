@@ -55,12 +55,12 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   textColor = "text-foreground",
 }) => (
   <Card className={cn("w-full", bgColor, textColor)}>
-    <CardHeader className="p-2 sm:p-3">
-      <CardTitle className="text-xs sm:text-sm font-medium truncate">{title}</CardTitle>
+    <CardHeader className="p-mobile-md sm:p-mobile-lg">
+      <CardTitle className="text-mobile-sm sm:text-mobile-base font-medium truncate">{title}</CardTitle>
     </CardHeader>
-    <CardContent className="p-2 pt-0 sm:p-3 sm:pt-0">
-      <div className="text-base sm:text-xl font-bold">{value}</div>
-      <Icon className="h-4 w-4 text-muted-foreground mt-1" />
+    <CardContent className="p-mobile-md pt-0 sm:p-mobile-lg sm:pt-0">
+      <div className="text-mobile-lg sm:text-mobile-xl font-bold">{value}</div>
+      <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground mt-1" />
     </CardContent>
   </Card>
 )
@@ -72,16 +72,16 @@ interface ActivityItemProps {
 }
 
 const ActivityItem: React.FC<ActivityItemProps> = ({ description, amount, type }) => (
-  <div className="flex items-center justify-between py-2 sm:py-3">
-    <div className="flex items-center gap-2 sm:gap-3">
+  <div className="flex items-center justify-between py-mobile-sm sm:py-mobile-md touch-target">
+    <div className="flex items-center gap-mobile-sm sm:gap-mobile-md">
       {type === "expense" ? (
-        <CreditCard className="h-5 w-5 text-red-500" />
+        <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-red-500" />
       ) : (
-        <DollarSign className="h-5 w-5 text-green-500" />
+        <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-green-500" />
       )}
-      <p className="text-sm text-muted-foreground flex-1 min-w-0">{description}</p>
+      <p className="text-mobile-sm sm:text-mobile-base text-muted-foreground flex-1 min-w-0">{description}</p>
     </div>
-    {amount && <p className="text-sm font-medium">{amount}</p>}
+    {amount && <p className="text-mobile-sm sm:text-mobile-base font-medium">{amount}</p>}
   </div>
 )
 
@@ -96,12 +96,12 @@ const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, active, href = "#"
   <Link
     href={href}
     className={cn(
-      "flex flex-col items-center gap-0.5 p-1 sm:p-2 rounded-md flex-1",
+      "flex flex-col items-center gap-1 p-mobile-sm sm:p-mobile-md rounded-mobile flex-1 touch-target",
       active ? "text-primary" : "text-muted-foreground hover:text-primary",
     )}
   >
     <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
-    <span className="text-[10px] leading-tight sm:text-xs text-center">{label}</span>
+    <span className="text-mobile-xs sm:text-mobile-sm text-center leading-tight">{label}</span>
   </Link>
 )
 
@@ -312,16 +312,16 @@ export default function DashboardScreen() {
   return (
     <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col">
       {!isStandalone && <PWAInstallButton />}
-      <header className="p-3 sm:p-4 flex items-center justify-between border-b">
-        <h1 className="text-lg sm:text-xl font-bold text-gray-800">BuddyBill</h1>
-        <div className="flex items-center gap-2 sm:gap-3">
+      <header className="p-mobile-md sm:p-mobile-lg flex items-center justify-between border-b">
+        <h1 className="text-mobile-lg sm:text-mobile-xl font-bold text-gray-800">BuddyBill</h1>
+        <div className="flex items-center gap-mobile-sm sm:gap-mobile-md">
           <div className="relative">
-            <Bell className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600" />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center">
+            <Bell className="h-6 w-6 sm:h-7 sm:w-7 text-gray-600" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-mobile-xs w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center">
               0
             </span>
           </div>
-          <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
+          <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
             <AvatarImage src={userProfile?.avatar_url} alt="User" />
             <AvatarFallback>
               {userProfile?.full_name ? userProfile.full_name.substring(0, 2).toUpperCase() : "??"}
@@ -331,24 +331,24 @@ export default function DashboardScreen() {
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-700"
+            className="h-10 w-10 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-700 touch-target"
             onClick={refreshData}
             disabled={isRefreshing}
           >
             {isRefreshing ? (
-              <RefreshCw className="h-4 w-4 animate-spin" />
+              <RefreshCw className="h-5 w-5 animate-spin" />
             ) : (
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw className="h-5 w-5" />
             )}
           </Button>
         </div>
       </header>
       <PullToRefresh onRefresh={refreshData}>
         <ScrollArea className="flex-grow">
-          <div className="p-3 sm:p-4 space-y-5 sm:space-y-6">
+          <div className="p-mobile-md sm:p-mobile-lg space-y-mobile-lg sm:space-y-mobile-xl">
             <section>
-              <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-2">{t('dashboard:overview.title')}</h2>
-              <p className="text-sm text-gray-500 mb-3">
+              <h2 className="text-mobile-base sm:text-mobile-lg font-semibold text-gray-700 mb-mobile-sm">{t('dashboard:overview.title')}</h2>
+              <p className="text-mobile-sm text-gray-500 mb-mobile-md">
                 {t('dashboard:overview.welcome', { name: userProfile?.full_name || user?.email })}
               </p>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-3">
@@ -417,33 +417,33 @@ export default function DashboardScreen() {
               </Card>
             </section>
             <section>
-              <h3 className="text-lg font-semibold mb-3 text-gray-800">{t('dashboard:quickActions.title')}</h3>
+              <h3 className="text-mobile-base sm:text-mobile-lg font-semibold mb-mobile-md text-gray-800">{t('dashboard:quickActions.title')}</h3>
               <Card>
-                <CardContent className="p-4">
-                  <div className="flex flex-col space-y-3 max-w-sm">
+                <CardContent className="p-mobile-md sm:p-mobile-lg">
+                  <div className="flex flex-col space-y-mobile-md max-w-sm">
                     <Link href="/create-group">
-                      <Button className="bg-blue-500 hover:bg-blue-600 text-white h-12 text-sm w-full justify-start">
-                        <UsersRound className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.createGroup')}
+                      <Button className="bg-blue-500 hover:bg-blue-600 text-white min-h-button text-mobile-sm sm:text-mobile-base w-full justify-start touch-target">
+                        <UsersRound className="mr-mobile-md h-5 w-5 sm:h-6 sm:w-6" /> {t('dashboard:quickActions.createGroup')}
                       </Button>
                     </Link>
                     <Link href="/join-group">
-                      <Button variant="outline" className="text-sm h-12 w-full justify-start">
-                        <PlusCircle className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.joinGroup')}
+                      <Button variant="outline" className="text-mobile-sm sm:text-mobile-base min-h-button w-full justify-start touch-target">
+                        <PlusCircle className="mr-mobile-md h-5 w-5 sm:h-6 sm:w-6" /> {t('dashboard:quickActions.joinGroup')}
                       </Button>
                     </Link>
                     <Link href="/dashboard/settle-up">
-                      <Button variant="outline" className="text-sm h-12 w-full justify-start">
-                        <CheckCircle className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.settleUp')}
+                      <Button variant="outline" className="text-mobile-sm sm:text-mobile-base min-h-button w-full justify-start touch-target">
+                        <CheckCircle className="mr-mobile-md h-5 w-5 sm:h-6 sm:w-6" /> {t('dashboard:quickActions.settleUp')}
                       </Button>
                     </Link>
                     <Link href="/dashboard/expenses">
-                      <Button variant="outline" className="text-sm h-12 w-full justify-start">
-                        <Receipt className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.manageExpenses')}
+                      <Button variant="outline" className="text-mobile-sm sm:text-mobile-base min-h-button w-full justify-start touch-target">
+                        <Receipt className="mr-mobile-md h-5 w-5 sm:h-6 sm:w-6" /> {t('dashboard:quickActions.manageExpenses')}
                       </Button>
                     </Link>
                     <Link href="/dashboard/recent-activity">
-                      <Button variant="outline" className="text-sm h-12 w-full justify-start">
-                        <Activity className="mr-3 h-5 w-5" /> {t('dashboard:quickActions.viewFullActivity')}
+                      <Button variant="outline" className="text-mobile-sm sm:text-mobile-base min-h-button w-full justify-start touch-target">
+                        <Activity className="mr-mobile-md h-5 w-5 sm:h-6 sm:w-6" /> {t('dashboard:quickActions.viewFullActivity')}
                       </Button>
                     </Link>
                   </div>
