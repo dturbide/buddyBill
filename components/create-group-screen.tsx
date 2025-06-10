@@ -13,11 +13,9 @@ import { Progress } from "@/components/ui/progress"
 import { ArrowLeft, Camera, Check, ChevronRight, ChevronLeft, ImageIcon, AlertCircle, Loader2, Copy, CheckCircle } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-// Note: Supabase client for image upload would be needed here if doing direct-to-storage uploads
-// For simplicity, we'll assume image_url is handled or passed as a string for now.
+import { POPULAR_CURRENCIES, ALL_CURRENCIES, getCurrencyByCode } from "@/lib/currencies"
 
 const groupTypes = ["Voyage", "Colocataires", "Amis", "Événement", "Projet", "Autre"]
-const currencies = ["USD", "EUR", "GBP", "CAD", "AUD", "JPY"]
 
 // ... (dummyContacts can remain for UI, but member addition logic needs more work)
 
@@ -30,7 +28,8 @@ export default function CreateGroupScreen() {
   const [groupType, setGroupType] = useState("")
   const [groupImage, setGroupImage] = useState<File | null>(null)
   const [groupImagePreview, setGroupImagePreview] = useState<string | null>(null)
-  const [defaultCurrency, setDefaultCurrency] = useState(currencies[0])
+  const [defaultCurrency, setDefaultCurrency] = useState(POPULAR_CURRENCIES[0].code)
+  const [searchCurrency, setSearchCurrency] = useState("")
   const [isInviteOnly, setIsInviteOnly] = useState(true)
   const [requireApproval, setRequireApproval] = useState(false)
   // Member selection state (UI only for now, not part of initial group creation action)
@@ -138,6 +137,11 @@ export default function CreateGroupScreen() {
       }
     }
   }
+
+  const filteredCurrencies = ALL_CURRENCIES.filter((currency) =>
+    currency.code.toLowerCase().includes(searchCurrency.toLowerCase()) ||
+    currency.name.toLowerCase().includes(searchCurrency.toLowerCase())
+  )
 
   return (
     <div className="w-full max-w-md h-[800px] max-h-[90vh] bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col">
@@ -278,20 +282,55 @@ export default function CreateGroupScreen() {
         {currentStep === 2 && (
           <div className="space-y-5 animate-fadeIn">
             <h2 className="text-base font-semibold text-gray-700">2. Paramètres</h2>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="defaultCurrency">Devise par Défaut</Label>
-              <Select value={defaultCurrency} onValueChange={setDefaultCurrency}>
-                <SelectTrigger id="defaultCurrency">
-                  <SelectValue placeholder="Sélectionner devise" />
-                </SelectTrigger>
-                <SelectContent>
-                  {currencies.map((currency) => (
-                    <SelectItem key={currency} value={currency}>
-                      {currency}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="space-y-2">
+                <Input
+                  type="search"
+                  value={searchCurrency}
+                  onChange={(e) => setSearchCurrency(e.target.value)}
+                  placeholder="Rechercher une devise (ex: JPY, Yen)"
+                  className="w-full"
+                />
+                <Select value={defaultCurrency} onValueChange={setDefaultCurrency}>
+                  <SelectTrigger id="defaultCurrency">
+                    <SelectValue>
+                      {getCurrencyByCode(defaultCurrency)?.flag} {getCurrencyByCode(defaultCurrency)?.name} ({defaultCurrency})
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="max-h-40 overflow-y-auto">
+                    {/* Devises populaires en premier si pas de recherche */}
+                    {!searchCurrency && (
+                      <>
+                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">Populaires</div>
+                        {POPULAR_CURRENCIES.map((currency) => (
+                          <SelectItem key={currency.code} value={currency.code}>
+                            <span className="flex items-center gap-2">
+                              <span>{currency.flag}</span>
+                              <span>{currency.name}</span>
+                              <span className="text-muted-foreground">({currency.code})</span>
+                            </span>
+                          </SelectItem>
+                        ))}
+                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground border-t mt-1 pt-2">Toutes les devises</div>
+                      </>
+                    )}
+                    {/* Devises filtrées */}
+                    {filteredCurrencies
+                      .filter(currency => searchCurrency ? true : !currency.popular)
+                      .slice(0, 50) // Limiter à 50 résultats pour les performances
+                      .map((currency) => (
+                        <SelectItem key={currency.code} value={currency.code}>
+                          <span className="flex items-center gap-2">
+                            <span>{currency.flag}</span>
+                            <span>{currency.name}</span>
+                            <span className="text-muted-foreground">({currency.code})</span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="flex items-center justify-between p-3 border rounded-md">
               <div>

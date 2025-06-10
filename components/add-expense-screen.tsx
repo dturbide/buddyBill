@@ -1,26 +1,25 @@
 "use client"
 
-import type React from "react"
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { ArrowLeft, CalendarIcon, Paperclip, ChevronDown, Tag, DollarSign, Camera } from "lucide-react"
-import Link from "next/link"
-import { createClient } from '@/lib/supabase/client'
+import React, { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import { format } from 'date-fns'
+import { ArrowLeft, CalendarIcon, Paperclip, ChevronDown, Tag, DollarSign, Camera, Upload, Plus, Minus, Calculator, X } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import { useNotifications } from '@/components/notification-system'
 import { AppLayout, MobileCard } from '@/components/app-layout'
-
-const currencies = ["USD", "EUR", "GBP", "CAD", "AUD", "JPY"] // Should ideally come from a config or API
+import { ALL_CURRENCIES, getCurrencyByCode, formatCurrencyAmount, POPULAR_CURRENCIES } from '@/lib/currencies'
 
 interface Member {
   id: string
@@ -60,6 +59,13 @@ export default function AddExpenseScreen({ groupContext }: AddExpenseScreenProps
   const [notes, setNotes] = useState("")
   const [categories, setCategories] = useState<{id: string, name: string, icon: string}[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [searchCurrency, setSearchCurrency] = useState("")
+
+  // Filtrer les devises
+  const filteredCurrencies = ALL_CURRENCIES.filter((curr) =>
+    curr.code.toLowerCase().includes(searchCurrency.toLowerCase()) ||
+    curr.name.toLowerCase().includes(searchCurrency.toLowerCase())
+  )
 
   useEffect(() => {
     setCurrency(groupContext.defaultCurrency)
@@ -168,7 +174,7 @@ export default function AddExpenseScreen({ groupContext }: AddExpenseScreenProps
   }
 
   return (
-    <AppLayout title="Ajouter une dépense" showBackButton={true} backHref="/dashboard/expenses">
+    <AppLayout title="Ajouter une dépense" showBackButton={true} backHref="/dashboard">
       <MobileCard>
         {/* Form Area (Scrollable) */}
         <form onSubmit={handleSubmit} className="flex-grow overflow-y-auto p-6 space-y-5">
@@ -199,20 +205,54 @@ export default function AddExpenseScreen({ groupContext }: AddExpenseScreenProps
                 />
               </div>
             </div>
-            <div className="w-1/3">
+            <div className="w-1/3 space-y-2">
               <Label htmlFor="currency">Currency</Label>
-              <Select value={currency} onValueChange={setCurrency}>
-                <SelectTrigger id="currency">
-                  <SelectValue placeholder="Select currency" />
-                </SelectTrigger>
-                <SelectContent>
-                  {currencies.map((curr) => (
-                    <SelectItem key={curr} value={curr}>
-                      {curr}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="space-y-1">
+                <Input
+                  placeholder="Search currency..."
+                  value={searchCurrency}
+                  onChange={(e) => setSearchCurrency(e.target.value)}
+                  className="text-xs h-8"
+                />
+                <Select value={currency} onValueChange={setCurrency}>
+                  <SelectTrigger id="currency" className="h-9">
+                    <SelectValue>
+                      {getCurrencyByCode(currency)?.flag} {currency}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="max-h-40 overflow-y-auto">
+                    {/* Devises populaires en premier si pas de recherche */}
+                    {!searchCurrency && (
+                      <>
+                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground">Popular</div>
+                        {POPULAR_CURRENCIES.map((curr) => (
+                          <SelectItem key={curr.code} value={curr.code}>
+                            <span className="flex items-center gap-2">
+                              <span>{curr.flag}</span>
+                              <span>{curr.code}</span>
+                              <span className="text-muted-foreground text-xs">{curr.symbol}</span>
+                            </span>
+                          </SelectItem>
+                        ))}
+                        <div className="border-t my-1"></div>
+                      </>
+                    )}
+                    {/* Devises filtrées */}
+                    {filteredCurrencies
+                      .filter(curr => searchCurrency ? true : !curr.popular)
+                      .slice(0, 30)
+                      .map((curr) => (
+                        <SelectItem key={curr.code} value={curr.code}>
+                          <span className="flex items-center gap-2">
+                            <span>{curr.flag}</span>
+                            <span>{curr.code}</span>
+                            <span className="text-muted-foreground text-xs">{curr.symbol}</span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 

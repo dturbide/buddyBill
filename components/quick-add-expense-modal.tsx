@@ -8,9 +8,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
+import { X, DollarSign, Receipt } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useNotifications } from '@/components/notification-system'
-import { X, DollarSign, Receipt } from 'lucide-react'
+import { ALL_CURRENCIES, getCurrencyByCode, formatCurrencyAmount } from '@/lib/currencies'
 
 interface QuickAddExpenseModalProps {
   isOpen: boolean
@@ -38,6 +40,7 @@ export default function QuickAddExpenseModal({
     currency: defaultCurrency,
     notes: ''
   })
+  const [searchCurrency, setSearchCurrency] = useState('')
 
   // Mettre à jour la devise par défaut quand le prop change
   useEffect(() => {
@@ -46,6 +49,11 @@ export default function QuickAddExpenseModal({
       currency: defaultCurrency
     }))
   }, [defaultCurrency])
+
+  const filteredCurrencies = ALL_CURRENCIES.filter((curr) =>
+    curr.code.toLowerCase().includes(searchCurrency.toLowerCase()) ||
+    curr.name.toLowerCase().includes(searchCurrency.toLowerCase())
+  )
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -157,19 +165,33 @@ export default function QuickAddExpenseModal({
                 />
               </div>
             </div>
-            <div className="w-24 space-y-2">
+            <div className="w-32 space-y-2">
               <Label htmlFor="currency">Devise</Label>
-              <Select value={formData.currency} onValueChange={(value) => handleInputChange('currency', value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="EUR">EUR</SelectItem>
-                  <SelectItem value="USD">USD</SelectItem>
-                  <SelectItem value="GBP">GBP</SelectItem>
-                  <SelectItem value="CAD">CAD</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="space-y-1">
+                <Input
+                  placeholder="Rechercher..."
+                  value={searchCurrency}
+                  onChange={(e) => setSearchCurrency(e.target.value)}
+                  className="text-xs h-8"
+                />
+                <Select value={formData.currency} onValueChange={(value) => handleInputChange('currency', value)}>
+                  <SelectTrigger className="h-8">
+                    <SelectValue>
+                      {getCurrencyByCode(formData.currency)?.flag} {formData.currency}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="max-h-32 overflow-y-auto">
+                    {filteredCurrencies.slice(0, 20).map((currency) => (
+                      <SelectItem key={currency.code} value={currency.code}>
+                        <span className="flex items-center gap-1">
+                          <span>{currency.flag}</span>
+                          <span>{currency.code}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 

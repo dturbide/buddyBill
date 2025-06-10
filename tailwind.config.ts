@@ -12,18 +12,22 @@ const config: Config = {
   	extend: {
       // Breakpoints mobile améliorés
       screens: {
-        'xs': '375px',
-        'mobile': '480px',
-        'tablet': '768px',
+        'xs': '475px',
+        'mobile-sm': '320px',
+        'mobile-md': '375px',
+        'mobile-lg': '425px',
+        'desktop-sm': '768px',
+        'desktop-md': '1024px',
+        'desktop-lg': '1280px',
       },
       // Tailles de police mobile-first
       fontSize: {
-        'mobile-xs': ['0.875rem', { lineHeight: '1.5' }],
-        'mobile-sm': ['1rem', { lineHeight: '1.5' }],
-        'mobile-base': ['1.125rem', { lineHeight: '1.6' }],
-        'mobile-lg': ['1.25rem', { lineHeight: '1.6' }],
-        'mobile-xl': ['1.5rem', { lineHeight: '1.6' }],
-        'mobile-2xl': ['1.75rem', { lineHeight: '1.6' }],
+        'mobile-xs': ['10px', { lineHeight: '14px' }],
+        'mobile-sm': ['12px', { lineHeight: '16px' }],
+        'mobile-base': ['14px', { lineHeight: '20px' }],
+        'mobile-lg': ['16px', { lineHeight: '24px' }],
+        'desktop-nav': ['13px', { lineHeight: '18px' }],
+        'desktop-nav-lg': ['14px', { lineHeight: '20px' }],
       },
       // Espacements optimisés pour mobile
       spacing: {

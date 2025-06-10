@@ -96,12 +96,12 @@ const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, active, href = "#"
   <Link
     href={href}
     className={cn(
-      "flex flex-col items-center justify-center gap-1 p-mobile-xs sm:p-mobile-sm rounded-mobile flex-1 touch-target min-h-[50px] sm:min-h-[60px]",
+      "flex flex-col items-center justify-center gap-1 p-mobile-xs sm:p-mobile-sm rounded-mobile flex-1 touch-target min-h-[50px] sm:min-h-[60px] desktop-sm:min-h-[70px]",
       active ? "text-primary" : "text-muted-foreground hover:text-primary",
     )}
   >
-    <Icon className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-    <span className="text-[10px] sm:text-mobile-xs text-center leading-none truncate max-w-full">{label}</span>
+    <Icon className="h-4 w-4 sm:h-5 sm:w-5 desktop-sm:h-6 desktop-sm:w-6 flex-shrink-0" />
+    <span className="text-[10px] sm:text-mobile-xs desktop-sm:text-desktop-nav desktop-md:text-desktop-nav-lg text-center leading-none truncate max-w-full">{label}</span>
   </Link>
 )
 
@@ -480,7 +480,7 @@ export default function DashboardScreen() {
           </div>
         </ScrollArea>
       </PullToRefresh>
-      <nav className="p-mobile-sm sm:p-2 border-t bg-slate-50 grid grid-cols-5 gap-mobile-xs sm:gap-1 min-h-[60px] sm:min-h-[70px]">
+      <nav className="p-mobile-sm sm:p-2 desktop-sm:p-3 border-t bg-slate-50 grid grid-cols-5 gap-mobile-xs sm:gap-1 desktop-sm:gap-2 min-h-[60px] sm:min-h-[70px] desktop-sm:min-h-[80px]">
         {navItems.map((item) => (
           <NavItem key={item.label} {...item} />
         ))}
