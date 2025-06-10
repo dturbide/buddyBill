@@ -48,6 +48,8 @@ export default function ExpensesListScreen() {
   const [selectedGroup, setSelectedGroup] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [userCurrency, setUserCurrency] = useState<string>('USD')
+  const [conversions, setConversions] = useState<{[key: string]: number}>({})
 
   // Charger les données initiales
   useEffect(() => {
@@ -62,6 +64,7 @@ export default function ExpensesListScreen() {
       if (response.ok) {
         const { user } = await response.json()
         setCurrentUserId(user.id)
+        setUserCurrency(user.preferred_currency || 'USD')
       } else {
         console.error('Utilisateur non authentifié:', response.status)
         setError('Utilisateur non authentifié')
@@ -137,6 +140,31 @@ export default function ExpensesListScreen() {
       alert('Erreur lors de la suppression')
     }
   }
+
+  // Charger les conversions pour les dépenses visibles
+  useEffect(() => {
+    const loadConversions = async () => {
+      if (userCurrency && expenses.length > 0) {
+        const uniqueCurrencies = [...new Set(expenses.map(e => e.currency).filter(c => c !== userCurrency))]
+        
+        for (const currency of uniqueCurrencies) {
+          const cacheKey = `${currency}_${userCurrency}`
+          if (!conversions[cacheKey]) {
+            try {
+              const response = await fetch(`/api/currency/convert?from=${currency}&to=${userCurrency}&amount=1`)
+              if (response.ok) {
+                const { rate } = await response.json()
+                setConversions(prev => ({ ...prev, [cacheKey]: rate }))
+              }
+            } catch (error) {
+              console.error(`Erreur conversion ${currency} → ${userCurrency}:`, error)
+            }
+          }
+        }
+      }
+    }
+    loadConversions()
+  }, [userCurrency, expenses])
 
   // Filtrer les dépenses
   const filteredExpenses = expenses.filter(expense => {
@@ -333,9 +361,16 @@ export default function ExpensesListScreen() {
 
                   {/* Deuxième ligne: montant et actions */}
                   <div className="flex items-center justify-between">
-                    <p className="text-base font-bold text-blue-600 sm:text-lg">
-                      {formatCurrency(expense.amount, expense.currency)}
-                    </p>
+                    <div className="space-y-1">
+                      <p className="text-base font-bold text-blue-600 sm:text-lg">
+                        {formatCurrency(expense.amount, expense.currency)}
+                      </p>
+                      {expense.currency !== userCurrency && conversions[`${expense.currency}_${userCurrency}`] && (
+                        <p className="text-xs text-gray-500">
+                          ≈ {formatCurrency(expense.amount * conversions[`${expense.currency}_${userCurrency}`], userCurrency)}
+                        </p>
+                      )}
+                    </div>
                     
                     {/* Actions sur mobile */}
                     {canEditOrDelete(expense) && (

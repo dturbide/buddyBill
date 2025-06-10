@@ -18,7 +18,7 @@ export async function GET() {
     // Récupérer le profil utilisateur pour avoir des infos complètes
     const { data: profile, error: profileError } = await supabase
       .from('user_profiles')
-      .select('id, full_name, role')
+      .select('id, full_name, role, preferred_currency')
       .eq('id', user.id)
       .single()
 
@@ -31,7 +31,8 @@ export async function GET() {
           email: user.email,
           full_name: user.user_metadata?.full_name || 'Utilisateur',
           tenant_id: null,
-          role: 'user'
+          role: 'user',
+          preferred_currency: 'USD'
         }
       })
     }
@@ -42,7 +43,8 @@ export async function GET() {
         email: user.email,
         full_name: profile.full_name || user.user_metadata?.full_name || 'Utilisateur',
         tenant_id: null, // Temporaire jusqu'à migration complète
-        role: profile.role || 'user' // Maintenant récupéré depuis la DB
+        role: profile.role || 'user', // Maintenant récupéré depuis la DB
+        preferred_currency: profile.preferred_currency || 'USD'
       }
     })
 
