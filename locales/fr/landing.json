@@ -7,7 +7,13 @@
     "cta": "Commencer gratuitement",
     "secure": " 100% Sécurisé",
     "users": " 10 000+ Utilisateurs",
-    "rating": " 4,9/5 Évaluation"
+    "rating": " 4,9/5 Évaluation",
+    "badge": " Sécurisé & Fiable",
+    "features": {
+      "secure": "100% Sécurisé",
+      "users": "10,000+ Utilisateurs",
+      "rating": "4.9/5 Évaluation"
+    }
   },
   "problem": {
     "title": "Simplifiez vos partages de dépenses",
@@ -124,15 +130,11 @@
     ]
   },
   "cta": {
-    "title": "Prêt à simplifier vos partages de dépenses ?",
-    "subtitle": "Rejoignez des milliers d'utilisateurs qui font confiance à BuddyBill pour leurs dépenses partagées",
-    "primary": "Créer un compte",
-    "secondary": "En savoir plus",
-    "guarantee": {
-      "free": "100% Gratuit",
-      "secure": "100% Sécurisé", 
-      "easy": "Facile à Utiliser"
-    }
+    "primary": "Installer l'App",
+    "demo": "Voir la Démo",
+    "login": "Se connecter",
+    "signup": "S'inscrire",
+    "getStarted": "Commencer gratuitement"
   },
   "footer": {
     "tagline": "Simplifiez vos partages de dépenses entre amis, famille et collègues",
@@ -159,7 +161,7 @@
     }
   },
   "pwa": {
-    "title": "📱 Installez BuddyBill sur votre appareil",
+    "title": " Installez BuddyBill sur votre appareil",
     "subtitle": "Accès rapide depuis votre écran d'accueil",
     "button": "Télécharger l'app",
     "linkText": "Installez l'app pour une meilleure expérience",

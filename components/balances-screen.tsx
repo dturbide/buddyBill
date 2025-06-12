@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Skeleton } from '@/components/ui/skeleton'
+import { CurrencyAmountDisplay } from '@/components/currency-amount-display'
+import { CurrencyConversionStatus } from '@/components/internet-status-indicator'
 import { TrendingUp, TrendingDown, Users, Send, AlertCircle, Plus, History, Mail, MessageCircle, Phone } from 'lucide-react'
 import Link from 'next/link'
 import { useNotifications } from '@/components/notification-system'
@@ -27,6 +29,7 @@ interface BalancesByGroup {
   balance: number
   owedToYou: number
   youOwe: number
+  currency?: string // Devise du groupe (voyage)
 }
 
 interface BalancesData {
@@ -38,6 +41,8 @@ interface BalancesData {
   pendingTransactions: number
   balancesByPerson: BalancesByPerson[]
   balancesByGroup: BalancesByGroup[]
+  userPreferredCurrency?: string // Devise de base de l'utilisateur
+  groupCurrency?: string // Devise principale pour les totaux
 }
 
 export default function BalancesScreen() {
@@ -86,10 +91,10 @@ export default function BalancesScreen() {
     fetchBalances()
   }, [])
 
-  const formatCurrency = (amount: number | undefined | null) => {
-    // Vérifier et nettoyer la valeur
+  // Fonction pour formater les devises (fallback)
+  const formatCurrency = (amount: number | undefined | null, currency: string = 'EUR') => {
     const cleanAmount = typeof amount === 'number' && !isNaN(amount) ? amount : 0
-    return `${cleanAmount.toFixed(2)} €`
+    return `${cleanAmount.toFixed(2)} ${currency}`
   }
 
   // Fonction élégante pour gérer les paiements par email
@@ -101,7 +106,7 @@ export default function BalancesScreen() {
         title: '📧 Email de démonstration',
         message: `${personName} utilise une adresse email de démonstration.
         
-🏷️ Montant à régler : ${formatCurrency(amount)}
+🏷️ Montant à régler : ${formatCurrency(amount, balances?.groupCurrency || 'EUR')}
 
 💡 En production, vous pourriez :
 • Envoyer un email automatique à l'adresse réelle
@@ -115,7 +120,7 @@ export default function BalancesScreen() {
         onConfirm: () => {
           notifications.showSuccess(
             '✅ Email simulé envoyé !', 
-            `Le message de paiement pour ${personName} (${formatCurrency(amount)}) a été simulé avec succès. En production, un vrai email serait envoyé !`
+            `Le message de paiement pour ${personName} (${formatCurrency(amount, balances?.groupCurrency || 'EUR')}) a été simulé avec succès. En production, un vrai email serait envoyé !`
           )
         }
       })
@@ -123,14 +128,14 @@ export default function BalancesScreen() {
     }
 
     // Email réel disponible - procéder à l'envoi
-    const subject = encodeURIComponent(`💰 Paiement BuddyBill - ${formatCurrency(amount)}`)
+    const subject = encodeURIComponent(`💰 Paiement BuddyBill - ${formatCurrency(amount, balances?.groupCurrency || 'EUR')}`)
     
     const bodyMessage = isOwedToYou 
       ? `Salut ${personName} ! 👋
 
 J'espère que tu vas bien ! 
 
-D'après nos comptes sur BuddyBill, tu me dois ${formatCurrency(amount)}. 📊
+D'après nos comptes sur BuddyBill, tu me dois ${formatCurrency(amount, balances?.groupCurrency || 'EUR')}. 📊
 
 Peux-tu me faire le virement quand tu auras un moment ? 🏦
 
@@ -141,7 +146,7 @@ Merci beaucoup ! 🙏
 
 J'espère que tu vas bien !
 
-D'après nos comptes sur BuddyBill, je te dois ${formatCurrency(amount)}. 📊
+D'après nos comptes sur BuddyBill, je te dois ${formatCurrency(amount, balances?.groupCurrency || 'EUR')}. 📊
 
 Je vais te faire le virement très bientôt ! Peux-tu me confirmer tes coordonnées bancaires ? 🏦
 
@@ -209,6 +214,9 @@ Merci et à bientôt ! ✨`
   return (
     <AppLayout title="Équilibres">
       <div className="space-y-4 p-4">
+        {/* Indicateur de statut de connexion pour les conversions */}
+        <CurrencyConversionStatus className="mb-2" />
+        
         {/* Résumé global */}
         {balances && (
           <MobileCard>
@@ -221,9 +229,12 @@ Merci et à bientôt ! ✨`
                     <TrendingUp className="w-4 h-4 text-green-600 mr-1" />
                     <span className="text-sm text-gray-600">On vous doit</span>
                   </div>
-                  <div className="text-xl font-bold text-green-600">
-                    {formatCurrency(balances.totalOwed)}
-                  </div>
+                  <CurrencyAmountDisplay 
+                    amount={balances.totalOwed} 
+                    currency={balances.groupCurrency || 'EUR'} 
+                    userPreferredCurrency={balances.userPreferredCurrency || 'CAD'}
+                    showConversion={true}
+                  />
                 </div>
                 
                 <div className="text-center">
@@ -231,20 +242,24 @@ Merci et à bientôt ! ✨`
                     <TrendingDown className="w-4 h-4 text-red-600 mr-1" />
                     <span className="text-sm text-gray-600">Vous devez</span>
                   </div>
-                  <div className="text-xl font-bold text-red-600">
-                    {formatCurrency(balances.totalYouOwe)}
-                  </div>
+                  <CurrencyAmountDisplay 
+                    amount={balances.totalYouOwe} 
+                    currency={balances.groupCurrency || 'EUR'} 
+                    userPreferredCurrency={balances.userPreferredCurrency || 'CAD'}
+                    showConversion={true}
+                  />
                 </div>
               </div>
 
               <div className="border-t pt-4">
                 <div className="text-center">
                   <span className="text-sm text-gray-600">Balance nette</span>
-                  <div className={`text-2xl font-bold ${
-                    balances.netBalance >= 0 ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {formatCurrency(balances.netBalance)}
-                  </div>
+                  <CurrencyAmountDisplay 
+                    amount={balances.netBalance} 
+                    currency={balances.groupCurrency || 'EUR'} 
+                    userPreferredCurrency={balances.userPreferredCurrency || 'CAD'}
+                    showConversion={true}
+                  />
                 </div>
               </div>
 
@@ -259,7 +274,12 @@ Merci et à bientôt ! ✨`
                 </div>
                 <div>
                   <div className="text-sm text-gray-600">Ce mois</div>
-                  <div className="font-semibold">{formatCurrency(balances.monthExpenses)}</div>
+                  <CurrencyAmountDisplay 
+                    amount={balances.monthExpenses} 
+                    currency={balances.groupCurrency || 'EUR'} 
+                    userPreferredCurrency={balances.userPreferredCurrency || 'CAD'}
+                    showConversion={true}
+                  />
                 </div>
               </div>
             </div>
@@ -307,11 +327,12 @@ Merci et à bientôt ! ✨`
                     </div>
                     
                     <div className="text-right">
-                      <div className={`font-semibold ${
-                        (person.balance || 0) >= 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {formatCurrency(Math.abs(person.balance || 0))}
-                      </div>
+                      <CurrencyAmountDisplay 
+                        amount={Math.abs(person.balance || 0)} 
+                        currency={balances.groupCurrency || 'EUR'} 
+                        userPreferredCurrency={balances.userPreferredCurrency || 'CAD'}
+                        showConversion={true}
+                      />
                       
                       <Button 
                         size="sm" 
@@ -354,11 +375,12 @@ Merci et à bientôt ! ✨`
                     </div>
                     
                     <div className="text-right">
-                      <div className={`font-semibold ${
-                        (group.balance || 0) >= 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {formatCurrency(Math.abs(group.balance || 0))}
-                      </div>
+                      <CurrencyAmountDisplay 
+                        amount={Math.abs(group.balance || 0)} 
+                        currency={group.currency || balances.groupCurrency || 'EUR'} 
+                        userPreferredCurrency={balances.userPreferredCurrency || 'CAD'}
+                        showConversion={true}
+                      />
                       
                       <Link href={`/dashboard/groups/${group.groupId}`}>
                         <Button size="sm" variant="outline" className="mt-1">

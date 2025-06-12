@@ -20,6 +20,17 @@ export async function GET(request: NextRequest) {
       }, { status: 401 })
     }
 
+    // Récupérer le profil utilisateur avec sa devise préférée
+    const { data: userProfile, error: profileError } = await supabase
+      .from('user_profiles')
+      .select('preferred_currency')
+      .eq('id', user.id)
+      .single()
+
+    console.log('DEBUG API balances - userProfile:', userProfile)
+    
+    const userPreferredCurrency = userProfile?.preferred_currency || 'CAD'
+
     // Récupérer les groupes de l'utilisateur en deux étapes pour éviter les problèmes de jointure
     const { data: memberships, error: membershipsError } = await supabase
       .from('group_members')
@@ -41,7 +52,7 @@ export async function GET(request: NextRequest) {
     const groupIds = memberships?.map((m: any) => m.group_id) || []
     console.log('DEBUG API balances - groupIds:', groupIds)
 
-    // Si pas de groupes, retourner des valeurs par défaut
+    // Si pas de groupes, retourner des valeurs par défaut avec devises
     if (groupIds.length === 0) {
       return NextResponse.json({ 
         success: true,
@@ -53,12 +64,14 @@ export async function GET(request: NextRequest) {
           activeGroups: 0,
           pendingTransactions: 0,
           balancesByGroup: [],
-          balancesByPerson: []
+          balancesByPerson: [],
+          userPreferredCurrency,
+          groupCurrency: userPreferredCurrency // Par défaut, même devise
         }
       })
     }
 
-    // Récupérer les détails des groupes
+    // Récupérer les détails des groupes avec leurs devises
     console.log('DEBUG API balances - Tentative récupération groupes avec IDs:', groupIds)
     const { data: groups, error: groupsError } = await supabase
       .from('groups')
@@ -75,6 +88,17 @@ export async function GET(request: NextRequest) {
         error: `Erreur lors de la récupération des groupes: ${groupsError.message}` 
       }, { status: 500 })
     }
+
+    // Déterminer la devise principale des groupes (la plus commune)
+    const groupCurrencies = groups?.map(g => g.currency).filter(Boolean) || []
+    const primaryGroupCurrency = groupCurrencies.length > 0 
+      ? groupCurrencies.reduce((a, b, i, arr) => 
+          arr.filter(v => v === a).length >= arr.filter(v => v === b).length ? a : b
+        )
+      : userPreferredCurrency
+    
+    console.log('DEBUG API balances - Devise principale des groupes:', primaryGroupCurrency)
+    console.log('DEBUG API balances - Devise préférée utilisateur:', userPreferredCurrency)
 
     // Récupérer les dépenses du mois en cours pour ces groupes
     const currentMonth = new Date()
@@ -336,27 +360,34 @@ export async function GET(request: NextRequest) {
 
     console.log(`DEBUG - Total dû à vous: ${totalOwed}, Total que vous devez: ${totalYouOwe}`)
 
-    const netBalance = totalOwed - totalYouOwe
-
-    const balancesByGroup = Array.from(groupBalances.entries()).map(([groupId, data]) => ({
-      groupId,
-      groupName: data.name,
-      balance: data.balance,
-      owedToYou: data.balance > 0 ? data.balance : 0,
-      youOwe: data.balance < 0 ? Math.abs(data.balance) : 0
-    }))
+    const balancesByGroup = Array.from(groupBalances.entries()).map(([groupId, data]) => {
+      // Trouver la devise du groupe
+      const group = groups?.find(g => g.id === groupId)
+      const groupCurrency = group?.currency || primaryGroupCurrency
+      
+      return {
+        groupId,
+        groupName: data.name,
+        balance: data.balance,
+        owedToYou: data.balance > 0 ? data.balance : 0,
+        youOwe: data.balance < 0 ? Math.abs(data.balance) : 0,
+        currency: groupCurrency // Ajouter la devise du groupe
+      }
+    })
 
     return NextResponse.json({
       success: true,
       data: {
         totalOwed,
         totalYouOwe,
-        netBalance,
+        netBalance: totalOwed - totalYouOwe,
         monthExpenses: totalMonthExpenses,
         activeGroups: groups?.length || 0,
         pendingTransactions: balancesByPerson.length,
         balancesByGroup,
-        balancesByPerson
+        balancesByPerson,
+        userPreferredCurrency,
+        groupCurrency: primaryGroupCurrency
       }
     })
 

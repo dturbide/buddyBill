@@ -38,6 +38,7 @@ import {
   Quote,
   Settings
 } from 'lucide-react'
+import Image from "next/image"
 import InstallPWAInstructions from './install-pwa-instructions'
 import PWAInstallButton from "@/components/pwa-install-button"
 import SafeTranslation from "./safe-translation"
@@ -82,56 +83,55 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 via-white to-indigo-50">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-orange-50 via-white to-red-50">
       {/* Header avec effet de verre */}
-      <header className="border-b border-blue-100 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+      <header className="border-b border-orange-100 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-mobile-sm sm:px-4 py-mobile-sm sm:py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-mobile-xs sm:gap-2 group">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-1.5 sm:p-2.5 rounded-xl group-hover:shadow-lg transition-all duration-300">
-              <DollarSign size={16} className="sm:w-5 sm:h-5" strokeWidth={2.5} />
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10">
+              <Image
+                src="/icons/logobuddy.png"
+                alt="BuddyBill Logo"
+                fill
+                className="object-contain group-hover:scale-110 transition-transform duration-300"
+              />
             </div>
-            <span className="text-mobile-base sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text group-hover:from-blue-700 group-hover:to-indigo-700 transition-all duration-300">BuddyBill</span>
+            <span className="text-mobile-base sm:text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 text-transparent bg-clip-text group-hover:from-orange-600 group-hover:to-red-600 transition-all duration-300">BuddyBill</span>
           </Link>
           
           <div className="flex items-center gap-mobile-xs sm:gap-4">
             {/* Sélecteur de langue optimisé pour mobile */}
-            <div className="flex bg-blue-50 rounded-lg p-1">
+            <div className="flex bg-orange-50 rounded-lg p-1">
               <button
                 onClick={() => handleLanguageChange("fr")}
-                className={`px-mobile-xs sm:px-2 py-1 rounded text-mobile-xs sm:text-sm transition-all duration-200 ${
+                className={`px-2 py-1 rounded text-xs sm:text-sm transition-all duration-200 ${
                   language === 'fr' 
-                    ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-sm' 
-                    : 'text-blue-600 hover:bg-blue-100'
+                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-sm' 
+                    : 'text-orange-600 hover:bg-orange-100'
                 }`}
               >
                 🇫🇷
               </button>
               <button
                 onClick={() => handleLanguageChange("en")}
-                className={`px-mobile-xs sm:px-2 py-1 rounded text-mobile-xs sm:text-sm transition-all duration-200 ${
+                className={`px-2 py-1 rounded text-xs sm:text-sm transition-all duration-200 ${
                   language === 'en' 
-                    ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-sm' 
-                    : 'text-blue-600 hover:bg-blue-100'
+                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-sm' 
+                    : 'text-orange-600 hover:bg-orange-100'
                 }`}
               >
-                🇬🇧
+                🇺🇸
               </button>
             </div>
             
-            <div className="flex gap-mobile-xs sm:gap-2">
-              <Button variant="outline" size="sm" className="border-blue-200 hover:border-blue-300 hover:bg-blue-50 text-blue-700 hover:text-blue-800 transition-all duration-300 px-mobile-xs sm:px-3 text-mobile-xs sm:text-sm">
-                <Link href="/signup" className="flex items-center">
-                  <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                  <span className="hidden xs:inline">New</span>
-                </Link>
-              </Button>
-              <Button size="sm" className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-md hover:shadow-lg transition-all duration-300 px-mobile-xs sm:px-3 text-mobile-xs sm:text-sm">
-                <Link href="/signin" className="flex items-center">
-                  <UserCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                  <span className="hidden xs:inline">Login</span>
-                </Link>
-              </Button>
-            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="border-orange-200 text-orange-600 hover:bg-orange-50 flex"
+              onClick={() => router.push('/signin')}
+            >
+              <SafeTranslation ns="landing" tKey="cta.login" fallback="Se connecter" />
+            </Button>
           </div>
         </div>
       </header>
@@ -140,22 +140,21 @@ export default function LandingPage() {
         {/* Section Héros avec animations et effets visuels */}
         <section className="py-20 md:py-32 relative overflow-hidden">
           {/* Éléments de fond décoratifs */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-70"></div>
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-300 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-          <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-indigo-300 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-200 rounded-full blur-2xl opacity-30"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 via-transparent to-red-400/20"></div>
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-orange-500 rounded-full blur-3xl opacity-10"></div>
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-red-500 rounded-full blur-3xl opacity-10"></div>
           
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               {/* Contenu textuel de la section héros */}
               <div className="text-center lg:text-left reveal">
-                <Badge className="mb-6 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 border-blue-200 hover:bg-gradient-to-r hover:from-blue-200 hover:to-indigo-200 transition-all duration-300 inline-flex items-center gap-2">
+                <Badge className="mb-6 bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 border-orange-200 hover:bg-gradient-to-r hover:from-orange-200 hover:to-red-200 transition-all duration-300 inline-flex items-center gap-2">
                   <Sparkles className="h-4 w-4" />
                   New
                 </Badge>
                 
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight">
-                  <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-transparent bg-clip-text">
+                  <span className="bg-gradient-to-r from-orange-600 via-red-500 to-orange-600 text-transparent bg-clip-text">
                     BuddyBill
                   </span>
                 </h1>
@@ -169,7 +168,7 @@ export default function LandingPage() {
                   <Button 
                     asChild 
                     size="lg" 
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg px-8 py-3"
+                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg px-8 py-3"
                   >
                     <Link href="/signup" className="inline-flex items-center gap-2">
                       Get Started
@@ -193,7 +192,7 @@ export default function LandingPage() {
                   <PWAInstallButton 
                     variant="ghost"
                     size="sm"
-                    className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 transition-all duration-300"
+                    className="text-orange-600 hover:text-orange-800 hover:bg-orange-50 transition-all duration-300"
                   >
                     <Smartphone className="h-4 w-4 mr-2" />
                     Install App
@@ -207,7 +206,7 @@ export default function LandingPage() {
                     Secure
                   </div>
                   <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-blue-600" />
+                    <Users className="h-4 w-4 text-orange-600" />
                     1000+ Users
                   </div>
                   <div className="flex items-center gap-2">
@@ -221,12 +220,12 @@ export default function LandingPage() {
               <div className="relative reveal">
                 <div className="relative mx-auto max-w-md lg:max-w-lg">
                   {/* Effets de fond pour l'image */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-indigo-500/20 rounded-3xl blur-xl transform rotate-3"></div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-3xl blur-2xl transform -rotate-2"></div>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 to-red-500/20 rounded-3xl blur-xl transform rotate-3"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-3xl blur-2xl transform -rotate-2"></div>
                   
                   {/* Conteneur principal de l'interface */}
-                  <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden border border-blue-100 transform hover:rotate-1 transition-all duration-500">
-                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-3">
+                  <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden border border-orange-100 transform hover:rotate-1 transition-all duration-500">
+                    <div className="bg-gradient-to-br from-orange-50 to-red-50 p-3">
                       <div className="bg-white rounded-2xl overflow-hidden">
                         {/* Interface Dashboard Simulée */}
                         <div className="max-w-sm mx-auto bg-white">
@@ -279,29 +278,29 @@ export default function LandingPage() {
                             <div className="space-y-3">
                               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                 <div className="flex items-center gap-3">
-                                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">V</div>
+                                  <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">V</div>
                                   <div>
                                     <div className="font-medium text-sm">vacances</div>
                                     <div className="text-xs text-gray-500">members</div>
                                   </div>
                                 </div>
-                                <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center text-white text-sm">+</div>
+                                <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center text-white text-sm">+</div>
                               </div>
                               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                 <div className="flex items-center gap-3">
-                                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">V</div>
+                                  <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">V</div>
                                   <div>
                                     <div className="font-medium text-sm">vacance</div>
                                     <div className="text-xs text-gray-500">members</div>
                                   </div>
                                 </div>
-                                <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center text-white text-sm">+</div>
+                                <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center text-white text-sm">+</div>
                               </div>
                             </div>
 
                             {/* Quick Actions */}
                             <h3 className="font-semibold mt-4 mb-3">Quick actions</h3>
-                            <button className="w-full bg-blue-500 text-white py-3 rounded-lg flex items-center justify-center gap-2 text-sm font-medium">
+                            <button className="w-full bg-orange-500 text-white py-3 rounded-lg flex items-center justify-center gap-2 text-sm font-medium">
                               <span>👥</span>
                               Create group
                             </button>
@@ -310,7 +309,7 @@ export default function LandingPage() {
                           {/* Bottom Navigation */}
                           <div className="border-t bg-white p-2">
                             <div className="flex justify-around">
-                              <div className="flex flex-col items-center py-2 text-blue-500">
+                              <div className="flex flex-col items-center py-2 text-orange-500">
                                 <div className="text-lg">🏠</div>
                                 <span className="text-xs">Dashboard</span>
                               </div>
@@ -347,9 +346,9 @@ export default function LandingPage() {
         </section>
 
         {/* Section PWA Installation moderne */}
-        <section className="py-16 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden" data-section="pwa">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-200 rounded-full blur-3xl opacity-20"></div>
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-200 rounded-full blur-3xl opacity-20"></div>
+        <section className="py-16 bg-gradient-to-br from-orange-50 via-red-50 to-orange-50 relative overflow-hidden" data-section="pwa">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-orange-200 rounded-full blur-3xl opacity-20"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-red-200 rounded-full blur-3xl opacity-20"></div>
           
           <div className="container mx-auto px-4 relative z-10">
             <InstallPWAInstructions />
@@ -358,20 +357,20 @@ export default function LandingPage() {
 
         {/* Section Fonctionnalités principales */}
         <section className="py-24 bg-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-blue-50 opacity-50"></div>
-          <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-200 rounded-full blur-3xl opacity-10"></div>
-          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-200 rounded-full blur-3xl opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-orange-50 opacity-50"></div>
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-orange-200 rounded-full blur-3xl opacity-10"></div>
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-red-200 rounded-full blur-3xl opacity-10"></div>
           
           <div className="container mx-auto px-4 relative z-10">
             {/* En-tête de section */}
             <div className="text-center mb-20 reveal">
-              <Badge className="mb-6 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 border-blue-200 hover:bg-gradient-to-r hover:from-blue-200 hover:to-indigo-200 transition-all duration-300 inline-flex items-center gap-2">
+              <Badge className="mb-6 bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 border-orange-200 hover:bg-gradient-to-r hover:from-orange-200 hover:to-red-200 transition-all duration-300 inline-flex items-center gap-2">
                 <Settings className="h-4 w-4" />
                 Features
               </Badge>
               
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-transparent bg-clip-text">
+                <span className="bg-gradient-to-r from-orange-600 via-red-500 to-orange-600 text-transparent bg-clip-text">
                   Main Features
                 </span>
               </h2>
@@ -387,7 +386,7 @@ export default function LandingPage() {
                 { 
                   icon: <Users className="h-8 w-8" />, 
                   key: "groups",
-                  gradient: "from-blue-500 to-cyan-500"
+                  gradient: "from-orange-500 to-red-500"
                 },
                 { 
                   icon: <Globe className="h-8 w-8" />, 
@@ -417,7 +416,7 @@ export default function LandingPage() {
               ].map(({icon, key, gradient}, index) => (
                 <Card 
                   key={key} 
-                  className="group border border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden reveal bg-white/80 backdrop-blur-sm" 
+                  className="group border border-gray-200 hover:border-orange-300 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden reveal bg-white/80 backdrop-blur-sm" 
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <CardContent className="p-8">
@@ -426,7 +425,7 @@ export default function LandingPage() {
                       {icon}
                     </div>
                     
-                    <h3 className="text-xl font-bold mb-4 text-center text-gray-900 group-hover:text-blue-900 transition-colors duration-300">
+                    <h3 className="text-xl font-bold mb-4 text-center text-gray-900 group-hover:text-orange-900 transition-colors duration-300">
                       {key.charAt(0).toUpperCase() + key.slice(1)}
                     </h3>
                     
@@ -441,9 +440,9 @@ export default function LandingPage() {
         </section>
 
         {/* Section Problèmes et Solutions */}
-        <section className="py-24 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
-          <div className="absolute top-12 right-12 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply blur-3xl opacity-20"></div>
-          <div className="absolute bottom-12 left-12 w-64 h-64 bg-indigo-300 rounded-full mix-blend-multiply blur-3xl opacity-20"></div>
+        <section className="py-24 bg-gradient-to-br from-gray-50 to-orange-50 relative overflow-hidden">
+          <div className="absolute top-12 right-12 w-64 h-64 bg-orange-300 rounded-full mix-blend-multiply blur-3xl opacity-20"></div>
+          <div className="absolute bottom-12 left-12 w-64 h-64 bg-red-300 rounded-full mix-blend-multiply blur-3xl opacity-20"></div>
           
           <div className="container mx-auto px-4 relative z-10">
             {/* En-tête de section */}
@@ -454,7 +453,7 @@ export default function LandingPage() {
               </Badge>
               
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 text-transparent bg-clip-text">
+                <span className="bg-gradient-to-r from-orange-600 via-red-500 to-orange-600 text-transparent bg-clip-text">
                   Common Problems
                 </span>
               </h2>
@@ -467,24 +466,24 @@ export default function LandingPage() {
             {/* Comparaison Problèmes vs Solutions */}
             <div className="grid lg:grid-cols-2 gap-12">
               {/* Colonne des défis */}
-              <div className="bg-gradient-to-br from-red-50 to-orange-50 p-8 rounded-3xl border border-red-100 shadow-lg reveal">
+              <div className="bg-gradient-to-br from-red-50 to-orange-50 p-8 rounded-3xl border border-orange-100 shadow-lg reveal">
                 <div className="text-center mb-8">
-                  <div className="bg-gradient-to-br from-red-500 to-orange-500 text-white p-4 rounded-2xl w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <div className="bg-gradient-to-br from-orange-500 to-red-500 text-white p-4 rounded-2xl w-16 h-16 flex items-center justify-center mx-auto mb-4">
                     <Users className="h-8 w-8" />
                   </div>
-                  <h3 className="text-2xl font-bold text-red-700">
+                  <h3 className="text-2xl font-bold text-orange-700">
                     Challenges
                   </h3>
                 </div>
                 
                 <ul className="space-y-6">
                   {[0, 1, 2].map((i) => (
-                    <li key={i} className="flex gap-4 group hover:bg-red-50 p-4 rounded-xl transition-all duration-300">
-                      <div className="bg-red-200 text-red-700 p-3 rounded-xl flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <li key={i} className="flex gap-4 group hover:bg-orange-50 p-4 rounded-xl transition-all duration-300">
+                      <div className="bg-orange-200 text-orange-700 p-3 rounded-xl flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                         <Users className="h-5 w-5" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-lg mb-2 text-red-900">
+                        <h4 className="font-bold text-lg mb-2 text-orange-900">
                           Challenge {i+1}
                         </h4>
                         <p className="text-gray-700 leading-relaxed">
@@ -525,110 +524,6 @@ export default function LandingPage() {
                   ))}
                 </ul>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How it works */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4 text-center mb-12">
-            <h2 className="text-3xl font-bold text-blue-900 mb-4">
-              How it works
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Manage your expenses with ease
-            </p>
-          </div>
-          
-          <div className="container mx-auto px-4 max-w-4xl">
-            <div className="relative">
-              <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-blue-200 hidden md:block"></div>
-              
-              {[1, 2, 3, 4].map((step) => (
-                <div key={step} className="flex flex-col md:flex-row gap-8 mb-12">
-                  <div className="flex-shrink-0 flex items-center justify-center">
-                    <div className="bg-blue-500 text-white h-16 w-16 rounded-full flex items-center justify-center text-xl font-bold z-10">
-                      {step}
-                    </div>
-                  </div>
-                  <div className="pt-2">
-                    <h3 className="text-xl font-semibold mb-2">
-                      Step {step}
-                    </h3>
-                    <p className="text-gray-600 mb-4">
-                      Manage your expenses with ease
-                    </p>
-                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                      <p className="text-sm italic text-blue-700">
-                        Manage your expenses with ease
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Section Témoignages */}
-        <section className="py-24 bg-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-50"></div>
-          <div className="absolute -top-24 -left-24 w-96 h-96 bg-purple-200 rounded-full blur-3xl opacity-10"></div>
-          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-blue-200 rounded-full blur-3xl opacity-10"></div>
-          
-          <div className="container mx-auto px-4 relative z-10">
-            {/* En-tête de section */}
-            <div className="text-center mb-20 reveal">
-              <Badge className="mb-6 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 border-purple-200 hover:bg-gradient-to-r hover:from-purple-200 hover:to-pink-200 transition-all duration-300 inline-flex items-center gap-2">
-                <Quote className="h-4 w-4" />
-                Testimonials
-              </Badge>
-              
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-transparent bg-clip-text">
-                  What our users say
-                </span>
-              </h2>
-              
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Manage your expenses with ease
-              </p>
-            </div>
-            
-            {/* Grille de témoignages */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[0, 1, 2].map((i) => (
-                <Card key={i} className="group border border-purple-100 hover:border-purple-300 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden reveal bg-white/90 backdrop-blur-sm">
-                  <CardContent className="p-8">
-                    {/* Note étoilée */}
-                    <div className="flex gap-1 mb-6">
-                      {[...Array(5)].map((_, starIndex) => (
-                        <Star key={starIndex} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                    
-                    {/* Citation */}
-                    <blockquote className="text-gray-700 mb-6 leading-relaxed italic">
-                      Manage your expenses with ease
-                    </blockquote>
-                    
-                    {/* Profil de l'utilisateur */}
-                    <div className="flex items-center gap-4">
-                      <div className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-3 rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg">
-                        User {i+1}
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900">
-                          User {i+1}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          User role
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
           </div>
         </section>
@@ -715,9 +610,9 @@ export default function LandingPage() {
         </section>
 
         {/* Section CTA Finale */}
-        <section className="py-24 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white relative overflow-hidden">
+        <section className="py-24 bg-gradient-to-br from-orange-600 via-red-500 to-orange-600 text-white relative overflow-hidden">
           {/* Éléments décoratifs de fond */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/80 to-purple-600/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-600/80 to-orange-600/80"></div>
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-white rounded-full blur-3xl opacity-10"></div>
           <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-yellow-300 rounded-full blur-3xl opacity-20"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white rounded-full blur-2xl opacity-5"></div>
@@ -733,7 +628,7 @@ export default function LandingPage() {
                 Get Started
               </h2>
               
-              <p className="text-xl md:text-2xl text-blue-100 mb-12 leading-relaxed max-w-2xl mx-auto">
+              <p className="text-xl md:text-2xl text-orange-100 mb-12 leading-relaxed max-w-2xl mx-auto">
                 Manage your expenses with ease
               </p>
               
@@ -742,7 +637,7 @@ export default function LandingPage() {
                 <Button 
                   asChild 
                   size="lg" 
-                  className="bg-white text-blue-700 hover:bg-gray-100 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg px-8 py-4"
+                  className="bg-white text-orange-700 hover:bg-gray-100 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg px-8 py-4"
                 >
                   <Link href="/signup" className="inline-flex items-center gap-2">
                     Get Started
@@ -773,7 +668,7 @@ export default function LandingPage() {
               </div>
               
               {/* Assurance additionnelle */}
-              <div className="flex flex-wrap gap-8 justify-center text-sm text-blue-100">
+              <div className="flex flex-wrap gap-8 justify-center text-sm text-orange-100">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-400" />
                   Free
@@ -794,16 +689,21 @@ export default function LandingPage() {
 
       {/* Footer moderne */}
       <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20"></div>
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-500 rounded-full blur-3xl opacity-5"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-red-900/20"></div>
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-orange-500 rounded-full blur-3xl opacity-5"></div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Logo et description */}
             <div className="lg:col-span-1">
               <Link href="/" className="flex items-center gap-2 mb-6 group">
-                <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-2.5 rounded-xl group-hover:shadow-lg transition-all duration-300">
-                  <DollarSign size={20} strokeWidth={2.5} />
+                <div className="relative w-8 h-8 sm:w-10 sm:h-10">
+                  <Image
+                    src="/icons/logobuddy.png"
+                    alt="BuddyBill Logo"
+                    fill
+                    className="object-contain group-hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
                 <span className="text-xl font-bold">BuddyBill</span>
               </Link>

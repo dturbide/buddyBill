@@ -22,13 +22,19 @@ import {
   Hourglass,
   Fingerprint,
   CreditCard,
+  Database,
+  Wifi,
+  WifiOff
 } from "lucide-react"
 import { format, parseISO } from "date-fns"
 import { fr } from "date-fns/locale"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
-import { useState, useEffect } from "react" // Added for user state
+import { useState, useEffect } from "react"
 import { useBiometricAuth } from "@/hooks/use-biometric-auth"
+import { OfflineIndicator } from "@/components/offline-indicator"
+import { ConflictResolver } from "@/components/conflict-resolver"
+import { useConflictResolution } from "@/hooks/use-conflict-resolution"
 
 interface UserData {
   id: string
@@ -83,6 +89,36 @@ export default function UserProfileScreen() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { isSupported: isBiometricSupported, hasCredentials } = useBiometricAuth()
+  const { conflicts, resolveConflict } = useConflictResolution()
+
+  // Fonction utilitaire pour formater les montants selon la devise
+  const formatCurrency = (amount: number, currency: string = 'EUR') => {
+    const currencySymbols: { [key: string]: string } = {
+      'CAD': '$',
+      'USD': '$', 
+      'EUR': '€',
+      'GBP': '£',
+      'CHF': 'CHF ',
+      'JPY': '¥',
+      'AUD': 'A$'
+    }
+    
+    const symbol = currencySymbols[currency] || currency + ' '
+    const formattedAmount = Math.abs(amount).toFixed(2)
+    const sign = amount >= 0 ? '+' : '-'
+    
+    // Pour JPY, pas de décimales
+    if (currency === 'JPY') {
+      return `${sign}${symbol}${Math.abs(amount).toFixed(0)}`
+    }
+    
+    // Pour CHF et autres devises avec symbole après
+    if (currency === 'CHF') {
+      return `${sign}${symbol}${formattedAmount}`
+    }
+    
+    return `${sign}${symbol}${formattedAmount}`
+  }
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -124,25 +160,26 @@ export default function UserProfileScreen() {
         id: authUser.id,
         name: profileData?.full_name || authUser.email?.split("@")[0] || "Utilisateur",
         email: authUser.email || "Non défini",
-        avatarUrl: profileData?.avatar_url || undefined,
-        phone: profileData?.phone || undefined,
-        defaultCurrency: profileData?.preferred_currency || undefined,
+        avatarUrl: profileData?.avatar_url,
+        phone: profileData?.phone,
+        defaultCurrency: profileData?.preferred_currency || "CAD",
         memberSince: profileData?.created_at || authUser.created_at,
       })
       setIsLoading(false)
     }
+
     fetchUser()
-  }, [supabase, router])
+  }, [router, supabase])
 
   const handleLogout = async () => {
     setIsLoading(true)
-    const { error: signOutError } = await supabase.auth.signOut()
-    setIsLoading(false)
-    if (signOutError) {
-      setError(`Erreur lors de la déconnexion: ${signOutError.message}`)
-      alert(`Erreur lors de la déconnexion: ${signOutError.message}`)
-    } else {
-      router.push("/signin") // Rediriger vers la page de connexion après déconnexion
+    try {
+      await supabase.auth.signOut()
+      router.push("/signin")
+    } catch (error) {
+      console.error("Logout error:", error)
+      setError("Erreur lors de la déconnexion")
+      setIsLoading(false)
     }
   }
 
@@ -169,10 +206,24 @@ export default function UserProfileScreen() {
 
   return (
     <div className="space-y-4">
+      {/* Indicateur offline-first détaillé */}
+      <OfflineIndicator variant="detailed" />
+      
+      {/* Résolveur de conflits si nécessaire */}
+      {conflicts.length > 0 && (
+        <ConflictResolver 
+          onConflictsResolved={() => {
+            console.log('Tous les conflits ont été résolus')
+          }} 
+        />
+      )}
+      
       <div className="text-center">
         <Avatar className="h-24 w-24 mx-auto mb-3 ring-2 ring-primary/50 ring-offset-2">
           <AvatarImage src={user.avatarUrl || "/placeholder.svg?width=100&height=100&query=avatar"} alt={user.name} />
-          <AvatarFallback className="text-3xl">{user.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+          <AvatarFallback className="text-xl font-bold bg-primary/10">
+            {user.name.split(" ").map((n) => n[0]).join("").toUpperCase()}
+          </AvatarFallback>
         </Avatar>
         <h2 className="text-xl font-semibold">{user.name}</h2>
         <p className="text-sm text-muted-foreground">{user.email}</p>
@@ -243,7 +294,7 @@ export default function UserProfileScreen() {
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-blue-700">Devise principale ({user.defaultCurrency || 'EUR'})</span>
                 <div className="text-right">
-                  <div className="text-lg font-bold text-blue-800">+125,50 €</div>
+                  <div className="text-lg font-bold text-blue-800">{formatCurrency(125.50, user.defaultCurrency)}</div>
                   <div className="text-xs text-blue-600">Vous devez recevoir</div>
                 </div>
               </div>
@@ -257,8 +308,8 @@ export default function UserProfileScreen() {
                   <span className="text-xs text-muted-foreground">États-Unis</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-semibold text-green-600">+$142.30</div>
-                  <div className="text-xs text-muted-foreground">≈ 127,85 €</div>
+                  <div className="text-sm font-semibold text-green-600">{formatCurrency(142.30, 'USD')}</div>
+                  <div className="text-xs text-muted-foreground">≈ {formatCurrency(127.85, user.defaultCurrency)}</div>
                 </div>
               </div>
 
@@ -268,8 +319,8 @@ export default function UserProfileScreen() {
                   <span className="text-xs text-muted-foreground">Canada</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-semibold text-red-600">-$45.20</div>
-                  <div className="text-xs text-muted-foreground">≈ -31,15 €</div>
+                  <div className="text-sm font-semibold text-red-600">{formatCurrency(-45.20, 'CAD')}</div>
+                  <div className="text-xs text-muted-foreground">≈ {formatCurrency(-31.15, user.defaultCurrency)}</div>
                 </div>
               </div>
 
@@ -279,8 +330,8 @@ export default function UserProfileScreen() {
                   <span className="text-xs text-muted-foreground">Royaume-Uni</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-semibold text-green-600">+£28.80</div>
-                  <div className="text-xs text-muted-foreground">≈ 33,45 €</div>
+                  <div className="text-sm font-semibold text-green-600">{formatCurrency(28.80, 'GBP')}</div>
+                  <div className="text-xs text-muted-foreground">≈ {formatCurrency(33.45, user.defaultCurrency)}</div>
                 </div>
               </div>
             </div>
@@ -290,7 +341,7 @@ export default function UserProfileScreen() {
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium">Total net équivalent</span>
                 <div className="text-right">
-                  <div className="text-lg font-bold text-primary">+129,15 €</div>
+                  <div className="text-lg font-bold text-primary">{formatCurrency(129.15, user.defaultCurrency)}</div>
                   <div className="text-xs text-muted-foreground">Mis à jour il y a 2h</div>
                 </div>
               </div>
@@ -319,7 +370,7 @@ export default function UserProfileScreen() {
             <ProfileLinkItem
               icon={HelpCircle}
               label="Aide et Support"
-              onClick={() => alert("Navigation vers la page d'aide (non implémenté)")}
+              onClick={() => router.push('/dashboard/help')}
             />
           </CardContent>
         </Card>

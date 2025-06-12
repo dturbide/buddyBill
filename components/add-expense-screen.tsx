@@ -13,13 +13,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
-import { ArrowLeft, CalendarIcon, Paperclip, ChevronDown, Tag, DollarSign, Camera, Upload, Plus, Minus, Calculator, X } from 'lucide-react'
+import { ArrowLeft, CalendarIcon, Paperclip, ChevronDown, Tag, DollarSign, Camera, Upload, Plus, Minus, Calculator, X, WifiOff } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useNotifications } from '@/components/notification-system'
 import { AppLayout, MobileCard } from '@/components/app-layout'
 import { ALL_CURRENCIES, getCurrencyByCode, formatCurrencyAmount, POPULAR_CURRENCIES } from '@/lib/currencies'
+import { useOfflineExpenses } from '@/hooks/use-offline-expenses'
+import { toast } from 'sonner'
 
 interface Member {
   id: string
@@ -60,6 +62,7 @@ export default function AddExpenseScreen({ groupContext }: AddExpenseScreenProps
   const [categories, setCategories] = useState<{id: string, name: string, icon: string}[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [searchCurrency, setSearchCurrency] = useState("")
+  const { createExpense, isCreating, isOnline } = useOfflineExpenses()
 
   // Filtrer les devises
   const filteredCurrencies = ALL_CURRENCIES.filter((curr) =>
@@ -122,52 +125,64 @@ export default function AddExpenseScreen({ groupContext }: AddExpenseScreenProps
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Validation
-    if (!description || !amount || !date || !category || !paidBy || selectedMembersForSplit.length === 0) {
-      notifications.showError("Champs manquants", "Veuillez remplir tous les champs requis.")
+    if (!description.trim() || !amount || parseFloat(amount) <= 0) {
+      notifications.showError("Champs requis", "Veuillez remplir tous les champs obligatoires.")
+      return
+    }
+
+    if (selectedMembersForSplit.length === 0) {
+      notifications.showError("Aucun participant", "Veuillez sélectionner au moins un participant pour partager cette dépense.")
       return
     }
 
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('/api/expenses/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          groupId: groupContext.id,
-          description,
-          amount: parseFloat(amount),
-          categoryId: category,
-          paidBy,
-          participants: selectedMembersForSplit,
-          splitType: 'equal',
-          currency
-        }),
+      // Utiliser le hook offline-first pour créer la dépense
+      const result = await createExpense({
+        group_id: groupContext.id,
+        description: description.trim(),
+        amount: parseFloat(amount),
+        currency: currency,
+        paid_by: paidBy,
+        expense_date: date?.toISOString() || new Date().toISOString(),
+        participants: selectedMembersForSplit,
+        category: category,
+        notes: notes.trim()
       })
 
-      const result = await response.json()
-
-      if (response.ok) {
-        notifications.showSuccess("Dépense ajoutée", result.message || "Dépense ajoutée avec succès !")
+      if (result.success) {
+        // Afficher le message approprié selon le mode (online/offline)
+        if (result.isOffline) {
+          toast.info('Dépense créée hors-ligne. Elle sera synchronisée automatiquement.', {
+            description: 'Votre dépense a été sauvegardée localement.',
+            action: {
+              label: 'Voir le statut',
+              onClick: () => console.log('Voir statut offline')
+            }
+          })
+        } else {
+          notifications.showSuccess("Dépense ajoutée", "La dépense a été ajoutée avec succès au groupe.")
+        }
+        
         // Réinitialiser le formulaire
         setDescription("")
         setAmount("")
-        setCategory("")
         setNotes("")
         setReceipt(null)
         setReceiptPreview(null)
         setDate(new Date())
-        setSelectedMembersForSplit(groupContext.members.map((m) => m.id))
-        router.push('/dashboard')
+        
+        // Rediriger vers la liste des dépenses après un délai
+        setTimeout(() => {
+          router.push(`/groups/${groupContext.id}/expenses`)
+        }, 1500)
       } else {
-        notifications.showError("Erreur de création", result.error || 'Erreur inconnue')
+        notifications.showError("Erreur", result.error || "Impossible de créer la dépense")
       }
     } catch (error) {
       console.error('Erreur lors de la création de la dépense:', error)
-      notifications.showError("Erreur de connexion", 'Erreur de connexion. Veuillez réessayer.')
+      notifications.showError("Erreur inattendue", "Une erreur inattendue s'est produite. Veuillez réessayer.")
     } finally {
       setIsSubmitting(false)
     }

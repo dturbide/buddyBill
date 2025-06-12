@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Plus, DollarSign, Users, Calendar, Filter, Edit, Trash2 } from 'lucide-react'
+import { Plus, DollarSign, Users, Calendar, Filter, Edit, Trash2, WifiOff, Clock } from 'lucide-react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import { AppLayout, MobileCard } from '@/components/app-layout'
 import Link from 'next/link'
+import { useOfflineExpenses } from '@/hooks/use-offline-expenses'
+import { toast } from 'sonner'
 
 interface Expense {
   id: string
@@ -51,6 +53,9 @@ export default function ExpensesListScreen() {
   const [userCurrency, setUserCurrency] = useState<string>('USD')
   const [conversions, setConversions] = useState<{[key: string]: number}>({})
 
+  // Hook offline-first pour les dépenses
+  const { getExpenses, deleteExpense: deleteExpenseOffline, isCreating, isOnline } = useOfflineExpenses()
+
   // Charger les données initiales
   useEffect(() => {
     loadExpenses()
@@ -79,32 +84,43 @@ export default function ExpensesListScreen() {
     try {
       setLoading(true)
       setError(null)
-      const response = await fetch('/api/expenses')
       
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('Erreur API dépenses:', response.status, errorText)
-        alert(`Erreur de chargement: ${response.status}`)
-        setExpenses([])
-        setError(`Erreur de chargement: ${response.status}`)
-        return
-      }
+      // Utiliser le hook offline-first pour récupérer les dépenses
+      const offlineExpenses = await getExpenses()
       
-      const data = await response.json()
-      console.log('Données reçues:', data)
-      
-      if (data.success && data.expenses) {
-        setExpenses(data.expenses)
+      if (offlineExpenses && offlineExpenses.length > 0) {
+        // Transformer les données pour correspondre au format attendu
+        const transformedExpenses = offlineExpenses.map(expense => ({
+          id: expense.id,
+          description: expense.description,
+          amount: expense.amount,
+          currency: expense.currency,
+          date: expense.expense_date,
+          created_by: expense.paid_by,
+          group_id: expense.group_id,
+          group_name: 'Groupe', // À récupérer depuis le cache des groupes
+          created_by_name: 'Utilisateur', // À récupérer depuis le cache des utilisateurs
+          category: expense.category || undefined
+        }))
+        
+        setExpenses(transformedExpenses)
+        
+        // Afficher un indicateur si on utilise des données mises en cache
+        if (!isOnline) {
+          toast.info('Données affichées depuis le cache local', {
+            description: 'Certaines informations peuvent ne pas être à jour.'
+          })
+        }
       } else {
-        console.error('Format de données invalide:', data)
         setExpenses([])
-        setError('Format de données invalide')
+        if (!isOnline) {
+          setError('Aucune donnée en cache. Veuillez vous connecter pour charger les dépenses.')
+        }
       }
     } catch (error) {
       console.error('Erreur chargement dépenses:', error)
-      alert('Erreur de connexion')
       setExpenses([])
-      setError('Erreur de connexion')
+      setError('Erreur de chargement des dépenses')
     } finally {
       setLoading(false)
     }
@@ -124,20 +140,33 @@ export default function ExpensesListScreen() {
 
   const deleteExpense = async (expenseId: string) => {
     try {
-      const response = await fetch('/api/expenses/delete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ expenseId })
-      })
-
-      if (response.ok) {
+      // Utiliser le hook offline-first pour supprimer la dépense
+      const result = await deleteExpenseOffline(expenseId)
+      
+      if (result.success) {
+        // Retirer immédiatement de la liste locale
         setExpenses(prev => prev.filter(exp => exp.id !== expenseId))
+        
+        if (result.isOffline) {
+          toast.info('Suppression enregistrée hors-ligne', {
+            description: 'La suppression sera synchronisée automatiquement.',
+            action: {
+              label: 'Annuler',
+              onClick: () => {
+                // Optionnel : logique d'annulation
+                console.log('Annulation de la suppression')
+              }
+            }
+          })
+        } else {
+          toast.success('Dépense supprimée avec succès')
+        }
       } else {
-        alert('Erreur lors de la suppression')
+        toast.error(result.error || 'Erreur lors de la suppression')
       }
     } catch (error) {
-      console.error('Erreur suppression:', error)
-      alert('Erreur lors de la suppression')
+      console.error('Erreur suppression dépense:', error)
+      toast.error('Erreur inattendue lors de la suppression')
     }
   }
 

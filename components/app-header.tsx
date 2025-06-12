@@ -8,6 +8,7 @@ import { Bell, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
 import LanguageSwitcher from "./language-switcher"
+import { OfflineIndicator } from "./offline-indicator"
 
 interface AppHeaderProps {
   title?: string
@@ -56,6 +57,9 @@ export default function AppHeader({ title, showBackButton = false, backHref = "/
         </h1>
       </div>
       <div className="flex items-center gap-2 sm:gap-3">
+        {/* Indicateur offline-first */}
+        <OfflineIndicator variant="compact" />
+        
         <LanguageSwitcher />
         <div className="relative">
           <Bell className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600" />

@@ -147,41 +147,114 @@ export async function GET(request: NextRequest) {
     const groupId = searchParams.get('groupId')
     const limit = parseInt(searchParams.get('limit') || '50')
 
-    let query = supabase
-      .from('payments')
-      .select(`
-        *,
-        payer:user_profiles!payments_payer_id_fkey(id, full_name),
-        payee:user_profiles!payments_payee_id_fkey(id, full_name)
-      `)
-      .or(`payer_id.eq.${user.id},payee_id.eq.${user.id}`)
-      .order('created_at', { ascending: false })
-      .limit(limit)
+    // Essayer d'abord avec la requête complexe
+    try {
+      let query = supabase
+        .from('payments')
+        .select(`
+          *,
+          payer:user_profiles!payments_payer_id_fkey(id, full_name),
+          payee:user_profiles!payments_payee_id_fkey(id, full_name)
+        `)
+        .or(`payer_id.eq.${user.id},payee_id.eq.${user.id}`)
+        .order('created_at', { ascending: false })
+        .limit(limit)
 
-    if (groupId) {
-      query = query.eq('group_id', groupId)
-    }
+      if (groupId) {
+        query = query.eq('group_id', groupId)
+      }
 
-    const { data: payments, error: paymentsError } = await query
+      const { data: payments, error: paymentsError } = await query
 
-    if (paymentsError) {
-      console.error('Erreur récupération paiements:', paymentsError)
+      if (paymentsError) {
+        throw paymentsError
+      }
+
       return NextResponse.json({
-        success: false,
-        error: 'Erreur lors de la récupération des paiements'
-      }, { status: 500 })
-    }
+        success: true,
+        data: payments || []
+      })
 
-    return NextResponse.json({
-      success: true,
-      data: payments || []
-    })
+    } catch (relationError) {
+      console.log('Erreur avec relations, tentative requête simple:', relationError)
+      
+      // Fallback: requête simple sans relations
+      let simpleQuery = supabase
+        .from('payments')
+        .select('*')
+        .or(`payer_id.eq.${user.id},payee_id.eq.${user.id}`)
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (groupId) {
+        simpleQuery = simpleQuery.eq('group_id', groupId)
+      }
+
+      const { data: simplePayments, error: simpleError } = await simpleQuery
+
+      if (simpleError) {
+        throw simpleError
+      }
+
+      // Récupérer les noms d'utilisateurs séparément
+      const userIds = new Set<string>()
+      simplePayments?.forEach((payment: any) => {
+        if (payment.payer_id) userIds.add(payment.payer_id)
+        if (payment.payee_id) userIds.add(payment.payee_id)
+      })
+
+      let usersMap = new Map<string, string>()
+      
+      if (userIds.size > 0) {
+        try {
+          const { data: users, error: usersError } = await supabase
+            .from('user_profiles')
+            .select('id, full_name')
+            .in('id', Array.from(userIds))
+
+          if (!usersError && users) {
+            usersMap = new Map(users.map((u: any) => [u.id, u.full_name || 'Utilisateur']))
+          }
+        } catch (usersError) {
+          console.log('Impossible de récupérer les noms utilisateurs:', usersError)
+        }
+      }
+
+      // Enrichir les paiements avec les noms
+      const enrichedPayments = simplePayments?.map((payment: any) => ({
+        ...payment,
+        payer: { 
+          id: payment.payer_id, 
+          full_name: usersMap.get(payment.payer_id) || 'Utilisateur inconnu' 
+        },
+        payee: { 
+          id: payment.payee_id, 
+          full_name: usersMap.get(payment.payee_id) || 'Utilisateur inconnu' 
+        }
+      })) || []
+
+      return NextResponse.json({
+        success: true,
+        data: enrichedPayments
+      })
+    }
 
   } catch (error) {
     console.error('Erreur API payments GET:', error)
+    
+    // Si même la table payments n'existe pas, retourner une liste vide
+    if (error instanceof Error && error.message.includes('does not exist')) {
+      console.log('Table payments inexistante, retour liste vide')
+      return NextResponse.json({
+        success: true,
+        data: [],
+        warning: 'Table payments non configurée - aucun historique disponible'
+      })
+    }
+    
     return NextResponse.json({
       success: false,
-      error: 'Erreur interne du serveur'
+      error: 'Erreur lors de la récupération des paiements'
     }, { status: 500 })
   }
 }

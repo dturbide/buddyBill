@@ -7,7 +7,13 @@
     "cta": "Get started for free",
     "secure": " 100% Secure",
     "users": " 10,000+ Users",
-    "rating": " 4.9/5 Rating"
+    "rating": " 4.9/5 Rating",
+    "badge": "🔒 Secure & Reliable",
+    "features": {
+      "secure": "100% Secure",
+      "users": "10,000+ Users",
+      "rating": "4.9/5 Rating"
+    }
   },
   "problem": {
     "title": "Simplify your expense sharing",
@@ -124,15 +130,11 @@
     ]
   },
   "cta": {
-    "title": "Ready to simplify your expense sharing?",
-    "subtitle": "Join thousands of users who trust BuddyBill for their shared expenses",
-    "primary": "Create an account",
-    "secondary": "Learn more",
-    "guarantee": {
-      "free": "100% Free",
-      "secure": "100% Secure", 
-      "easy": "Easy to Use"
-    }
+    "primary": "Install App",
+    "demo": "See Demo",
+    "login": "Sign In",
+    "signup": "Sign Up",
+    "getStarted": "Get Started Free"
   },
   "footer": {
     "tagline": "Simplify your expense sharing between friends, family, and colleagues",

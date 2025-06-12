@@ -1,0 +1,59 @@
+{
+  "online": "En ligne",
+  "offline": "Hors ligne",
+  "connected": "Connecté",
+  "disconnected": "Déconnecté",
+  "sync_now": "Synchroniser",
+  "syncing": "Synchronisation",
+  "last_sync": "Dernière sync",
+  "will_sync_when_online": "Sera synchronisé une fois en ligne",
+  "sync_error": "Erreur de synchronisation",
+  "offline_status": "État hors-ligne",
+  "cached_data": "Données en cache",
+  "pending_actions": "Actions en attente",
+  "data_conflicts": "Conflits de données",
+  "no_conflicts": "Aucun conflit",
+  "all_data_synced": "Toutes vos données sont synchronisées",
+  "auto_resolve": "Résolution auto",
+  "resolve_conflict": "Résoudre le conflit",
+  "local_version": "Version locale",
+  "server_version": "Version serveur",
+  "resolution_options": "Options de résolution",
+  "use_local": "Utiliser local",
+  "use_server": "Utiliser serveur",
+  "keep_my_changes": "Garder mes modifications",
+  "use_server_data": "Utiliser données serveur",
+  "smart_merge": "Fusion intelligente",
+  "offline_mode": "Mode hors-ligne",
+  "offline_features": {
+    "read_groups": "Consulter les groupes",
+    "read_expenses": "Voir les dépenses",
+    "create_expenses": "Créer des dépenses",
+    "edit_expenses": "Modifier les dépenses",
+    "view_balances": "Voir les soldes",
+    "use_calculator": "Utiliser la calculatrice"
+  },
+  "cache_management": {
+    "title": "Gestion du cache",
+    "cache_size": "Taille du cache",
+    "clear_cache": "Vider le cache",
+    "cache_cleared": "Cache vidé avec succès",
+    "auto_cache_description": "Les données récentes sont automatiquement mises en cache pour une utilisation hors-ligne"
+  },
+  "sync_settings": {
+    "title": "Paramètres de synchronisation",
+    "auto_sync": "Synchronisation automatique",
+    "sync_frequency": "Fréquence de sync",
+    "sync_on_startup": "Sync au démarrage",
+    "background_sync": "Sync en arrière-plan"
+  },
+  "notifications": {
+    "offline_created": "Créé hors-ligne. Synchronisation en attente.",
+    "offline_updated": "Modifié hors-ligne. Synchronisation en attente.",
+    "offline_deleted": "Supprimé hors-ligne. Synchronisation en attente.",
+    "sync_completed": "Synchronisation terminée avec succès",
+    "sync_failed": "Échec de la synchronisation",
+    "back_online": "Connexion rétablie. Synchronisation en cours...",
+    "going_offline": "Passage en mode hors-ligne"
+  }
+}

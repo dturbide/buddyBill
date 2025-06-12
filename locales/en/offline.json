@@ -1,0 +1,59 @@
+{
+  "online": "Online",
+  "offline": "Offline",
+  "connected": "Connected",
+  "disconnected": "Disconnected",
+  "sync_now": "Sync now",
+  "syncing": "Syncing",
+  "last_sync": "Last sync",
+  "will_sync_when_online": "Will sync when online",
+  "sync_error": "Sync error",
+  "offline_status": "Offline status",
+  "cached_data": "Cached data",
+  "pending_actions": "Pending actions",
+  "data_conflicts": "Data conflicts",
+  "no_conflicts": "No conflicts",
+  "all_data_synced": "All your data is synchronized",
+  "auto_resolve": "Auto resolve",
+  "resolve_conflict": "Resolve conflict",
+  "local_version": "Local version",
+  "server_version": "Server version", 
+  "resolution_options": "Resolution options",
+  "use_local": "Use local",
+  "use_server": "Use server",
+  "keep_my_changes": "Keep my changes",
+  "use_server_data": "Use server data",
+  "smart_merge": "Smart merge",
+  "offline_mode": "Offline mode",
+  "offline_features": {
+    "read_groups": "View groups",
+    "read_expenses": "View expenses",
+    "create_expenses": "Create expenses",
+    "edit_expenses": "Edit expenses",
+    "view_balances": "View balances",
+    "use_calculator": "Use calculator"
+  },
+  "cache_management": {
+    "title": "Cache management",
+    "cache_size": "Cache size",
+    "clear_cache": "Clear cache",
+    "cache_cleared": "Cache cleared successfully",
+    "auto_cache_description": "Recent data is automatically cached for offline use"
+  },
+  "sync_settings": {
+    "title": "Sync settings",
+    "auto_sync": "Auto sync",
+    "sync_frequency": "Sync frequency",
+    "sync_on_startup": "Sync on startup",
+    "background_sync": "Background sync"
+  },
+  "notifications": {
+    "offline_created": "Created offline. Sync pending.",
+    "offline_updated": "Updated offline. Sync pending.",
+    "offline_deleted": "Deleted offline. Sync pending.",
+    "sync_completed": "Sync completed successfully",
+    "sync_failed": "Sync failed",
+    "back_online": "Back online. Syncing...",
+    "going_offline": "Going offline"
+  }
+}
